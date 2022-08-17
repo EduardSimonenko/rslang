@@ -18,7 +18,9 @@ module.exports = {
     project: './tsconfig.json'
   },
   rules: {
-    "@typescript-eslint/no-explicit-any": 2
+    "@typescript-eslint/no-explicit-any": 2,
+    "class-methods-use-this": "off",
+    "consistent-return": 0
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
   },
