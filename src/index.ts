@@ -1,4 +1,5 @@
-import { App } from "./components/app/app";
+import './styles/global.scss';
+import App from './components/app/app';
 
-const app = new App();
-app.start();
+// const app = new App();
+App.start();

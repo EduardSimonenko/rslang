@@ -9,6 +9,10 @@ a, a:link, a:visited  {
   text-decoration: none;
 }
 
+a:hover, button:hover {
+	cursor: pointer;
+}
+
 ul, li {
 	list-style: none;
 }
