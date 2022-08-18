@@ -29,7 +29,7 @@ class Authorization extends Loader {
   }
 
   listen() {
-    const loginBtn = document.getElementById('login-btn');
+    const loginBtn = document.getElementById('registration-btn');
     loginBtn.addEventListener('click', (event) => {
       event.preventDefault();
       this.createNewUser();

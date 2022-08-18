@@ -21,11 +21,11 @@ class AuthForm {
     this.NewElement.setAttributes(nameInput, { id: 'name', type: 'text', placeholder: 'Name' });
     const passwordInput = this.NewElement.createNewElement('input', ['login-form__input']);
     this.NewElement.setAttributes(passwordInput, { id: 'password', type: 'password', placeholder: 'Password' });
-    const loginBtn = this.NewElement.createNewElement('button', ['btn', 'login-btn'], 'Регистрация');
-    this.NewElement.setAttributes(loginBtn, { id: 'login-btn', type: 'submit' });
+    const registrationBtn = this.NewElement.createNewElement('button', ['btn', 'registration-btn'], 'Регистрация');
+    this.NewElement.setAttributes(registrationBtn, { id: 'registration-btn', type: 'submit' });
     const cancelBtn = this.NewElement.createNewElement('button', ['btn', 'cancel-btn'], 'Отменить');
     this.NewElement.setAttributes(cancelBtn, { id: 'cancel-btn', type: 'button' });
-    this.NewElement.insertChilds(loginForm, [emailInput, nameInput, passwordInput, loginBtn, cancelBtn]);
+    this.NewElement.insertChilds(loginForm, [emailInput, nameInput, passwordInput, registrationBtn, cancelBtn]);
     this.NewElement.insertChilds(authWrapper, [authHeader, loginForm]);
 
     document.body.appendChild(authWrapper);
