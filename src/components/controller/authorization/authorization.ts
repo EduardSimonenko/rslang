@@ -11,11 +11,11 @@ class Authorization extends Loader {
 
   async createNewUser() {
     console.log('create new user');
-
     super.load(
       {
         method: MethodEnum.post,
         headers: {
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -28,11 +28,43 @@ class Authorization extends Loader {
     );
   }
 
+  async logIn() {
+    console.log('login user');
+
+    try {
+      const result = await fetch('https://rslang2022q1-learnwords.herokuapp.com/signin', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: `${this.emailInput.value}`,
+          password: `${this.passwordInput.value}`,
+        }),
+      });
+
+      const { token, refreshToken } = await result.json();
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+      // eslint-disable-next-line no-alert
+      alert('успешный вход');
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   listen() {
-    const loginBtn = document.getElementById('registration-btn');
-    loginBtn.addEventListener('click', (event) => {
+    const registrationBtn = document.getElementById('registration-btn');
+    const loginBtn = document.getElementById('login-btn');
+    registrationBtn.addEventListener('click', (event) => {
       event.preventDefault();
       this.createNewUser();
+    });
+    loginBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.logIn();
     });
   }
 }
