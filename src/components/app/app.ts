@@ -1,5 +1,4 @@
 import { DataWords } from '../../types/loadServerData/interfaces';
-import Authorization from '../controller/authorization/authorization';
 import Controller from '../controller/controller';
 import AppView from '../view/appView';
 
@@ -15,9 +14,7 @@ export class App {
     (await response.json()) as DataWords;
 
     const appView = new AppView();
-    appView.drawAuthForm();
-    const authorization = new Authorization();
-    authorization.listen();
+    appView.startAuth();
   }
 }
 
