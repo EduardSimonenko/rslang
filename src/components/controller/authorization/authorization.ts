@@ -58,19 +58,19 @@ class Authorization extends Loader {
     }
   }
 
-  logOut() {
+  logOut(): void {
     ['name', 'userId', 'token', 'refreshToken'].forEach((item) => localStorage.removeItem(item));
     window.location.reload();
     console.log('Вы вышли из аккаунта');
   }
 
-  clear() {
+  clear(): void {
     this.emailInput.value = '';
     this.nameInput.value = '';
     this.passwordInput.value = '';
   }
 
-  listen() {
+  listen(): void {
     const registrationBtn = document.getElementById('registration-btn');
     const loginBtn = document.getElementById('login-btn');
     const logoutBtn = document.getElementById('logout-btn');
