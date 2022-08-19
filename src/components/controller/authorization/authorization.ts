@@ -44,7 +44,10 @@ class Authorization extends Loader {
         }),
       });
 
-      const { userId, token, refreshToken }: Record<string, string> = await result.json();
+      const {
+        name, userId, token, refreshToken,
+      }: Record<string, string> = await result.json();
+      localStorage.setItem('name', name);
       localStorage.setItem('userId', userId);
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
@@ -55,9 +58,17 @@ class Authorization extends Loader {
     }
   }
 
+  logOut() {
+    ['name', 'userId', 'token', 'refreshToken'].forEach((item) => localStorage.removeItem(item));
+    window.location.reload();
+    console.log('Вы вышли из аккаунта');
+  }
+
   listen() {
     const registrationBtn = document.getElementById('registration-btn');
     const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
     registrationBtn.addEventListener('click', (event) => {
       event.preventDefault();
       this.createNewUser();
@@ -65,6 +76,10 @@ class Authorization extends Loader {
     loginBtn.addEventListener('click', (event) => {
       event.preventDefault();
       this.logIn();
+    });
+    logoutBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.logOut();
     });
   }
 }

@@ -27,7 +27,9 @@ class AuthForm {
     this.NewElement.setAttributes(loginBtn, { id: 'login-btn', type: 'submit' });
     const cancelBtn = this.NewElement.createNewElement('button', ['btn', 'cancel-btn'], 'Отменить');
     this.NewElement.setAttributes(cancelBtn, { id: 'cancel-btn', type: 'button' });
-    this.NewElement.insertChilds(loginForm, [emailInput, nameInput, passwordInput, registrationBtn, loginBtn, cancelBtn]);
+    const logoutBtn = this.NewElement.createNewElement('button', ['btn', 'logout-btn'], 'Выйти из аккаунта');
+    this.NewElement.setAttributes(logoutBtn, { id: 'logout-btn', type: 'button' });
+    this.NewElement.insertChilds(loginForm, [emailInput, nameInput, passwordInput, registrationBtn, loginBtn, cancelBtn, logoutBtn]);
     this.NewElement.insertChilds(authWrapper, [authHeader, loginForm]);
 
     document.body.appendChild(authWrapper);
