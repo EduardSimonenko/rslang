@@ -1,8 +1,8 @@
 class NewElement {
-  public createNewElement(tag: string, classNames: Array<string>, innerText = ''): HTMLElement {
+  public createNewElement(tag: string, classNames: Array<string>, innerHTML = ''): HTMLElement {
     const tagElement = document.createElement(tag);
     tagElement.classList.add(...classNames);
-    tagElement.innerText = innerText;
+    tagElement.innerHTML = innerHTML;
     return tagElement;
   }
 
