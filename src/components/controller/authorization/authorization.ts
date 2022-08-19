@@ -44,8 +44,8 @@ class Authorization extends Loader {
         }),
       });
 
-      const { token, refreshToken }: Record<string, string> = await result.json();
-
+      const { userId, token, refreshToken }: Record<string, string> = await result.json();
+      localStorage.setItem('userId', userId);
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
       // eslint-disable-next-line no-alert
