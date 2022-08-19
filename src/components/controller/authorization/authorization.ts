@@ -9,7 +9,7 @@ class Authorization extends Loader {
 
   passwordInput = document.getElementById('password') as HTMLInputElement;
 
-  async createNewUser() {
+  async createNewUser(): Promise<void> {
     console.log('create new user');
     super.load(
       {
@@ -28,7 +28,7 @@ class Authorization extends Loader {
     );
   }
 
-  async logIn() {
+  async logIn(): Promise<void> {
     console.log('login user');
 
     try {
@@ -44,7 +44,7 @@ class Authorization extends Loader {
         }),
       });
 
-      const { token, refreshToken } = await result.json();
+      const { token, refreshToken }: Record<string, string> = await result.json();
 
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);

@@ -10,7 +10,7 @@ class AuthForm {
     this.NewElement = new NewElement();
   }
 
-  render() {
+  render(): void {
     const authWrapper = this.NewElement.createNewElement('div', ['auth-wrapper']);
     const authHeader = this.NewElement.createNewElement('h2', ['auth-header'], 'Регистрация');
 
