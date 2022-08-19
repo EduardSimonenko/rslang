@@ -64,10 +64,17 @@ class Authorization extends Loader {
     console.log('Вы вышли из аккаунта');
   }
 
+  clear() {
+    this.emailInput.value = '';
+    this.nameInput.value = '';
+    this.passwordInput.value = '';
+  }
+
   listen() {
     const registrationBtn = document.getElementById('registration-btn');
     const loginBtn = document.getElementById('login-btn');
     const logoutBtn = document.getElementById('logout-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
 
     registrationBtn.addEventListener('click', (event) => {
       event.preventDefault();
@@ -80,6 +87,10 @@ class Authorization extends Loader {
     logoutBtn.addEventListener('click', (event) => {
       event.preventDefault();
       this.logOut();
+    });
+    cancelBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.clear();
     });
   }
 }
