@@ -31,9 +31,9 @@ class Authorization extends Loader {
   async logIn(): Promise<void> {
     console.log('login user');
 
-    try {
-      const result = await fetch('https://rslang2022q1-learnwords.herokuapp.com/signin', {
-        method: 'POST',
+    const result = await super.load(
+      {
+        method: MethodEnum.post,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -42,19 +42,21 @@ class Authorization extends Loader {
           email: `${this.emailInput.value}`,
           password: `${this.passwordInput.value}`,
         }),
-      });
+      },
+      [UrlFolderEnum.signin],
+    ) as Response;
 
+    if (result !== undefined) {
       const {
         name, userId, token, refreshToken,
       }: Record<string, string> = await result.json();
+
       localStorage.setItem('name', name);
       localStorage.setItem('userId', userId);
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
       // eslint-disable-next-line no-alert
       alert('успешный вход');
-    } catch (e) {
-      console.log(e);
     }
   }
 
