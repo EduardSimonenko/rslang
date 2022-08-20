@@ -10,7 +10,7 @@ class Authorization extends Loader {
   passwordInput = document.getElementById('password') as HTMLInputElement;
 
   async createNewUser(): Promise<void> {
-    console.log('create new user');
+    // console.log('create new user');
     super.load(
       {
         method: MethodEnum.post,
@@ -29,7 +29,7 @@ class Authorization extends Loader {
   }
 
   async logIn(): Promise<void> {
-    console.log('login user');
+    // console.log('login user');
 
     const result = await super.load(
       {
@@ -56,7 +56,33 @@ class Authorization extends Loader {
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
       // eslint-disable-next-line no-alert
-      alert('успешный вход');
+      // alert('успешный вход');
+    }
+  }
+
+  async refreshToken(): Promise<void> {
+    const userId = localStorage.getItem('userId');
+    const result = await super.load(
+      {
+        method: MethodEnum.get,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+        },
+      },
+      [UrlFolderEnum.users, userId, 'tokens'],
+    ) as Response;
+
+    if (result !== undefined) {
+      const {
+        token, refreshToken,
+      }: Record<string, string> = await result.json();
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+      // eslint-disable-next-line no-alert
+      // alert('успешный рефреш');
     }
   }
 
