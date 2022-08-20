@@ -105,7 +105,7 @@ class Authorization extends Loader {
   logOut(): void {
     ['name', 'userId', 'token', 'refreshToken'].forEach((item) => localStorage.removeItem(item));
     window.location.reload();
-    console.log('Вы вышли из аккаунта');
+    // console.log('Вы вышли из аккаунта');
   }
 
   clear(): void {
