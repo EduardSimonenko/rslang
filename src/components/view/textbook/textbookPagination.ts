@@ -1,3 +1,4 @@
+import BtnPaginationEnum from '../../../types/textbook/enum';
 import NewElement from '../../controller/newcomponent';
 
 class TextbookPagination {
@@ -35,19 +36,19 @@ class TextbookPagination {
     for (let i = 0; i < this.btnsPagination; i += 1) {
       switch (i) {
         case 0:
-          elementBtn = '◄';
+          elementBtn = BtnPaginationEnum.prev;
           break;
         case 1:
-          elementBtn = '1';
+          elementBtn = BtnPaginationEnum.start;
           break;
         case startOrEndNum:
-          elementBtn = '…';
+          elementBtn = BtnPaginationEnum.random;
           break;
         case this.btnsPagination - 2:
-          elementBtn = '30';
+          elementBtn = BtnPaginationEnum.end;
           break;
         case this.btnsPagination - 1:
-          elementBtn = '►';
+          elementBtn = BtnPaginationEnum.next;
           break;
         default:
           elementBtn = this.initNumPagination[num];
@@ -82,7 +83,7 @@ class TextbookPagination {
 
   public changeNumPagination(btn: string): void {
     switch (btn) {
-      case '►':
+      case BtnPaginationEnum.next:
         if (this.chooseNumPage === '29') {
           return;
         }
@@ -94,7 +95,7 @@ class TextbookPagination {
         }
         break;
 
-      case '…':
+      case BtnPaginationEnum.random:
         if (+(this.initNumPagination[0]) > 15) {
           this.initNumPagination = this.initNumPagination.map((el) => `${+el - 3}`);
           [,this.chooseNumPage, , ,] = this.initNumPagination;
@@ -104,7 +105,7 @@ class TextbookPagination {
         }
         break;
 
-      case '◄':
+      case BtnPaginationEnum.prev:
         if (this.chooseNumPage === '0') {
           return;
         }
@@ -116,12 +117,12 @@ class TextbookPagination {
         }
         break;
 
-      case '30':
+      case BtnPaginationEnum.end:
         this.initNumPagination = ['26', '27', '28', '29'];
         this.chooseNumPage = '29';
         break;
 
-      case '1':
+      case BtnPaginationEnum.start:
         this.initNumPagination = ['2', '3', '4', '5'];
         this.chooseNumPage = '0';
         break;
