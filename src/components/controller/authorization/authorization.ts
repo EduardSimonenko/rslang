@@ -81,9 +81,25 @@ class Authorization extends Loader {
 
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
-      // eslint-disable-next-line no-alert
-      // alert('успешный рефреш');
     }
+  }
+
+  async getUserById(): Promise<Record<string, string>> {
+    const userId = localStorage.getItem('userId');
+    const result = await super.load(
+      {
+        method: MethodEnum.get,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      },
+      [UrlFolderEnum.users, userId],
+    ) as Response;
+    const { name, email, id }: Record<string, string> = await result.json();
+    // console.log({ name, email, id });
+    return { name, email, id };
   }
 
   logOut(): void {
