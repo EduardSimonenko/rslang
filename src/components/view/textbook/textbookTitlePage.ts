@@ -55,7 +55,12 @@ class TextbookTitlePage {
         this.newElement.insertChilds(lineBook3, [btnBook]);
       }
     }
-    this.newElement.insertChilds(containerBook, [lineBook1, lineBook2, lineBook3]);
+
+    if (localStorage.getItem('token')) {
+      this.newElement.insertChilds(containerBook, [lineBook1, lineBook2, lineBook3]);
+    } else {
+      this.newElement.insertChilds(containerBook, [lineBook1, lineBook3]);
+    }
 
     this.listener(containerBook);
   }

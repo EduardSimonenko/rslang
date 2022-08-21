@@ -1,4 +1,4 @@
-enum BtnPaginationEnum {
+export enum BtnPaginationEnum {
   prev = '◄',
   next = '►',
   random = '…',
@@ -6,4 +6,18 @@ enum BtnPaginationEnum {
   start = '1',
 }
 
-export default BtnPaginationEnum;
+export enum BtnUserControlEnum {
+  done = 'done',
+  hard = 'hard',
+}
+
+export enum BtndifficultyEnum {
+  hard = 'hard',
+  easy = 'easy',
+}
+
+export enum WordProgressEnum {
+  start = 'start',
+  middle = 'middle',
+  end = 'end',
+}

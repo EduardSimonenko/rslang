@@ -40,9 +40,9 @@ class Loader {
         options,
       );
 
-      return this.errorHandler(response);
-    } catch (err: unknown) {
-      console.error(err);
+      return response;
+    } catch (err) {
+    // console.error(err);
     }
   }
 }

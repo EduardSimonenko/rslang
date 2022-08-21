@@ -1,4 +1,4 @@
-import BtnPaginationEnum from '../../../types/textbook/enum';
+import { BtnPaginationEnum } from '../../../types/textbook/enum';
 import NewElement from '../../controller/newcomponent';
 
 class TextbookPagination {

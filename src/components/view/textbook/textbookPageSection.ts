@@ -2,8 +2,9 @@ import { DataWords } from '../../../types/loadServerData/interfaces';
 import { RemoveElements } from '../../../types/textbook/type';
 import NewElement from '../../controller/newcomponent';
 import ControllerTextbook from '../../controller/textbook/controller';
-import { allLevel, baseUrl, bookLevelImg } from '../../model/textbook';
+import { baseUrl, bookLevelImg } from '../../model/textbook';
 import TextbookPagination from './textbookPagination';
+import TextbookUsers from './textbookUsers';
 
 class TextbookPageSection {
   private body: HTMLBodyElement;
@@ -20,7 +21,11 @@ class TextbookPageSection {
 
   private pagination: TextbookPagination;
 
+  private activeUser: TextbookUsers;
+
   private currentGroup: string;
+
+  private allLevel: number;
 
   constructor(body: HTMLBodyElement, wrapper: HTMLElement, fun: RemoveElements, group: string) {
     this.body = body;
@@ -29,8 +34,10 @@ class TextbookPageSection {
     this.newElement = new NewElement();
     this.cotroller = new ControllerTextbook();
     this.pagination = new TextbookPagination();
+    this.activeUser = new TextbookUsers();
     this.containerWords = this.newElement.createNewElement('div', ['container__words']);
     this.currentGroup = group;
+    this.allLevel = 6;
   }
 
   public renderPageWithWords(words: DataWords[]): void {
@@ -101,10 +108,17 @@ class TextbookPageSection {
       this.newElement.insertChilds(containerWord, [wordEng, transcription, translateWord]);
       this.newElement.insertChilds(containerMean, [textMeaning, textMeaningTranslate]);
       this.newElement.insertChilds(containerExample, [textExample, textExampleTranslate]);
-      this.newElement.insertChilds(
-        containerText,
-        [containerWord, containerMean, containerExample],
-      );
+      if (localStorage.getItem('token')) {
+        this.newElement.insertChilds(
+          containerText,
+          [containerWord, containerMean, containerExample, this.activeUser.renderControlBtn()],
+        );
+      } else {
+        this.newElement.insertChilds(
+          containerText,
+          [containerWord, containerMean, containerExample],
+        );
+      }
 
       this.newElement.insertChilds(
         card,
@@ -153,7 +167,11 @@ class TextbookPageSection {
     let heightLevel = 60;
     let chooseGroup: string[];
 
-    for (let i = 0; i < allLevel; i += 1) {
+    if (localStorage.getItem('token')) {
+      this.allLevel = 7;
+    }
+
+    for (let i = 0; i < this.allLevel; i += 1) {
       const level: HTMLElement = this.newElement.createNewElement('img', ['img__book']);
       if (i === +this.currentGroup) {
         chooseGroup = ['btn__group', 'btn__shadow'];
