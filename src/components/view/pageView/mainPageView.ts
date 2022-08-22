@@ -1,4 +1,6 @@
 import NewElement from '../../controller/newElement';
+import descrBlocks from '../../model/descsriptionBlocks';
+import teammates from '../../model/teammateData';
 
 export default class Page {
   private static body = document.querySelector('body');
@@ -49,5 +51,69 @@ export default class Page {
     NewElement.insertChilds(navbar, [nav]);
 
     return navbar;
+  }
+
+  private static renderMain() {
+    const main = NewElement.createNewElement('main', ['main']);
+    const wrapper = NewElement.createNewElement('div', ['wrapper']);
+    const gameBenefitsSection = NewElement.createNewElement('section', ['game-benefits']);
+    const gameBenefitsTitle = NewElement.createNewElement('h1', ['game-benefits__title'], 'Rs-lang разработано на базовых принципах');
+    const teamSection = this.renderTeamSection();
+
+    descrBlocks.forEach((el, index) => {
+      const benefitDescriptionBlock = NewElement.createNewElement('div', ['game-benefits__description', 'description-block']);
+      const subtitle = NewElement.createNewElement('h3', ['description-block__title'], el.titleContent);
+      const quote = NewElement.createNewElement('blockquote', ['description-block__blockquote'], el.quote);
+      NewElement.insertChilds(benefitDescriptionBlock, [subtitle, quote]);
+
+      if (el.additionalContent) {
+        const additionalContent = NewElement.createNewElement('p', ['description-block__content'], el.additionalContent);
+        NewElement.insertChilds(benefitDescriptionBlock, [additionalContent]);
+      }
+
+      const imageBlock = this.createBlockWithImg('game-benefits__img-block', `../../assets/images/benefit${index}.png`, 'benefit image');
+      if (index % 2 === 0) {
+        NewElement.insertChilds(gameBenefitsSection, [imageBlock, benefitDescriptionBlock]);
+      } else {
+        NewElement.insertChilds(gameBenefitsSection, [benefitDescriptionBlock, imageBlock]);
+      }
+    });
+
+    NewElement.insertChilds(wrapper, [gameBenefitsTitle, gameBenefitsSection, teamSection]);
+    NewElement.insertChilds(main, [wrapper]);
+
+    return main;
+  }
+
+  private static createBlockWithImg(blockClassName: string, path: string, alt: string) {
+    const gameBenefitsImgBlock = NewElement.createNewElement('div', [blockClassName]);
+    const gameBenefitsImg = NewElement.createNewElement('img', ['game-benefits__img']) as HTMLImageElement;
+    gameBenefitsImg.src = path;
+    gameBenefitsImg.alt = alt;
+    NewElement.insertChilds(gameBenefitsImgBlock, [gameBenefitsImg]);
+
+    return gameBenefitsImgBlock;
+  }
+
+  private static renderTeamSection() {
+    const teamSection = NewElement.createNewElement('section', ['team']);
+    const teamTitle = NewElement.createNewElement('h2', ['team-title'], 'Лучшие разработчики РБ');
+
+    NewElement.insertChilds(teamSection, [teamTitle]);
+
+    teammates.forEach((el) => {
+      const teammate = NewElement.createNewElement('div', ['teammate']);
+      const teammateFoto = NewElement.createNewElement('img', ['teammate__foto']) as HTMLImageElement;
+      const linkToGithub = NewElement.createNewElement('a', ['teammate__link'], el.name) as HTMLLinkElement;
+
+      teammateFoto.src = el.pathToFoto;
+      teammateFoto.alt = 'handsome man photo';
+      linkToGithub.href = el.linkToGithub;
+
+      NewElement.insertChilds(teammate, [teammateFoto, linkToGithub]);
+      NewElement.insertChilds(teamSection, [teammate]);
+    });
+
+    return teamSection;
   }
 }
