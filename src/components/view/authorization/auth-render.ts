@@ -18,7 +18,7 @@ class AuthForm {
     this.NewElement.setAttributes(closeBtnImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
     this.NewElement.insertChilds(closeBtn, [closeBtnImg]);
     const loginTitle = this.NewElement.createNewElement('div', ['login-form-title'], '<h2>Изучать слова удобнее, если у вас есть профиль</h2>');
-    const loginSubtitle = this.NewElement.createNewElement('div', ['login-form-title'], 'Вы получите доступ к долгосрочному хранению статистики, а также сможете формировать собственный словарь.');
+    const loginSubtitle = this.NewElement.createNewElement('div', ['login-form-subtitle'], 'Вы получите доступ к долгосрочному хранению статистики, а также сможете формировать собственный словарь.');
     const loginFormFields = this.NewElement.createNewElement('div', ['login-form-fields']);
     const emailInput = this.NewElement.createNewElement('input', ['login-form__input']);
     this.NewElement.setAttributes(emailInput, {
@@ -34,6 +34,7 @@ class AuthForm {
     });
     this.NewElement.insertChilds(loginFormFields, [emailInput, nameInput, passwordInput]);
     const loginFormError = this.NewElement.createNewElement('div', ['login-form-error']);
+    this.NewElement.setAttributes(loginFormError, { id: 'login-error' });
     const registrationBtn = this.NewElement.createNewElement('button', ['btn', 'registration-btn', 'hidden'], 'Регистрация');
     this.NewElement.setAttributes(registrationBtn, { id: 'registration-btn', type: 'submit' });
     const loginBtn = this.NewElement.createNewElement('button', ['btn', 'login-btn'], 'Войти');
@@ -46,6 +47,12 @@ class AuthForm {
     this.NewElement.insertChilds(loginForm, [closeBtn, loginTitle, loginSubtitle, loginFormFields, loginFormError, registrationBtn, loginBtn, cancelBtn, logoutBtn, loginAuthChange]);
     loginWrapper.appendChild(loginForm);
     document.body.appendChild(loginWrapper);
+
+    const isLogIn = Boolean(localStorage.getItem('token'));
+    if (isLogIn) {
+      [loginTitle, loginSubtitle, loginFormFields, loginBtn, cancelBtn, loginAuthChange].forEach((item) => item.classList.add('hidden'));
+      logoutBtn.classList.remove('hidden');
+    }
 
     closeBtnImg.addEventListener('click', () => {
       document.body.removeChild(loginWrapper);

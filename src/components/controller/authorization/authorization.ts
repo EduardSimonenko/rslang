@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import Loader from '../load';
+import CustomStorage from '../storage';
 
 class Authorization extends Loader {
   emailInput = document.getElementById('email') as HTMLInputElement;
@@ -8,6 +9,16 @@ class Authorization extends Loader {
   nameInput = document.getElementById('name') as HTMLInputElement;
 
   passwordInput = document.getElementById('password') as HTMLInputElement;
+
+  storage: CustomStorage;
+
+  message: HTMLElement;
+
+  constructor() {
+    super();
+    this.storage = new CustomStorage();
+    this.message = document.getElementById('login-error');
+  }
 
   async createNewUser(): Promise<void> {
     // console.log('create new user');
@@ -29,8 +40,6 @@ class Authorization extends Loader {
   }
 
   async logIn(): Promise<void> {
-    // console.log('login user');
-
     const result = await super.load(
       {
         method: MethodEnum.post,
@@ -51,24 +60,28 @@ class Authorization extends Loader {
         name, userId, token, refreshToken,
       }: Record<string, string> = await result.json();
 
-      localStorage.setItem('name', name);
-      localStorage.setItem('userId', userId);
-      localStorage.setItem('token', token);
-      localStorage.setItem('refreshToken', refreshToken);
-      // eslint-disable-next-line no-alert
-      // alert('успешный вход');
+      this.storage.setStorage('name', name);
+      this.storage.setStorage('userId', userId);
+      this.storage.setStorage('token', token);
+      this.storage.setStorage('refreshToken', refreshToken);
+
+      this.message.innerText = 'Вы вошли в систему';
+      this.message.style.color = 'green';
+    } else {
+      this.message.style.color = 'red';
+      this.message.innerText = 'Неверные учетные данные';
     }
   }
 
   async refreshToken(): Promise<void> {
-    const userId = localStorage.getItem('userId');
+    const userId = this.storage.getStorage('userId');
     const result = await super.load(
       {
         method: MethodEnum.get,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+          authorization: `Bearer ${this.storage.getStorage('refreshToken')}`,
         },
       },
       [UrlFolderEnum.users, userId, 'tokens'],
@@ -79,20 +92,20 @@ class Authorization extends Loader {
         token, refreshToken,
       }: Record<string, string> = await result.json();
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('refreshToken', refreshToken);
+      this.storage.setStorage('token', token);
+      this.storage.setStorage('refreshToken', refreshToken);
     }
   }
 
   async getUserById(): Promise<Record<string, string>> {
-    const userId = localStorage.getItem('userId');
+    const userId = this.storage.getStorage('userId');
     const result = await super.load(
       {
         method: MethodEnum.get,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          authorization: `Bearer ${localStorage.getItem('token')}`,
+          authorization: `Bearer ${this.storage.getStorage('token')}`,
         },
       },
       [UrlFolderEnum.users, userId],
