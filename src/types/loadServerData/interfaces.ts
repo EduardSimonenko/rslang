@@ -1,6 +1,6 @@
-import { Headers } from "./type";
+import { Headers } from './type';
 
-export interface DataWords  {
+export interface DataWords {
   id: string,
   group: number,
   page: number,

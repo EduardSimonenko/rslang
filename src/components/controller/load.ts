@@ -1,10 +1,10 @@
-import { QueryOptions } from "../../types/loadServerData/interfaces";
+import { QueryOptions } from '../../types/loadServerData/interfaces';
 
 export class Loader {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = "https://rslang2022q1-learnwords.herokuapp.com";
+    this.baseUrl = 'https://rslang2022q1-learnwords.herokuapp.com';
   }
 
   private errorHandler(res: Response): Response {
@@ -17,15 +17,15 @@ export class Loader {
 
   private makeUrl(endpoints: string[], queryParams: string[] = []): string {
     let url = `${this.baseUrl}`;
-    url = endpoints.reduce((acc, cur) => `${acc}/${cur}`,url)
+    url = endpoints.reduce((acc, cur) => `${acc}/${cur}`, url);
 
     url = queryParams.reduce(
-      (acc, cur, index) => !index
-          ? `${acc}?${cur}`
-          : `${acc}&${cur}`,
-      url
+      (acc, cur, index) => (!index
+        ? `${acc}?${cur}`
+        : `${acc}&${cur}`),
+      url,
     );
-console.log(url);
+    console.log(url);
 
     return url;
   }
@@ -33,12 +33,12 @@ console.log(url);
   protected async load(
     options: QueryOptions,
     endpoint: string[],
-    queryParams: string[] = []
+    queryParams: string[] = [],
   ): Promise<void | Response> {
     try {
       const response: Response = await fetch(
         this.makeUrl(endpoint, queryParams),
-        options
+        options,
       );
 
       return this.errorHandler(response);
