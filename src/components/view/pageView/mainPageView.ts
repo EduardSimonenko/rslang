@@ -85,6 +85,38 @@ export default class Page {
     return main;
   }
 
+  static renderFooter() {
+    const wrapper = NewElement.createNewElement('div', ['wrapper']);
+    const footer = NewElement.createNewElement('footer', ['footer']);
+    const logoRSBlock = NewElement.createNewElement('div', ['rs-school-logo']);
+    const logoRSLink = NewElement.createNewElement('a', ['rs-school-logo__link']);
+    const logoRSImg = NewElement.createNewElement('img', ['rs-school-logo__link']) as HTMLImageElement;
+    const githubLinksBlock = NewElement.createNewElement('div', ['github-links']);
+    const yearBlock = NewElement.createNewElement('div', ['creation-year']);
+    const yearBlockContent = NewElement.createNewElement('p', ['creation-year__content'], '2022');
+
+    logoRSImg.src = './assets/images/rs-school-logo.png';
+
+    teammates.forEach((el) => {
+      const linkToTeammate = NewElement.createNewElement('a', ['github-links__item']) as HTMLLinkElement;
+      const githubImage = NewElement.createNewElement('img', ['github-links__image']) as HTMLImageElement;
+
+      linkToTeammate.href = el.linkToGithub;
+      githubImage.src = el.pathToGithubFoto;
+      githubImage.alt = 'teammate github logo';
+      NewElement.insertChilds(linkToTeammate, [githubImage]);
+      NewElement.insertChilds(githubLinksBlock, [linkToTeammate]);
+    });
+
+    NewElement.insertChilds(logoRSLink, [logoRSImg]);
+    NewElement.insertChilds(logoRSBlock, [logoRSLink]);
+    NewElement.insertChilds(yearBlock, [yearBlockContent]);
+    NewElement.insertChilds(wrapper, [logoRSBlock, githubLinksBlock, yearBlock]);
+    NewElement.insertChilds(footer, [wrapper]);
+
+    return footer;
+  }
+
   private static createBlockWithImg(blockClassName: string, path: string, alt: string) {
     const gameBenefitsImgBlock = NewElement.createNewElement('div', [blockClassName]);
     const gameBenefitsImg = NewElement.createNewElement('img', ['game-benefits__img']) as HTMLImageElement;
