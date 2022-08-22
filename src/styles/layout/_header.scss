@@ -1,32 +1,22 @@
-
-//@mixin flex($justify-content: center, $align-items: center, $flex-wrap: nowrap, $flex-direction: row)
-//@mixin font($font-family: $main-font, $font-size: $main-font-size, $font-weight: 300, $line-height: 3.3rem, $color: #000000)
-//@mixin button($width: 240px, $height: 50px, $color: $font-color, $border-color: $font-color)
 .header {
+  height: 80px;
   background-color: $main-color;
 
   .wrapper {
-    @include flex($justify-content: flex-start, $align-items: center, $flex-wrap: nowrap, $flex-direction: row);
-    gap: 20px;
-    height: 70px;
+    height: 100%;
+    @include flex($justify-content: space-between);
   }
 }
 
-.burger-btn,
-.login-btn,
-.login-img {
-  max-width: 50px;
-}
-
-.login-btn {
-  margin-left: auto;
-}
-
-.burger-img,
-.logo-link{
+.logo {
   width: 50px;
   height: 50px;
 }
 
-
-
+.login {
+  background-color: $main-color;
+  img{
+    width: 50px;
+    height: 50px;
+  }
+}

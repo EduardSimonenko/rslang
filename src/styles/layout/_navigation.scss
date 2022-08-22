@@ -1,0 +1,22 @@
+.navbar {
+  @include flex();
+  height: 100%;
+}
+
+.nav {
+  @include flex();
+  height: 100%;
+}
+
+.nav__item {
+  height: 100%;
+  display: flex;
+  align-content: center;
+  padding: 0 15px;
+}
+
+.nav__link {
+  display: block;
+  @include font($font-size: 2.0rem, $color: white);
+  padding-top: 18px;
+}
