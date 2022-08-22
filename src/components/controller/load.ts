@@ -1,6 +1,6 @@
 import { QueryOptions } from '../../types/loadServerData/interfaces';
 
-export default class Loader {
+class Loader {
   private baseUrl: string;
 
   constructor() {
@@ -9,9 +9,9 @@ export default class Loader {
 
   private errorHandler(res: Response): Response {
     if (!res.ok) {
-      console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
-      throw Error(res.statusText);
+      throw Error(`Sorry, but there is ${res.status} error: ${res.statusText}`);
     }
+
     return res;
   }
 
@@ -25,7 +25,6 @@ export default class Loader {
         : `${acc}&${cur}`),
       url,
     );
-    console.log(url);
 
     return url;
   }
@@ -47,3 +46,5 @@ export default class Loader {
     }
   }
 }
+
+export default Loader;

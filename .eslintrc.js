@@ -19,10 +19,11 @@ module.exports = {
   },
   rules: {
     "@typescript-eslint/no-explicit-any": 2,
+    "class-methods-use-this": "off",
+    "consistent-return": 0,
+    "no-console": ["error", { allow: ["error", "table", "log"] }]
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
-    "class-methods-use-this": "off",
-    "consistent-return": 0
   },
   settings: {
   }
