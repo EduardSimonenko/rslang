@@ -1,7 +1,7 @@
 import { MethodEnum, UrlFolderEnum } from '../../types/loadServerData/enum';
-import { Loader } from './load';
+import Loader from './load';
 
-export class Controller extends Loader {
+export default class Controller extends Loader {
   public testquery(id: string): Promise<void | Response> {
     const user = {
       email: 'string',

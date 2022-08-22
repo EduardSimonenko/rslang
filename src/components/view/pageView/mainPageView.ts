@@ -5,6 +5,14 @@ import teammates from '../../model/teammateData';
 export default class Page {
   private static body = document.querySelector('body');
 
+  static renderMainPage() {
+    const header = this.renderHeader();
+    const main = this.renderMain();
+    const footer = this.renderFooter();
+
+    NewElement.insertChilds(this.body, [header, main, footer]);
+  }
+
   static renderHeader() {
     const wrapper = NewElement.createNewElement('div', ['wrapper']);
     const header = NewElement.createNewElement('header', ['header']);

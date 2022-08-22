@@ -1,6 +1,6 @@
 import { QueryOptions } from '../../types/loadServerData/interfaces';
 
-export class Loader {
+export default class Loader {
   private baseUrl: string;
 
   constructor() {
