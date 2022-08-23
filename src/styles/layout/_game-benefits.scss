@@ -22,14 +22,16 @@
   width: 50%;
   @include flex($flex-direction: column);
   gap: 30px;
+}
 
-  h3{
-    @include font($font-family: $title-font, $font-size: 2.7rem, $font-weight: 400);
-  }
-  blockquote{
-    @include font($font-size: 2.0rem);
-  }
-  p{
-    @include font($font-family: $title-font, $font-size: 2.0rem, $font-weight: 400);
-  }
+.description-block__title{
+  @include font($font-family: $title-font, $font-size: 2.7rem, $font-weight: 400);
+}
+
+.description-block__blockquote{
+  @include font($font-size: 2.0rem);
+}
+
+.description-block__content{
+  @include font($font-family: $title-font, $font-size: 2.0rem, $font-weight: 400);
 }

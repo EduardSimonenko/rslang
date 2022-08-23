@@ -16,7 +16,7 @@
 }
 
 @mixin wrapper() {
-  max-width: 1320px;
+  max-width: $wrapper-width;
   margin: 0 auto;
 }
 

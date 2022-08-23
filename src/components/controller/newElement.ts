@@ -2,7 +2,7 @@ class NewElement {
   static createNewElement(tag: string, classNames: Array<string>, innerText = ''): HTMLElement {
     const tagElement = document.createElement(tag);
     tagElement.classList.add(...classNames);
-    tagElement.innerText = innerText;
+    tagElement.innerHTML = innerText;
     return tagElement;
   }
 

@@ -2,10 +2,10 @@ import NewElement from '../../controller/newElement';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
 
-export default class Page {
-  private static body = document.querySelector('body');
+class Page {
+  private static body = document.querySelector('body') as HTMLBodyElement;
 
-  static renderMainPage() {
+  static renderMainPage(): void {
     const header = this.renderHeader();
     const main = this.renderMain();
     const footer = this.renderFooter();
@@ -13,7 +13,7 @@ export default class Page {
     NewElement.insertChilds(this.body, [header, main, footer]);
   }
 
-  static renderHeader() {
+  static renderHeader(): HTMLElement {
     const wrapper = NewElement.createNewElement('div', ['wrapper']);
     const header = NewElement.createNewElement('header', ['header']);
     const logo = NewElement.createNewElement('div', ['logo']);
@@ -40,7 +40,7 @@ export default class Page {
     return header;
   }
 
-  private static renderMenu() {
+  private static renderMenu(): HTMLElement {
     const navbar = NewElement.createNewElement('nav', ['navbar']);
     const nav = NewElement.createNewElement('ul', ['nav']);
     const linkToMainPage = NewElement.createNewElement('a', ['nav__link'], 'главная');
@@ -61,7 +61,7 @@ export default class Page {
     return navbar;
   }
 
-  private static renderMain() {
+  private static renderMain(): HTMLElement {
     const main = NewElement.createNewElement('main', ['main']);
     const wrapper = NewElement.createNewElement('div', ['wrapper']);
     const gameBenefitsSection = NewElement.createNewElement('section', ['game-benefits']);
@@ -93,7 +93,7 @@ export default class Page {
     return main;
   }
 
-  static renderFooter() {
+  static renderFooter(): HTMLElement {
     const wrapper = NewElement.createNewElement('div', ['wrapper']);
     const footer = NewElement.createNewElement('footer', ['footer']);
     const logoRSBlock = NewElement.createNewElement('div', ['rs-school-logo']);
@@ -125,7 +125,7 @@ export default class Page {
     return footer;
   }
 
-  private static createBlockWithImg(blockClassName: string, path: string, alt: string) {
+  private static createBlockWithImg(blockClassName: string, path: string, alt: string):HTMLElement {
     const gameBenefitsImgBlock = NewElement.createNewElement('div', [blockClassName]);
     const gameBenefitsImg = NewElement.createNewElement('img', ['game-benefits__img']) as HTMLImageElement;
     gameBenefitsImg.src = path;
@@ -135,7 +135,7 @@ export default class Page {
     return gameBenefitsImgBlock;
   }
 
-  private static renderTeamSection() {
+  private static renderTeamSection(): HTMLElement {
     const teamSection = NewElement.createNewElement('section', ['team']);
     const teamTitle = NewElement.createNewElement('h2', ['team-title'], 'Лучшие разработчики РБ');
 
@@ -157,3 +157,5 @@ export default class Page {
     return teamSection;
   }
 }
+
+export default Page;
