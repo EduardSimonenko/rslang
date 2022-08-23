@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable max-len */
 import NewElement from '../../controller/newcomponent';
 import '../../../styles/pages/_auth.scss';
 
@@ -10,7 +8,7 @@ class AuthForm {
     this.NewElement = new NewElement();
   }
 
-  render(): void {
+  public render(): void {
     const loginWrapper = this.NewElement.createNewElement('div', ['login-wrapper']);
     const loginForm = this.NewElement.createNewElement('form', ['login-form']);
     const closeBtn = this.NewElement.createNewElement('div', ['login-form__close-btn']);
@@ -44,7 +42,8 @@ class AuthForm {
     const logoutBtn = this.NewElement.createNewElement('button', ['btn', 'logout-btn', 'hidden'], 'Выйти из аккаунта');
     this.NewElement.setAttributes(logoutBtn, { id: 'logout-btn', type: 'button' });
     const loginAuthChange = this.NewElement.createNewElement('div', ['login-form-registration'], 'Нет аккаунта? | Регистрация');
-    this.NewElement.insertChilds(loginForm, [closeBtn, loginTitle, loginSubtitle, loginFormFields, loginFormError, registrationBtn, loginBtn, cancelBtn, logoutBtn, loginAuthChange]);
+    this.NewElement.insertChilds(loginForm, [closeBtn, loginTitle, loginSubtitle, loginFormFields,
+      loginFormError, registrationBtn, loginBtn, cancelBtn, logoutBtn, loginAuthChange]);
     loginWrapper.appendChild(loginForm);
     document.body.appendChild(loginWrapper);
 

@@ -1,27 +1,28 @@
-/* eslint-disable linebreak-style */
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import Loader from '../load';
 import CustomStorage from '../storage';
 
 class Authorization extends Loader {
-  emailInput = document.getElementById('email') as HTMLInputElement;
-
-  nameInput = document.getElementById('name') as HTMLInputElement;
-
-  passwordInput = document.getElementById('password') as HTMLInputElement;
-
   storage: CustomStorage;
 
   message: HTMLElement;
+
+  emailInput: HTMLInputElement;
+
+  passwordInput: HTMLInputElement;
+
+  nameInput: HTMLInputElement;
 
   constructor() {
     super();
     this.storage = new CustomStorage();
     this.message = document.getElementById('login-error');
+    this.emailInput = document.getElementById('email') as HTMLInputElement;
+    this.nameInput = document.getElementById('name') as HTMLInputElement;
+    this.passwordInput = document.getElementById('password') as HTMLInputElement;
   }
 
-  async createNewUser(): Promise<void> {
-    // console.log('create new user');
+  private async createNewUser(): Promise<void> {
     super.load(
       {
         method: MethodEnum.post,
@@ -39,7 +40,7 @@ class Authorization extends Loader {
     );
   }
 
-  async logIn(): Promise<void> {
+  private async logIn(): Promise<void> {
     const result = await super.load(
       {
         method: MethodEnum.post,
@@ -55,7 +56,7 @@ class Authorization extends Loader {
       [UrlFolderEnum.signin],
     ) as Response;
 
-    if (result !== undefined) {
+    if (result) {
       const {
         name, userId, token, refreshToken,
       }: Record<string, string> = await result.json();
@@ -73,7 +74,7 @@ class Authorization extends Loader {
     }
   }
 
-  async refreshToken(): Promise<void> {
+  private async refreshToken(): Promise<void> {
     const userId = this.storage.getStorage('userId');
     const result = await super.load(
       {
@@ -97,7 +98,7 @@ class Authorization extends Loader {
     }
   }
 
-  async getUserById(): Promise<Record<string, string>> {
+  private async getUserById(): Promise<Record<string, string>> {
     const userId = this.storage.getStorage('userId');
     const result = await super.load(
       {
@@ -111,23 +112,21 @@ class Authorization extends Loader {
       [UrlFolderEnum.users, userId],
     ) as Response;
     const { name, email, id }: Record<string, string> = await result.json();
-    // console.log({ name, email, id });
     return { name, email, id };
   }
 
-  logOut(): void {
+  private logOut(): void {
     ['name', 'userId', 'token', 'refreshToken'].forEach((item) => localStorage.removeItem(item));
     window.location.reload();
-    // console.log('Вы вышли из аккаунта');
   }
 
-  clear(): void {
+  private clear(): void {
     this.emailInput.value = '';
     this.nameInput.value = '';
     this.passwordInput.value = '';
   }
 
-  listen(): void {
+  public listen(): void {
     const registrationBtn = document.getElementById('registration-btn');
     const loginBtn = document.getElementById('login-btn');
     const logoutBtn = document.getElementById('logout-btn');
