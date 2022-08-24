@@ -1,0 +1,31 @@
+@mixin font($font-family: $main-font, $font-size: $main-font-size, $font-weight: 300, $line-height: 3.3rem, $color: #000000) {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: $font-weight;
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $color;
+}
+
+@mixin flex($justify-content: center, $align-items: center, $flex-wrap: nowrap, $flex-direction: row) {
+  display: flex;
+  flex-direction: $flex-direction;
+  justify-content: $justify-content;
+  align-items: $align-items;
+  flex-wrap: $flex-wrap;
+}
+
+@mixin wrapper() {
+  max-width: $wrapper-width;
+  margin: 0 auto;
+}
+
+@mixin button($width: 240px, $height: 50px, $color: $font-color, $border-color: $font-color) {
+  display: block;
+  width: $width;
+  height: $height;
+  color: $color;
+  border: 2px solid $border-color;
+  text-align: center;
+  line-height: 100%;
+}
