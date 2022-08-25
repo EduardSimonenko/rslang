@@ -160,10 +160,10 @@ class TextbookWordsSection {
     const imgVoiceStop: HTMLElement = this.newElement.createNewElement('img', ['card__voice', 'disable']);
 
     this.newElement.setAttributes(imgVoicePlay, {
-      src: '../../../assets/img/voice.png', width: '30', height: '30', alt: 'image voice',
+      src: textbookLevel.play, width: '30', height: '30', alt: 'image voice',
     });
     this.newElement.setAttributes(imgVoiceStop, {
-      src: '../../../assets/img/stop.png', width: '25', height: '25', alt: 'image voice',
+      src: textbookLevel.stop, width: '25', height: '25', alt: 'image voice',
     });
 
     this.newElement.insertChilds(

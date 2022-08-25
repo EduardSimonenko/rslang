@@ -1,9 +1,11 @@
 {
-  "book0" : "../../assets/images/book-level1.png",
-  "book1" : "../../assets/images/book-level2.png",
-  "book2" : "../../assets/images/book-level3.png",
-  "book3" : "../../assets/images/book-level4.png",
-  "book4" : "../../assets/images/book-level5.png",
-  "book5" : "../../assets/images/book-level6.png",
-  "book6" : "../../assets/images/book-level7.png"
+  "book0" : "../assets/images/book-level1.png",
+  "book1" : "../assets/images/book-level2.png",
+  "book2" : "../assets/images/book-level3.png",
+  "book3" : "../assets/images/book-level4.png",
+  "book4" : "../assets/images/book-level5.png",
+  "book5" : "../assets/images/book-level6.png",
+  "book6" : "../assets/images/book-level7.png",
+  "play" : "../assets/images/voice.png",
+  "stop" : "../assets/images/stop.png"
 }
