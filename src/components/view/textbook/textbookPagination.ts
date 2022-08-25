@@ -6,18 +6,27 @@ class TextbookPagination {
 
   private btnsPagination: number;
 
-  private initNumPagination: string[];
+  private startNumPagination: string[];
 
   private selectPage: boolean;
 
   public chooseNumPage: string;
 
+  private firstPageOfGroup: string;
+
+  private lastPageOfGroup: string;
+
+  private averagePageOfGroup: number;
+
   constructor() {
     this.newElement = new NewElement();
     this.btnsPagination = 9;
-    this.initNumPagination = ['2', '3', '4', '5'];
+    this.startNumPagination = ['2', '3', '4', '5'];
     this.selectPage = false;
     this.chooseNumPage = '0';
+    this.firstPageOfGroup = '0';
+    this.lastPageOfGroup = '29';
+    this.averagePageOfGroup = 15;
   }
 
   public renderPaginationMenu(choosePage: boolean = this.selectPage): HTMLElement {
@@ -29,7 +38,7 @@ class TextbookPagination {
     const curPage = `${+this.chooseNumPage + 1}`;
     const container: HTMLElement = this.newElement.createNewElement('div', ['container__pag']);
 
-    if (+(this.initNumPagination[0]) > 15) {
+    if ((+this.startNumPagination[0]) > this.averagePageOfGroup) {
       startOrEndNum = 2;
     }
 
@@ -51,17 +60,17 @@ class TextbookPagination {
           elementBtn = BtnPaginationEnum.next;
           break;
         default:
-          elementBtn = this.initNumPagination[num];
+          elementBtn = this.startNumPagination[num];
           num += 1;
           break;
       }
 
       if (elementBtn === curPage && choosePage) {
-        addClass = ['btn__pag', 'btn__choose'];
+        addClass = ['btn__pag', 'btn__pag-style', 'btn__choose'];
       } else if (i === 1 && !choosePage) {
-        addClass = ['btn__pag', 'btn__choose'];
+        addClass = ['btn__pag', 'btn__pag-style', 'btn__choose'];
       } else {
-        addClass = ['btn__pag'];
+        addClass = ['btn__pag', 'btn__pag-style'];
       }
       const btnPagination: HTMLElement = this.newElement.createNewElement('button', addClass, elementBtn);
       this.newElement.setAttributes(btnPagination, { 'data-page': `${elementBtn}` });
@@ -84,47 +93,25 @@ class TextbookPagination {
   public changeNumPagination(btn: string): void {
     switch (btn) {
       case BtnPaginationEnum.next:
-        if (this.chooseNumPage === '29') {
-          return;
-        }
-        if (this.initNumPagination.includes('29') || this.chooseNumPage === '0') {
-          this.chooseNumPage = `${+this.chooseNumPage + 1}`;
-        } else {
-          this.initNumPagination = this.initNumPagination.map((el) => `${+el + 1}`);
-          this.chooseNumPage = `${+this.chooseNumPage + 1}`;
-        }
+        this.controlBtnNext();
         break;
 
       case BtnPaginationEnum.random:
-        if (+(this.initNumPagination[0]) > 15) {
-          this.initNumPagination = this.initNumPagination.map((el) => `${+el - 3}`);
-          [,this.chooseNumPage, , ,] = this.initNumPagination;
-        } else {
-          this.initNumPagination = this.initNumPagination.map((el) => `${+el + 3}`);
-          [,this.chooseNumPage, , ,] = this.initNumPagination;
-        }
+        this.controlBtnRandom();
         break;
 
       case BtnPaginationEnum.prev:
-        if (this.chooseNumPage === '0') {
-          return;
-        }
-        if (this.initNumPagination.includes('2') || this.chooseNumPage === '29') {
-          this.chooseNumPage = `${+this.chooseNumPage - 1}`;
-        } else {
-          this.initNumPagination = this.initNumPagination.map((el) => `${+el - 1}`);
-          this.chooseNumPage = `${+this.chooseNumPage - 1}`;
-        }
+        this.controlBtnPrevious();
         break;
 
       case BtnPaginationEnum.end:
-        this.initNumPagination = ['26', '27', '28', '29'];
-        this.chooseNumPage = '29';
+        this.startNumPagination = ['26', '27', '28', '29'];
+        this.chooseNumPage = this.lastPageOfGroup;
         break;
 
       case BtnPaginationEnum.start:
-        this.initNumPagination = ['2', '3', '4', '5'];
-        this.chooseNumPage = '0';
+        this.startNumPagination = ['2', '3', '4', '5'];
+        this.chooseNumPage = this.firstPageOfGroup;
         break;
 
       default:
@@ -134,6 +121,41 @@ class TextbookPagination {
     this.selectPage = true;
     this.renderPaginationMenu(this.selectPage);
     this.selectPage = false;
+  }
+
+  private controlBtnNext(): void {
+    if (this.chooseNumPage === this.lastPageOfGroup) {
+      return;
+    }
+    if (this.startNumPagination.includes(this.lastPageOfGroup)
+      || this.chooseNumPage === this.firstPageOfGroup) {
+      this.chooseNumPage = `${+this.chooseNumPage + 1}`;
+    } else {
+      this.startNumPagination = this.startNumPagination.map((el) => `${+el + 1}`);
+      this.chooseNumPage = `${+this.chooseNumPage + 1}`;
+    }
+  }
+
+  private controlBtnRandom(): void {
+    if (+(this.startNumPagination[0]) > this.averagePageOfGroup) {
+      this.startNumPagination = this.startNumPagination.map((el) => `${+el - 3}`);
+      [,this.chooseNumPage, , ,] = this.startNumPagination;
+    } else {
+      this.startNumPagination = this.startNumPagination.map((el) => `${+el + 3}`);
+      [,this.chooseNumPage, , ,] = this.startNumPagination;
+    }
+  }
+
+  private controlBtnPrevious(): void {
+    if (this.chooseNumPage === this.firstPageOfGroup) {
+      return;
+    }
+    if (this.startNumPagination.includes('2') || this.chooseNumPage === this.lastPageOfGroup) {
+      this.chooseNumPage = `${+this.chooseNumPage - 1}`;
+    } else {
+      this.startNumPagination = this.startNumPagination.map((el) => `${+el - 1}`);
+      this.chooseNumPage = `${+this.chooseNumPage - 1}`;
+    }
   }
 }
 

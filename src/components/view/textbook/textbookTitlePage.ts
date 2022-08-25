@@ -1,8 +1,10 @@
-import { DataWords } from '../../../types/loadServerData/interfaces';
+import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
+import { ResponseData } from '../../../types/textbook/type';
 import NewElement from '../../controller/newcomponent';
+import CustomStorage from '../../controller/storage';
 import ControllerTextbook from '../../controller/textbook/controller';
-import { allLevel, bookLevelImg } from '../../model/textbook';
-import TextbookPageSection from './textbookPageSection';
+import TextbookWordsSection from './textbookWordsSection';
+import textbookLevel from '../../../mocks/textbookLevel.json';
 
 class TextbookTitlePage {
   private body;
@@ -13,11 +15,20 @@ class TextbookTitlePage {
 
   private wrapper: HTMLElement;
 
+  private customStorage: CustomStorage;
+
+  private isLogin: string | null;
+
+  private allLevelWithLogin: number;
+
   constructor() {
     this.newElement = new NewElement();
+    this.customStorage = new CustomStorage();
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cotroller = new ControllerTextbook();
     this.wrapper = this.newElement.createNewElement('div', ['wrapper']);
+    this.isLogin = this.customStorage.getStorage('token');
+    this.allLevelWithLogin = 7;
   }
 
   public renderPageTextBook(): void {
@@ -26,19 +37,20 @@ class TextbookTitlePage {
     const lineBook1: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
     const lineBook2: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
     const lineBook3: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
-    const title: HTMLElement = this.newElement.createNewElement('h1', ['title__book'], 'CHOOSE LEVEL');
+    const title: HTMLElement = this.newElement.createNewElement('h1', ['title__book'], 'Учебник');
+    const imgTextbookLevel: Record<string, string> = textbookLevel;
 
     this.newElement.insertChilds(this.body, [this.wrapper]);
     this.newElement.insertChilds(this.wrapper, [menu, title, containerBook]);
 
-    for (let i = 0; i < allLevel; i += 1) {
+    for (let i = 0; i < this.allLevelWithLogin; i += 1) {
       const level: HTMLElement = this.newElement.createNewElement('img', ['img__book']);
       const btnBook: HTMLElement = this.newElement.createNewElement('button', ['btn__book']);
 
       this.newElement.setAttributes(
         level,
         {
-          src: bookLevelImg[i],
+          src: imgTextbookLevel[`book${i}`],
           'data-book': `${i}`,
           width: '120',
           height: '130',
@@ -74,15 +86,31 @@ class TextbookTitlePage {
   }
 
   private async getLevelBooks(group: string, page = '0'): Promise<void> {
-    const sectionPage: TextbookPageSection = new TextbookPageSection(
-      this.body,
-      this.wrapper,
-      this.cleanPage,
-      group,
+    const sectionPage: TextbookWordsSection = new TextbookWordsSection(
+      {
+        body: this.body,
+        wrapper: this.wrapper,
+        clean: this.cleanPage,
+        group,
+        isLogin: this.isLogin,
+      },
     );
-    const response = (await this.cotroller.getwords(group, page)) as Response;
-    const data: DataWords[] = await response.json();
-    sectionPage.renderPageWithWords(data);
+    let response: Response;
+    let data: ResponseData;
+
+    if (this.isLogin && group === '6') {
+      response = (await this.cotroller.getDifficultWords()) as Response;
+      data = await response.json() as AuthorizeUserWords[];
+      sectionPage.renderPageWithWords(data[0].paginatedResults, true);
+    } else if (this.isLogin) {
+      response = (await this.cotroller.getWordsLoginUser(group, page)) as Response;
+      data = await response.json() as AuthorizeUserWords[];
+      sectionPage.renderPageWithWords(data[0].paginatedResults);
+    } else {
+      response = (await this.cotroller.getWordsUnloginUser(group, page)) as Response;
+      data = await response.json() as WordStructure[];
+      sectionPage.renderPageWithWords(data);
+    }
   }
 
   private cleanPage(): void {
