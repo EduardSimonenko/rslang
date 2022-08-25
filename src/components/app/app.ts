@@ -1,5 +1,6 @@
 // import { DataWords } from '../../types/loadServerData/interfaces';
 // import { Controller } from '../controller/controller';
+import AudiocallGame from '../view/audiocall/audiocall-render';
 import Page from '../view/pageView/mainPageView';
 
 export default class App {
@@ -11,5 +12,8 @@ export default class App {
 
   static async start(): Promise<void> {
     Page.renderMainPage();
+
+    const audiocall = new AudiocallGame();
+    audiocall.startAudiocall();
   }
 }
