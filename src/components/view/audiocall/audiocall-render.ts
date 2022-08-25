@@ -43,7 +43,7 @@ class AudiocallGame {
     const soundImg = this.NewElement.createNewElement('img', ['sound-img']);
     this.NewElement.setAttributes(soundImg, { id: 'sound-img', src: '../../../assets/svg/audio.svg', alt: 'audio' });
     const audio = this.NewElement.createNewElement('audio', ['audio']);
-    this.NewElement.setAttributes(soundImg, { id: 'audio', src: '' }); // add src
+    this.NewElement.setAttributes(audio, { id: 'audio', src: '' }); // add src
     this.NewElement.insertChilds(soundSection, [soundImg, audio]);
 
     const answersSection = this.NewElement.createNewElement('div', ['answers-wrapper']);
