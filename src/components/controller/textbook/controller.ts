@@ -8,7 +8,7 @@ class ControllerTextbook extends Loader {
 
   private userId: string;
 
-  private customStorage:CustomStorage;
+  private customStorage: CustomStorage;
 
   constructor() {
     super();
@@ -17,7 +17,7 @@ class ControllerTextbook extends Loader {
     this.userId = this.customStorage.getStorage('userId');
   }
 
-  public getwords(group: string, page: string): Promise<void | Response> {
+  public getWordsUnloginUser(group: string, page: string): Promise<Response> {
     return super.load(
       {
         method: MethodEnum.get,
@@ -30,7 +30,7 @@ class ControllerTextbook extends Loader {
     );
   }
 
-  public CreateAndUpdateUserWord(userRequest: UserWord): Promise<void | Response> {
+  public CreateOrUpdateUserWord(userRequest: UserWord): Promise<Response> {
     const wordOption = {
       difficulty: userRequest.difficulty,
       optional: {
@@ -51,7 +51,7 @@ class ControllerTextbook extends Loader {
     );
   }
 
-  public async GetAndDeleteWordUser(userRequest: UserWord): Promise<void | Response> {
+  public async GetOrDeleteWordUser(userRequest: UserWord): Promise<Response> {
     return super.load(
       {
         method: userRequest.request,
@@ -64,7 +64,7 @@ class ControllerTextbook extends Loader {
     );
   }
 
-  public async getAllUserWord(): Promise<void | Response> {
+  public async getAllUserWord(): Promise<Response> {
     return super.load(
       {
         method: MethodEnum.get,
@@ -74,6 +74,35 @@ class ControllerTextbook extends Loader {
         },
       },
       [UrlFolderEnum.users, this.userId, UrlFolderEnum.words],
+    );
+  }
+
+  public async getWordsLoginUser(group: string, page: string): Promise<Response> {
+    return super.load(
+      {
+        method: MethodEnum.get,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          Accept: 'application/json',
+        },
+      },
+      [UrlFolderEnum.users, this.userId, UrlFolderEnum.aggregatedWords],
+      [`page=${page}`, `group=${group}`, 'wordsPerPage=20'],
+    );
+  }
+
+  public async getDifficultWords(): Promise<Response> {
+    const hardWords = JSON.stringify({ 'userWord.difficulty': 'hard' });
+    return super.load(
+      {
+        method: MethodEnum.get,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          Accept: 'application/json',
+        },
+      },
+      [UrlFolderEnum.users, this.userId, UrlFolderEnum.aggregatedWords],
+      ['wordsPerPage=50', `filter=${hardWords}`],
     );
   }
 }
