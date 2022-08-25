@@ -1,0 +1,25 @@
+.team {
+  border: 2px solid $main-color;
+  @include flex($flex-wrap: wrap);
+}
+
+.team-title {
+  @include font($font-family: $title-font, $font-size: 2.7rem, $font-weight: 500, $color: $main-color);
+  width: 100%;
+  text-align: center;
+  padding: 40px;
+}
+
+.teammate {
+  @include flex($flex-direction: column);
+  display: inline-block;
+  width: 35%;
+}
+.teammate__foto {
+  max-width: 100%;
+}
+.teammate__link {
+  @include font();
+  display: block;
+  text-align: center;
+}
