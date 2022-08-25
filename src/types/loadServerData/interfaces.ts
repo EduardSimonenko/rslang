@@ -1,7 +1,6 @@
 import { Headers } from './type';
 
-export interface DataWords {
-  id: string,
+export interface WordStructure {
   group: number,
   page: number,
   word: string,
@@ -14,11 +13,28 @@ export interface DataWords {
   transcription: string,
   wordTranslate: string,
   textMeaningTranslate: string,
-  textExampleTranslate: string
+  textExampleTranslate: string,
+  userWord?: UserWord,
+  id?: string,
+  _id?: string
 }
 
 export interface QueryOptions {
   method: string;
   headers?: Headers;
   body?: string;
+}
+
+export interface UserWord {
+  difficulty: string,
+  optional: OptionalUserWord
+}
+
+export interface OptionalUserWord {
+  progress: string
+}
+
+export interface AuthorizeUserWords {
+  paginatedResults: WordStructure[]
+  totalCount: []
 }

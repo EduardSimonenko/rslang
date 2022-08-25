@@ -21,3 +21,13 @@ export enum WordProgressEnum {
   middle = 'middle',
   end = 'end',
 }
+
+export enum GroupWordsEnum {
+  one = '0',
+  two = '1',
+  three = '2',
+  four = '3',
+  five = '4',
+  six = '5',
+  seven = '6',
+}
