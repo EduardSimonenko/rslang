@@ -1,0 +1,40 @@
+.body {
+  max-width: 100%;
+  height: 100%;
+  position: relative;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: $light-section-background;
+    .wrapper {
+      width: inherit;
+      padding: 1.3rem;
+    }
+}
+
+.container__pag {
+  @include wh (100%, 100px);
+  @include flex();
+  margin-top: 3rem;
+  gap: 10px;
+}
+
+.container__words {
+  width: 60%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3rem;
+}
+
+.container__group {
+  @include flex();
+  gap: 1.3rem;
+}
+
+.title__section {
+  @include font($title-font, 3rem);
+  margin: 3rem 0 3rem 0;
+  text-align: center;
+}

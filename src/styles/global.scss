@@ -11,13 +11,17 @@
 
 // components
 @import
-  './components/button';
+  './components/button',
+  './components/cardWord';
 
 // layout
 @import 
   './layout/footer',
-  './layout/header';
+  './layout/header',
+  './layout/textbookGroup',
+  './components/buttonPag';
 
 // pages
 @import
-  './pages/home';
+  './pages/home',
+  './pages/textbook';

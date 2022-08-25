@@ -1,0 +1,101 @@
+.menu {
+  @include wh (90px, 100vh);
+  @include font ();
+  @include flex ();
+  position: absolute;
+  border: 1px solid white;
+  left: 0;
+  top: 0;
+}
+
+.title__book {
+  text-align: center;
+  font-size: 7rem;
+  margin: 0;
+  color: #FFD06C;
+  font-family: cursive;
+  font-weight: 700;
+  text-shadow: 3px 3px 0px #0BC748, 
+               6px 6px 0px #14E1DC, 
+               9px 9px 0px #B1C20C, 
+               12px 12px 0px #E3A915, 
+               15px 15px 0px #AE11E5, 
+               18px 18px 0px #DE134A, 
+               21px 21px 0px #3A1EE0, 
+}
+
+.container__book {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 100px;
+  margin-top: 50px;
+  
+  .line__book {
+    @include wh (100%, auto);
+    display: flex;
+    justify-content: space-around;
+
+      .btn__book {
+        @include wh(120px,120px);
+        @include flex ();
+        border: 0;
+        background-color: transparent;
+        border-radius: 30px;
+        -webkit-border-radius: 30px;
+        -moz-border-radius: 30px;
+        -ms-border-radius: 30px;
+        -o-border-radius: 30px;
+        
+        &:active {
+          transform: scale(0.9);
+          -webkit-transform: scale(0.9);
+          -moz-transform: scale(0.9);
+          -ms-transform: scale(0.9);
+          -o-transform: scale(0.9);
+        }
+      }
+  }
+}
+
+.img__book {
+  cursor: pointer;
+  
+}
+
+.btn__group {
+  background-color: transparent;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+  transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+
+    &:active {
+      transform: scale(0.9);
+      -webkit-transform: scale(0.9);
+      -moz-transform: scale(0.9);
+      -ms-transform: scale(0.9);
+      -o-transform: scale(0.9);
+    }  
+}
+
+.btn__shadow {
+  transform: translate(0, 30px);
+  -webkit-transform: translate(0, 30px);
+  -moz-transform: translate(0, 30px);
+  -ms-transform: translate(0, 30px);
+  -o-transform: translate(0, 30px);
+  transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+}
+
+
