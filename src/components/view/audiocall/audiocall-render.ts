@@ -1,14 +1,18 @@
 import NewElement from '../../controller/newcomponent';
 import '../../../styles/pages/_audiocall.scss';
+import CustomStorage from '../../controller/storage';
 
 class AudiocallGame {
   NewElement: NewElement;
 
   gameWrapper: HTMLElement;
 
+  customStorage: CustomStorage;
+
   constructor() {
     this.NewElement = new NewElement();
     this.gameWrapper = this.NewElement.createNewElement('div', ['audiocall-wrapper']);
+    this.customStorage = new CustomStorage();
   }
 
   renderStartScreen(): void {
@@ -18,16 +22,22 @@ class AudiocallGame {
     const gameLevel = this.NewElement.createNewElement('div', ['audiocall__level']);
     const gameLevelTitle = this.NewElement.createNewElement('div', ['audiocall__level-title'], '<span>Выберите сложность</span>');
     const gameLevelBtns = this.NewElement.createNewElement('div', ['audiocall__level-btns']);
-    const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+    const gameStartBtn = this.NewElement.createNewElement('button', ['audiocall__start-btn'], 'Начать игру');
+    this.NewElement.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
+    const levels = ['1', '2', '3', '4', '5', '6'];
     levels.forEach((item) => {
       const node = this.NewElement.createNewElement('div', ['audiocall__level-btn'], `${item}`);
       this.NewElement.setAttributes(node, { id: 'level-btn' });
-      node.dataset.level = item;
+      node.dataset.level = String(Number(item) - 1);
+      node.addEventListener('click', () => {
+        this.customStorage.setStorage('audiocallLevel', node.dataset.level);
+        node.classList.toggle('active');
+        gameStartBtn.toggleAttribute('disabled');
+      });
       gameLevelBtns.appendChild(node);
     });
     this.NewElement.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
-    const gameStartBtn = this.NewElement.createNewElement('button', ['audiocall__start-btn'], 'Начать игру');
-    this.NewElement.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button' });
+
     this.NewElement.insertChilds(gameStartScreen, [
       gameTitle, gameSubtitle, gameLevel, gameStartBtn]);
     this.gameWrapper.appendChild(gameStartScreen);
