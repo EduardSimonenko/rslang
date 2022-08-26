@@ -1,6 +1,6 @@
 .btn__pag {
   @include button(80px, 60px);
-  @include font ($main-font, 2rem);
+  @include font ($main-font, 2.8rem);
   border-radius: 10px;
   border: none;
   vertical-align: top;
@@ -28,7 +28,7 @@
 
 .btn__choose {
   background: linear-gradient(145deg, #63b3e6, #76d5ff);
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   -webkit-box-shadow: inset 15px 15px 20px -20px rgba(0,0,0,.5);
   -moz-box-shadow: inset 15px 15px 20px -20px rgba(0,0,0,.5);
   box-shadow: inset 15px 15px 20px -20px rgba(0,0,0,.5);

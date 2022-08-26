@@ -26,26 +26,24 @@ class TextbookUsers {
   }
 
   public renderControlBtn(group: string): HTMLElement {
-    if (this.isLogin) {
-      const containerBtnUser: HTMLElement = this.newElement.createNewElement('div', ['container__user']);
-      const btnDone: HTMLElement = this.newElement.createNewElement('button', ['btn__user'], 'Изучено');
-      let btnHard: HTMLElement;
+    const containerBtnUser: HTMLElement = this.newElement.createNewElement('div', ['container__user']);
+    const btnDone: HTMLElement = this.newElement.createNewElement('button', ['btn__user'], 'Изучено');
+    let btnHard: HTMLElement;
 
-      if (group === this.hardGroup) {
-        btnHard = this.newElement.createNewElement('button', ['btn__user'], 'Удалить');
-      } else {
-        btnHard = this.newElement.createNewElement('button', ['btn__user'], 'Сложное');
-      }
-
-      this.newElement.setAttributes(btnDone, { 'data-control': 'done' });
-      this.newElement.setAttributes(btnHard, { 'data-control': 'hard' });
-
-      this.newElement.insertChilds(containerBtnUser, [btnHard, btnDone]);
-      this.listenBtnUser(containerBtnUser, group);
-      this.stylePageGroup([btnHard, btnDone], group);
-
-      return containerBtnUser;
+    if (group === this.hardGroup) {
+      btnHard = this.newElement.createNewElement('button', ['btn__user'], 'Удалить');
+    } else {
+      btnHard = this.newElement.createNewElement('button', ['btn__user'], 'Сложное');
     }
+
+    this.newElement.setAttributes(btnDone, { 'data-control': 'done' });
+    this.newElement.setAttributes(btnHard, { 'data-control': 'hard' });
+
+    this.newElement.insertChilds(containerBtnUser, [btnHard, btnDone]);
+    this.listenBtnUser(containerBtnUser, group);
+    this.stylePageGroup(group, [btnHard, btnDone]);
+    this.stylePageGroupPag(group);
+    return containerBtnUser;
   }
 
   private listenBtnUser(btns: HTMLElement, group: string) {
@@ -171,68 +169,86 @@ class TextbookUsers {
     word.classList.remove('card__done');
   }
 
-  public stylePageGroup(word: HTMLElement[], group: string): void {
+  private stylePageGroup(group: string, word: HTMLElement[]): void {
     const wordColor: HTMLElement[] = word;
-    const btnPag = document.querySelectorAll('.btn__pag-style') as NodeListOf<Element>;
 
     switch (group) {
       case GroupWordsEnum.one:
         wordColor.forEach((btn) => btn.classList.add('card__group0'));
-        btnPag.forEach((btn) => {
-          btn.classList.remove(`card__group${this.prePage}`);
-          btn.classList.add('card__group0');
-        });
-        this.prePage = '0';
         break;
       case GroupWordsEnum.two:
         wordColor.forEach((btn) => btn.classList.add('card__group1'));
-        btnPag.forEach((btn) => {
-          btn.classList.remove(`card__group${this.prePage}`);
-          btn.classList.add('card__group1');
-        });
-        this.prePage = '1';
         break;
       case GroupWordsEnum.three:
         wordColor.forEach((btn) => btn.classList.add('card__group2'));
-        btnPag.forEach((btn) => {
-          btn.classList.remove(`card__group${this.prePage}`);
-          btn.classList.add('card__group2');
-        });
-        this.prePage = '2';
         break;
       case GroupWordsEnum.four:
         wordColor.forEach((btn) => btn.classList.add('card__group3'));
-        btnPag.forEach((btn) => {
-          btn.classList.remove(`card__group${this.prePage}`);
-          btn.classList.add('card__group3');
-        });
-        this.prePage = '3';
         break;
       case GroupWordsEnum.five:
         wordColor.forEach((btn) => btn.classList.add('card__group4'));
-        btnPag.forEach((btn) => {
-          btn.classList.remove(`card__group${this.prePage}`);
-          btn.classList.add('card__group4');
-        });
-        this.prePage = '4';
         break;
       case GroupWordsEnum.six:
         wordColor.forEach((btn) => btn.classList.add('card__group5'));
-        btnPag.forEach((btn) => {
-          btn.classList.remove(`card__group${this.prePage}`);
-          btn.classList.add('card__group5');
-        });
-        this.prePage = '5';
         break;
       default:
         wordColor.forEach((btn) => btn.classList.add('card__group6'));
-        btnPag.forEach((btn) => {
-          btn.classList.remove(`card__group${this.prePage}`);
-          btn.classList.add('card__group6');
-        });
-        this.prePage = '6';
         break;
     }
+  }
+
+  public stylePageGroupPag(group: string): void {
+    const btnPag = document.querySelectorAll('.btn__pag-style') as NodeListOf<Element>;
+
+    switch (group) {
+      case GroupWordsEnum.one:
+        btnPag.forEach((btn) => {
+          this.stylePagination(btn, GroupWordsEnum.one);
+        });
+        this.prePage = GroupWordsEnum.one;
+        break;
+      case GroupWordsEnum.two:
+        btnPag.forEach((btn) => {
+          this.stylePagination(btn, GroupWordsEnum.two);
+        });
+        this.prePage = GroupWordsEnum.two;
+        break;
+      case GroupWordsEnum.three:
+        btnPag.forEach((btn) => {
+          this.stylePagination(btn, GroupWordsEnum.three);
+        });
+        this.prePage = GroupWordsEnum.three;
+        break;
+      case GroupWordsEnum.four:
+        btnPag.forEach((btn) => {
+          this.stylePagination(btn, GroupWordsEnum.four);
+        });
+        this.prePage = GroupWordsEnum.four;
+        break;
+      case GroupWordsEnum.five:
+        btnPag.forEach((btn) => {
+          this.stylePagination(btn, GroupWordsEnum.five);
+        });
+        this.prePage = GroupWordsEnum.five;
+        break;
+      case GroupWordsEnum.six:
+        btnPag.forEach((btn) => {
+          this.stylePagination(btn, GroupWordsEnum.six);
+        });
+        this.prePage = GroupWordsEnum.six;
+        break;
+      default:
+        btnPag.forEach((btn) => {
+          this.stylePagination(btn, GroupWordsEnum.seven);
+        });
+        this.prePage = GroupWordsEnum.seven;
+        break;
+    }
+  }
+
+  private stylePagination(btn: Element, curPage: string): void {
+    btn.classList.remove(`card__group${this.prePage}`);
+    btn.classList.add(`card__group${curPage}`);
   }
 }
 

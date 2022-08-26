@@ -1,6 +1,9 @@
+import { ControlMenu } from '../../../types/textbook/interfaces';
 import NewElement from '../../controller/newElement';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
+import AppView from '../appView';
+import TextbookTitlePage from '../textbook/textbookTitlePage';
 
 class Page {
   private static body = document.querySelector('body') as HTMLBodyElement;
@@ -14,6 +17,12 @@ class Page {
   }
 
   static renderHeader(): HTMLElement {
+    if (this.body.firstElementChild) {
+      while (this.body.firstElementChild) {
+        this.body.firstElementChild.remove();
+      }
+    }
+
     const wrapper = NewElement.createNewElement('div', ['wrapper']);
     const header = NewElement.createNewElement('header', ['header']);
     const logo = NewElement.createNewElement('div', ['logo']);
@@ -30,12 +39,16 @@ class Page {
     logoImg.alt = 'logo image';
     loginImg.alt = 'login image';
 
+    NewElement.setAttributes(loginImg, { 'data-page': 'login' });
+
     NewElement.insertChilds(logoLink, [logoImg]);
     NewElement.insertChilds(logo, [logoLink]);
     NewElement.insertChilds(login, [loginImg]);
 
     NewElement.insertChilds(wrapper, [logo, navbar, login]);
     NewElement.insertChilds(header, [wrapper]);
+
+    this.listenMenu(header, this.renderFooter());
 
     return header;
   }
@@ -47,6 +60,11 @@ class Page {
     const linkToTextbook = NewElement.createNewElement('a', ['nav__link'], 'учебник');
     const linkToGames = NewElement.createNewElement('a', ['nav__link'], 'мини игры');
     const linkToStatistics = NewElement.createNewElement('a', ['nav__link'], 'статистика');
+
+    NewElement.setAttributes(linkToMainPage, { 'data-page': 'main' });
+    NewElement.setAttributes(linkToTextbook, { 'data-page': 'textbook' });
+    NewElement.setAttributes(linkToGames, { 'data-page': 'games' });
+    NewElement.setAttributes(linkToStatistics, { 'data-page': 'statistics' });
 
     const linksToPages = [linkToMainPage, linkToTextbook, linkToGames, linkToStatistics];
 
@@ -155,6 +173,35 @@ class Page {
     });
 
     return teamSection;
+  }
+
+  private static listenMenu(header:HTMLElement, footer: HTMLElement): void {
+    header.addEventListener('click', (e: Event) => {
+      const target = e.target as HTMLLinkElement;
+      const namePage = target.dataset.page;
+      this.launchPages({ namePage, header, footer });
+    });
+  }
+
+  private static launchPages(menu: ControlMenu): void {
+    const textbookPage = new TextbookTitlePage();
+    const authorization = new AppView();
+    switch (menu.namePage) {
+      case 'textbook':
+        textbookPage.renderPageTextBook(menu.header, menu.footer);
+        break;
+
+      case 'login':
+        authorization.startAuth();
+        break;
+
+      case 'main':
+        this.renderMainPage();
+        break;
+
+      default:
+        break;
+    }
   }
 }
 

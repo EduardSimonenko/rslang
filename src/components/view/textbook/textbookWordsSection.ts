@@ -1,12 +1,12 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
-import { PageElements } from '../../../types/textbook/interfaces';
+import { ControlMenu, PageElements } from '../../../types/textbook/interfaces';
 import { RemoveElements, ResponseData } from '../../../types/textbook/type';
 import NewElement from '../../controller/newcomponent';
 import ControllerTextbook from '../../controller/textbook/controller';
 import baseUrl from '../../model/baseUrl';
 import TextbookPagination from './textbookPagination';
 import TextbookUsers from './textbookUsers';
-import textbookLevel from '../../../mocks/textbookLevel.json';
+import textbookLevel from '../../../mocks/textbook.json';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -36,8 +36,7 @@ class TextbookWordsSection {
   private isLogin: string | null;
 
   constructor(partPage: PageElements) {
-    this.body = partPage.body;
-    this.wrapper = partPage.wrapper;
+    this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cleanPage = partPage.clean;
     this.newElement = new NewElement();
     this.cotroller = new ControllerTextbook();
@@ -45,26 +44,30 @@ class TextbookWordsSection {
     this.activeUser = new TextbookUsers(partPage.isLogin);
     this.containerWords = this.newElement.createNewElement('div', ['container__words']);
     this.wrapperPagination = this.newElement.createNewElement('div', ['wrapper__pag']);
+    this.wrapper = this.newElement.createNewElement('div', ['wrapper-textbook']);
     this.hardWord = this.newElement.createNewElement('h1', ['title__section'], 'Сложные слова!');
     this.currentGroup = partPage.group;
     this.allLevel = 6;
     this.isLogin = partPage.isLogin;
   }
 
-  public renderPageWithWords(words: WordStructure[], groupHard?: boolean): void {
+  public renderPageWithWords(words: WordStructure[], menu: ControlMenu, groupHard?: boolean): void {
     this.cleanPage();
-    const menu: HTMLElement = this.newElement.createNewElement('div', ['menu'], 'Here will be menu!');
 
     this.newElement.insertChilds(this.wrapperPagination, [this.pagination.renderPaginationMenu()]);
 
     this.newElement.insertChilds(
       this.wrapper,
-      [menu,
+      [
         this.renderGroupTextbook(),
         this.hardWord,
         this.wrapperPagination,
         this.containerWords,
       ],
+    );
+    this.newElement.insertChilds(
+      this.body,
+      [menu.header, this.wrapper, menu.footer],
     );
     this.wrapperPagination.style.display = 'none';
 
@@ -143,6 +146,7 @@ class TextbookWordsSection {
           containerText,
           [containerWord, containerMean, containerExample],
         );
+        this.activeUser.stylePageGroupPag(this.currentGroup);
       }
 
       this.newElement.insertChilds(

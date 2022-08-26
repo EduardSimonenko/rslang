@@ -4,7 +4,7 @@ import NewElement from '../../controller/newcomponent';
 import CustomStorage from '../../controller/storage';
 import ControllerTextbook from '../../controller/textbook/controller';
 import TextbookWordsSection from './textbookWordsSection';
-import textbookLevel from '../../../mocks/textbookLevel.json';
+import textbookLevel from '../../../mocks/textbook.json';
 
 class TextbookTitlePage {
   private body;
@@ -21,18 +21,29 @@ class TextbookTitlePage {
 
   private allLevelWithLogin: number;
 
+  private header: HTMLElement;
+
+  private footer: HTMLElement;
+
   constructor() {
     this.newElement = new NewElement();
     this.customStorage = new CustomStorage();
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cotroller = new ControllerTextbook();
-    this.wrapper = this.newElement.createNewElement('div', ['wrapper']);
+    this.wrapper = this.newElement.createNewElement('div', ['wrapper-textbook']);
     this.isLogin = this.customStorage.getStorage('token');
     this.allLevelWithLogin = 7;
+    this.header = this.newElement.createNewElement('div', ['header']);
+    this.footer = this.newElement.createNewElement('div', ['footer']);
   }
 
-  public renderPageTextBook(): void {
-    const menu: HTMLElement = this.newElement.createNewElement('div', ['menu'], 'Here will be menu!');
+  public renderPageTextBook(header: HTMLElement, footer: HTMLElement): void {
+    this.header = header;
+    this.footer = footer;
+    if (this.body.firstElementChild) {
+      this.cleanPage();
+    }
+    const wrapperTitle: HTMLElement = this.newElement.createNewElement('div', ['wrapper-title']);
     const containerBook: HTMLElement = this.newElement.createNewElement('div', ['container__book']);
     const lineBook1: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
     const lineBook2: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
@@ -40,12 +51,21 @@ class TextbookTitlePage {
     const title: HTMLElement = this.newElement.createNewElement('h1', ['title__book'], 'Учебник');
     const imgTextbookLevel: Record<string, string> = textbookLevel;
 
-    this.newElement.insertChilds(this.body, [this.wrapper]);
-    this.newElement.insertChilds(this.wrapper, [menu, title, containerBook]);
+    this.newElement.insertChilds(
+      wrapperTitle,
+      [this.header, this.wrapper, this.footer],
+    );
+    this.newElement.insertChilds(this.body, [wrapperTitle]);
+    this.newElement.insertChilds(this.wrapper, [title, containerBook]);
 
     for (let i = 0; i < this.allLevelWithLogin; i += 1) {
       const level: HTMLElement = this.newElement.createNewElement('img', ['img__book']);
-      const btnBook: HTMLElement = this.newElement.createNewElement('button', ['btn__book']);
+      let btnBook: HTMLElement;
+      if (i === (this.allLevelWithLogin - 1) && !this.customStorage.getStorage('token')) {
+        btnBook = this.newElement.createNewElement('button', ['btn__book', 'btn__book-visability']);
+      } else {
+        btnBook = this.newElement.createNewElement('button', ['btn__book']);
+      }
 
       this.newElement.setAttributes(
         level,
@@ -68,11 +88,7 @@ class TextbookTitlePage {
       }
     }
 
-    if (localStorage.getItem('token')) {
-      this.newElement.insertChilds(containerBook, [lineBook1, lineBook2, lineBook3]);
-    } else {
-      this.newElement.insertChilds(containerBook, [lineBook1, lineBook3]);
-    }
+    this.newElement.insertChilds(containerBook, [lineBook1, lineBook2, lineBook3]);
 
     this.listener(containerBook);
   }
@@ -88,8 +104,6 @@ class TextbookTitlePage {
   private async getLevelBooks(group: string, page = '0'): Promise<void> {
     const sectionPage: TextbookWordsSection = new TextbookWordsSection(
       {
-        body: this.body,
-        wrapper: this.wrapper,
         clean: this.cleanPage,
         group,
         isLogin: this.isLogin,
@@ -101,21 +115,28 @@ class TextbookTitlePage {
     if (this.isLogin && group === '6') {
       response = (await this.cotroller.getDifficultWords()) as Response;
       data = await response.json() as AuthorizeUserWords[];
-      sectionPage.renderPageWithWords(data[0].paginatedResults, true);
+      sectionPage.renderPageWithWords(
+        data[0].paginatedResults,
+        { header: this.header, footer: this.footer },
+        true,
+      );
     } else if (this.isLogin) {
       response = (await this.cotroller.getWordsLoginUser(group, page)) as Response;
       data = await response.json() as AuthorizeUserWords[];
-      sectionPage.renderPageWithWords(data[0].paginatedResults);
+      sectionPage.renderPageWithWords(
+        data[0].paginatedResults,
+        { header: this.header, footer: this.footer },
+      );
     } else {
       response = (await this.cotroller.getWordsUnloginUser(group, page)) as Response;
       data = await response.json() as WordStructure[];
-      sectionPage.renderPageWithWords(data);
+      sectionPage.renderPageWithWords(data, { header: this.header, footer: this.footer });
     }
   }
 
   private cleanPage(): void {
-    while (this.wrapper.firstElementChild) {
-      this.wrapper.firstElementChild.remove();
+    while (this.body.firstElementChild) {
+      this.body.firstElementChild.remove();
     }
   }
 }

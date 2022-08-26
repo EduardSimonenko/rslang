@@ -13,9 +13,13 @@ export interface StateTextbook {
 }
 
 export interface PageElements {
-  body: HTMLBodyElement,
-  wrapper: HTMLElement,
   clean: RemoveElements,
   group: string,
   isLogin: string | null
+}
+
+export interface ControlMenu {
+  header: HTMLElement,
+  footer: HTMLElement,
+  namePage?: string
 }
