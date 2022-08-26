@@ -18,6 +18,6 @@ export default class App {
     audiocallGame.startAudiocall();
 
     const audiocall = new Audiocall();
-    audiocall.setLevel();
+    audiocall.start();
   }
 }

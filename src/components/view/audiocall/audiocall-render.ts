@@ -52,18 +52,17 @@ class AudiocallGame {
     const soundSection = this.NewElement.createNewElement('div', ['sound-section']);
     const soundImg = this.NewElement.createNewElement('img', ['sound-img']);
     this.NewElement.setAttributes(soundImg, { id: 'sound-img', src: '../../../assets/svg/audio.svg', alt: 'audio' });
-    const audio = this.NewElement.createNewElement('audio', ['audio']);
+    const audio = this.NewElement.createNewElement('audio', ['audio']) as HTMLAudioElement;
+    soundImg.addEventListener('click', () => audio.play());
     this.NewElement.setAttributes(audio, { id: 'audio', src: '' }); // add src
     this.NewElement.insertChilds(soundSection, [soundImg, audio]);
 
     const answersSection = this.NewElement.createNewElement('div', ['answers-wrapper']);
-    const ans1 = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'ANSWER');
-    const ans2 = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'ANSWER');
-    const ans3 = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'ANSWER');
-    const ans4 = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'ANSWER');
-    const ans5 = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'ANSWER');
-    this.NewElement.insertChilds(answersSection, [ans1, ans2, ans3, ans4, ans5]);
-
+    for (let i = 0; i < 5; i += 1) {
+      const answerBtn = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'ANSWER');
+      answerBtn.setAttribute('id', 'answer-btn');
+      answersSection.appendChild(answerBtn);
+    }
     const nextBtn = this.NewElement.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Пропустить →');
     this.NewElement.setAttributes(nextBtn, { id: 'next-btn', type: 'button' });
 
@@ -74,9 +73,9 @@ class AudiocallGame {
   }
 
   listen(): void {
-    const startGame = document.getElementById('start-btn');
-    startGame.addEventListener('click', (event) => {
-      console.log(event.target);
+    const gameStartBtn = document.getElementById('start-btn');
+    gameStartBtn.addEventListener('click', (event) => {
+      event.preventDefault();
       this.renderGame();
     });
   }
