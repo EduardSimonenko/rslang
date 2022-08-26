@@ -15,9 +15,9 @@
 }
 
 .container__pag {
-  @include wh (100%, 100px);
+  @include wh (100%, 60px);
   @include flex();
-  margin-top: 4rem;
+
   gap: 1rem;
 }
 
@@ -33,7 +33,8 @@
 
 .container__group {
   @include flex();
-  margin-top: 20px;
+  width: 800px;
+  margin: 20px auto;
   gap: 2.3rem;
 }
 
@@ -51,4 +52,10 @@
 
 .wrapper-texbook {
   flex: 1 1 auto;
+}
+
+.wrapper__pag {
+  @include wh(800px, 100px);
+  padding: 20px 0;
+  margin: 0 auto;
 }

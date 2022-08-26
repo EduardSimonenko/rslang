@@ -95,7 +95,9 @@ class TextbookTitlePage {
 
   private listener(books: HTMLElement): void {
     books.addEventListener('click', (e: Event) => {
-      const book = (e.target as HTMLImageElement).dataset.book as string;
+      const target = e.target as HTMLImageElement;
+      if (!target.classList.contains('img__book')) return;
+      const book = target.dataset.book as string;
 
       this.getLevelBooks(book);
     });

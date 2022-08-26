@@ -233,6 +233,8 @@ class TextbookWordsSection {
   private listener(books: HTMLElement): void {
     books.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLImageElement;
+      if (!target.classList.contains('img__book')) return;
+
       const book = target.dataset.book as string;
       this.currentGroup = book;
       this.chooseLevel(target);
@@ -308,6 +310,8 @@ class TextbookWordsSection {
   private listenBtnPagination(btns: HTMLElement): void {
     btns.addEventListener('click', (e: Event) => {
       const target = (e.target as HTMLButtonElement);
+      if (!target.classList.contains('btn__pag')) return;
+
       const page = target.dataset.page as string;
 
       this.pagination.changeNumPagination(page);
