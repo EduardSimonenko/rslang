@@ -23,6 +23,8 @@ class Audiocall extends Loader {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supportWords: any[];
+
+  correctAnswer: Record<string, string>;
   // получать слова, левел в локалсторэдж от 0 до 5
 
   constructor() {
@@ -30,6 +32,7 @@ class Audiocall extends Loader {
     this.counter = 0;
     this.words = [];
     this.supportWords = [];
+    this.correctAnswer = {};
     this.correctAnswers = [];
     this.wrongAnswers = [];
     this.level = localStorage.getItem('audiocallLevel');
@@ -56,8 +59,10 @@ class Audiocall extends Loader {
   }
 
   async build(index: number) {
-    // console.log('build');
-    if (this.counter === 0) {
+    // console.log('counter', this.counter);
+    // console.log('index', index);
+
+    if (index === 0) {
       this.words = shuffle(await this.getWords(+this.level));
       const supportArray1 = await this.getWords(getRandomInt(0, 5));
       const supportArray2 = await this.getWords(getRandomInt(0, 5));
@@ -65,7 +70,7 @@ class Audiocall extends Loader {
       this.supportWords = shuffle(supportArray1.concat(supportArray2)).map((item) => item.wordTranslate);
       console.log(this.supportWords);
     // eslint-disable-next-line no-alert
-    } else if (this.counter === 19) alert('результаты');
+    } else if (index === 19) alert('результаты');
 
     const audio = document.getElementById('audio') as HTMLAudioElement;
     // const img = document.getElementById('sound-img') as HTMLImageElement;
@@ -74,7 +79,8 @@ class Audiocall extends Loader {
     // img.src = `https://rslang2022q1-learnwords.herokuapp.com/${words[0].image}`;
     audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.words[index].audio}`;
     setTimeout(() => audio.play(), 500);
-
+    this.correctAnswer = this.words[index];
+    console.log('correct answer', this.correctAnswer);
     this.supportWords = shuffle(this.supportWords);
     const answers = shuffle([this.words[index].wordTranslate, ...this.supportWords.slice(0, 4)]);
     for (let i = 0; i < answerBtns.length; i += 1) {
@@ -97,8 +103,23 @@ class Audiocall extends Loader {
       }
 
       if (target.id === 'next-btn') {
-        console.log('counter', this.counter);
+        // console.log('counter', this.counter);
+        this.wrongAnswers.push(this.correctAnswer);
         this.build(this.counter);
+        console.log('correct', this.correctAnswers);
+        console.log('wrong', this.wrongAnswers);
+      }
+
+      if (target.id === 'answer-btn') {
+        if (target.innerText === this.correctAnswer.wordTranslate) {
+          this.correctAnswers.push(this.correctAnswer);
+        } else {
+          this.wrongAnswers.push(this.correctAnswer);
+        }
+
+        this.build(this.counter);
+        console.log('correct', this.correctAnswers);
+        console.log('wrong', this.wrongAnswers);
       }
     });
   }
