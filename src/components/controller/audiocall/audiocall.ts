@@ -29,7 +29,6 @@ class Audiocall extends Loader {
   correctAnswer: Record<string, string>;
 
   NewElement: NewElement;
-  // получать слова, левел в локалсторэдж от 0 до 5
 
   constructor() {
     super();
@@ -45,8 +44,6 @@ class Audiocall extends Loader {
   }
 
   async getWords(level: number): Promise<WordStructure[]> {
-    // console.log('getwords');
-    // const level = this.storage.getStorage('audiocallLevel');
     const randomPage = getRandomInt(0, 29);
     const result = await super.load(
       {
@@ -64,43 +61,37 @@ class Audiocall extends Loader {
   }
 
   async buildGameLogic(index: number) {
-    // console.log('counter', this.counter);
-    // console.log('index', index);
-
     if (index === 0) {
       this.words = shuffle(await this.getWords(+this.level));
       const supportArray1 = await this.getWords(getRandomInt(0, 5));
       const supportArray2 = await this.getWords(getRandomInt(0, 5));
-      // eslint-disable-next-line max-len
       this.supportWords = shuffle(supportArray1.concat(supportArray2)).map((item) => item.wordTranslate);
       console.log(this.supportWords);
-    // eslint-disable-next-line no-alert
     } else if (index === 20) {
       console.log({ correct: this.correctAnswers, wrong: this.wrongAnswers });
-      // console.log('wrong', this.wrongAnswers);
       const audiocallWrapper = document.querySelector('.audiocall-wrapper');
       audiocallWrapper.innerHTML = '';
       audiocallWrapper.appendChild(this.showResults());
-      // audiocallWrapper.appendChild(this.showResults(this.wrongAnswers, 'Ошибки'));
       return;
     }
 
-    const audio = document.getElementById('audio') as HTMLAudioElement;
-    // const img = document.getElementById('sound-img') as HTMLImageElement;
-    const answerBtns = Array.from(document.getElementsByClassName('answer-btn')) as HTMLButtonElement[];
-
-    // img.src = `https://rslang2022q1-learnwords.herokuapp.com/${words[0].image}`;
-    audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.words[index].audio}`;
-    audio.play();
     this.correctAnswer = this.words[index];
-    console.log('correct answer', this.correctAnswer);
+    const audio = document.getElementById('audio') as HTMLAudioElement;
+    const wordImg = document.getElementById('word-img') as HTMLImageElement;
+    const word = document.getElementById('word');
+    wordImg.classList.add('hidden');
+    word.classList.add('hidden');
+    word.innerText = `${this.correctAnswer.word} - ${this.correctAnswer.wordTranslate}`;
+    wordImg.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.correctAnswer.image}`;
+    audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.correctAnswer.audio}`;
+    audio.play();
+    const answerBtns = Array.from(document.getElementsByClassName('answer-btn')) as HTMLButtonElement[];
     this.supportWords = shuffle(this.supportWords);
-    const answers = shuffle([this.words[index].wordTranslate, ...this.supportWords.slice(0, 4)]);
+    const answers = shuffle([this.correctAnswer.wordTranslate, ...this.supportWords.slice(0, 4)]);
     for (let i = 0; i < answerBtns.length; i += 1) {
+      answerBtns[i].style.backgroundColor = '';
       answerBtns[i].innerText = answers[i];
     }
-    // console.log('слово', this.words[index].word, this.words[index].wordTranslate);
-    // console.log('answers', answers);
     this.counter += 1;
   }
 
@@ -122,17 +113,6 @@ class Audiocall extends Loader {
   showResults() {
     const resultsWrapper = this.NewElement.createNewElement('div', ['results-wrapper']);
     const resultsTitle = this.NewElement.createNewElement('div', ['results-title'], '<span>Результаты</span>');
-    // const answers = this.NewElement.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
-    // for (let i = 0; i < results.length; i += 1) {
-    //   const answer = this.NewElement.createNewElement('div', ['results-item']);
-    //   const soundImg = this.NewElement.createNewElement('img', ['results-item__img']) as HTMLImageElement;
-    //   soundImg.src = '../../../assets/svg/audio.svg';
-    //   const audio = this.NewElement.createNewElement('div', ['results-item__audio']) as HTMLAudioElement;
-    //   audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${results[i].audio}`;
-    //   const word = this.NewElement.createNewElement('div', ['results-item__word'], `<span>${results[i].word}-${results[i].wordTranslate}</span>`);
-    //   this.NewElement.insertChilds(answer, [soundImg, audio, word]);
-    //   answers.appendChild(answer);
-    // }
     this.NewElement.insertChilds(resultsWrapper, [resultsTitle, this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
     return resultsWrapper;
   }
@@ -144,28 +124,46 @@ class Audiocall extends Loader {
       console.log(event.target);
 
       if (target.id === 'start-btn') {
-        // console.log(target.id);
         this.buildGameLogic(0);
       }
 
       if (target.id === 'next-btn') {
-        // console.log('counter', this.counter);
-        this.wrongAnswers.push(this.correctAnswer);
-        this.buildGameLogic(this.counter);
-        console.log('correct', this.correctAnswers);
-        console.log('wrong', this.wrongAnswers);
+        if (target.innerText === '→' && target.style.backgroundColor !== 'rgb(255, 0, 0)') {
+          this.buildGameLogic(this.counter);
+          target.innerText = 'Пропустить →';
+        } else if (target.innerText === 'Пропустить →') {
+          target.innerText = '→';
+          target.style.backgroundColor = 'rgb(255, 0, 0)';
+          const wordImg = document.getElementById('word-img') as HTMLImageElement;
+          const word = document.getElementById('word');
+          wordImg.classList.remove('hidden');
+          word.classList.remove('hidden');
+          this.wrongAnswers.push(this.correctAnswer);
+        } else if (target.innerText === '→' && target.style.backgroundColor === 'rgb(255, 0, 0)') {
+          target.style.backgroundColor = '';
+          target.innerText = 'Пропустить →';
+          this.buildGameLogic(this.counter);
+        }
+        // console.log('wrong', this.wrongAnswers);
+        // console.log('correct', this.correctAnswers);
       }
 
       if (target.id === 'answer-btn') {
         if (target.innerText === this.correctAnswer.wordTranslate) {
           this.correctAnswers.push(this.correctAnswer);
+          target.style.backgroundColor = '#00ff00';
         } else {
           this.wrongAnswers.push(this.correctAnswer);
+          target.style.backgroundColor = '#ff0000';
         }
-
-        this.buildGameLogic(this.counter);
-        console.log('correct', this.correctAnswers);
-        console.log('wrong', this.wrongAnswers);
+        const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
+        nextBtn.innerText = '→';
+        const wordImg = document.getElementById('word-img') as HTMLImageElement;
+        const word = document.getElementById('word');
+        wordImg.classList.remove('hidden');
+        word.classList.remove('hidden');
+        // console.log('wrong', this.wrongAnswers);
+        // console.log('correct', this.correctAnswers);
       }
     });
   }

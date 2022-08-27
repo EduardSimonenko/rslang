@@ -50,20 +50,24 @@ class AudiocallGame {
   renderGame(): void {
     const playField = this.NewElement.createNewElement('div', ['play-field']);
     const soundSection = this.NewElement.createNewElement('div', ['sound-section']);
+    const wordImg = this.NewElement.createNewElement('img', ['word-img', 'hidden']);
+    this.NewElement.setAttributes(wordImg, { id: 'word-img', src: '', alt: 'word image' });
     const soundImg = this.NewElement.createNewElement('img', ['sound-img']);
-    this.NewElement.setAttributes(soundImg, { id: 'sound-img', src: '../../../assets/svg/audio.svg', alt: 'audio' });
+    this.NewElement.setAttributes(soundImg, { id: 'sound-img', src: '../../../assets/svg/audio.svg', alt: 'audio image' });
     const audio = this.NewElement.createNewElement('audio', ['audio']) as HTMLAudioElement;
+    const word = this.NewElement.createNewElement('span', ['word', 'hidden']);
+    word.setAttribute('id', 'word');
     soundImg.addEventListener('click', () => audio.play());
     this.NewElement.setAttributes(audio, { id: 'audio', src: '' }); // add src
-    this.NewElement.insertChilds(soundSection, [soundImg, audio]);
+    this.NewElement.insertChilds(soundSection, [wordImg, soundImg, audio, word]);
 
     const answersSection = this.NewElement.createNewElement('div', ['answers-wrapper']);
     for (let i = 0; i < 5; i += 1) {
-      const answerBtn = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'ANSWER');
+      const answerBtn = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'Загрузка');
       answerBtn.setAttribute('id', 'answer-btn');
       answersSection.appendChild(answerBtn);
     }
-    const nextBtn = this.NewElement.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Пропустить →');
+    const nextBtn = this.NewElement.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
     this.NewElement.setAttributes(nextBtn, { id: 'next-btn', type: 'button' });
 
     this.NewElement.insertChilds(playField, [soundSection, answersSection, nextBtn]);
