@@ -82,7 +82,7 @@ class Audiocall extends Loader {
       audiocallWrapper.innerHTML = '';
       audiocallWrapper.appendChild(this.showResults());
       // audiocallWrapper.appendChild(this.showResults(this.wrongAnswers, 'Ошибки'));
-      return { correct: this.correctAnswers, wrong: this.wrongAnswers };
+      return;
     }
 
     const audio = document.getElementById('audio') as HTMLAudioElement;
