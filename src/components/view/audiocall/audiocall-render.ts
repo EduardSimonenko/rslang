@@ -22,7 +22,7 @@ class AudiocallGame {
     const gameLevel = this.NewElement.createNewElement('div', ['audiocall__level']);
     const gameLevelTitle = this.NewElement.createNewElement('div', ['audiocall__level-title'], '<span>Выберите сложность</span>');
     const gameLevelBtns = this.NewElement.createNewElement('div', ['audiocall__level-btns']);
-    const gameStartBtn = this.NewElement.createNewElement('button', ['audiocall__start-btn'], 'Начать игру');
+    const gameStartBtn = this.NewElement.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Начать игру');
     this.NewElement.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
     const levels = ['1', '2', '3', '4', '5', '6'];
     levels.forEach((item) => {
