@@ -58,7 +58,7 @@ class Audiocall extends Loader {
     return words;
   }
 
-  async build(index: number) {
+  async buildGameLogic(index: number) {
     // console.log('counter', this.counter);
     // console.log('index', index);
 
@@ -103,13 +103,13 @@ class Audiocall extends Loader {
 
       if (target.id === 'start-btn') {
         // console.log(target.id);
-        this.build(0);
+        this.buildGameLogic(0);
       }
 
       if (target.id === 'next-btn') {
         // console.log('counter', this.counter);
         this.wrongAnswers.push(this.correctAnswer);
-        this.build(this.counter);
+        this.buildGameLogic(this.counter);
         console.log('correct', this.correctAnswers);
         console.log('wrong', this.wrongAnswers);
       }
@@ -121,7 +121,7 @@ class Audiocall extends Loader {
           this.wrongAnswers.push(this.correctAnswer);
         }
 
-        this.build(this.counter);
+        this.buildGameLogic(this.counter);
         console.log('correct', this.correctAnswers);
         console.log('wrong', this.wrongAnswers);
       }
