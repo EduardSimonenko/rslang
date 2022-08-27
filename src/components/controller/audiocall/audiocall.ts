@@ -163,6 +163,10 @@ class Audiocall extends Loader {
         // console.log('wrong', this.wrongAnswers);
         // console.log('correct', this.correctAnswers);
       }
+
+      if (target.classList.contains('results-item__img')) {
+        (target.nextSibling as HTMLAudioElement).play();
+      }
     });
   }
 
