@@ -70,7 +70,11 @@ class Audiocall extends Loader {
       this.supportWords = shuffle(supportArray1.concat(supportArray2)).map((item) => item.wordTranslate);
       console.log(this.supportWords);
     // eslint-disable-next-line no-alert
-    } else if (index === 19) alert('результаты');
+    } else if (index === 20) {
+      console.log('correct', this.correctAnswers);
+      console.log('wrong', this.wrongAnswers);
+      return { correct: this.correctAnswers, wrong: this.wrongAnswers };
+    }
 
     const audio = document.getElementById('audio') as HTMLAudioElement;
     // const img = document.getElementById('sound-img') as HTMLImageElement;
@@ -78,7 +82,7 @@ class Audiocall extends Loader {
 
     // img.src = `https://rslang2022q1-learnwords.herokuapp.com/${words[0].image}`;
     audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.words[index].audio}`;
-    setTimeout(() => audio.play(), 500);
+    audio.play();
     this.correctAnswer = this.words[index];
     console.log('correct answer', this.correctAnswer);
     this.supportWords = shuffle(this.supportWords);
