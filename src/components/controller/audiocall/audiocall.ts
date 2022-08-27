@@ -99,7 +99,7 @@ class Audiocall extends Loader {
       const answer = this.NewElement.createNewElement('div', ['results-item']);
       const soundImg = this.NewElement.createNewElement('img', ['results-item__img']) as HTMLImageElement;
       soundImg.src = '../../../assets/svg/audio.svg';
-      const audio = this.NewElement.createNewElement('div', ['results-item__audio']) as HTMLAudioElement;
+      const audio = this.NewElement.createNewElement('audio', ['results-item__audio']) as HTMLAudioElement;
       audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${results[i].audio}`;
       const word = this.NewElement.createNewElement('div', ['results-item__word'], `<span>${results[i].word}-${results[i].wordTranslate}</span>`);
       this.NewElement.insertChilds(answer, [soundImg, audio, word]);
