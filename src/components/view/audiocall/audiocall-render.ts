@@ -84,7 +84,7 @@ class AudiocallGame {
     });
   }
 
-  startAudiocall() {
+  start() {
     const enterGame = document.querySelector('.nav__link');
 
     enterGame.addEventListener('click', () => {

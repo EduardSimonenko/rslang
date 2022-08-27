@@ -15,7 +15,7 @@ export default class App {
     Page.renderMainPage();
 
     const audiocallGame = new AudiocallGame();
-    audiocallGame.startAudiocall();
+    audiocallGame.start();
 
     const audiocall = new Audiocall();
     audiocall.start();

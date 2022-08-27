@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-// import AudiocallGame from '../../view/audiocall/audiocall-render';
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import { WordStructure } from '../../../types/loadServerData/interfaces';
 import { shuffle, getRandomInt } from '../../utils/utils';
@@ -8,25 +6,21 @@ import NewElement from '../newcomponent';
 import CustomStorage from '../storage';
 
 class Audiocall extends Loader {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  words: any[];
+  words: WordStructure[];
 
   level: string;
 
   storage: CustomStorage;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  correctAnswers: any[];
+  correctAnswers: WordStructure[];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  wrongAnswers: any[];
+  wrongAnswers: WordStructure[];
 
   counter: number;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supportWords: any[];
+  supportWords: string[];
 
-  correctAnswer: Record<string, string>;
+  correctAnswer: WordStructure;
 
   NewElement: NewElement;
 
@@ -35,7 +29,7 @@ class Audiocall extends Loader {
     this.counter = 0;
     this.words = [];
     this.supportWords = [];
-    this.correctAnswer = {};
+    this.correctAnswer = {} as WordStructure;
     this.correctAnswers = [];
     this.wrongAnswers = [];
     this.level = localStorage.getItem('audiocallLevel');
@@ -60,15 +54,16 @@ class Audiocall extends Loader {
     return words;
   }
 
-  async buildGameLogic(index: number) {
+  async buildGameLogic(index: number): Promise<void> {
     if (index === 0) {
       this.words = shuffle(await this.getWords(+this.level));
       const supportArray1 = await this.getWords(getRandomInt(0, 5));
       const supportArray2 = await this.getWords(getRandomInt(0, 5));
-      this.supportWords = shuffle(supportArray1.concat(supportArray2)).map((item) => item.wordTranslate);
+      this.supportWords = shuffle(supportArray1.concat(supportArray2))
+        .map((item) => item.wordTranslate);
       console.log(this.supportWords);
-    } else if (index === 20) {
-      console.log({ correct: this.correctAnswers, wrong: this.wrongAnswers });
+    } else if (index === this.words.length) {
+      // console.log({ correct: this.correctAnswers, wrong: this.wrongAnswers });
       const audiocallWrapper = document.querySelector('.audiocall-wrapper');
       audiocallWrapper.innerHTML = '';
       audiocallWrapper.appendChild(this.showResults());
@@ -78,16 +73,19 @@ class Audiocall extends Loader {
     this.correctAnswer = this.words[index];
     const audio = document.getElementById('audio') as HTMLAudioElement;
     const wordImg = document.getElementById('word-img') as HTMLImageElement;
-    const word = document.getElementById('word');
     wordImg.classList.add('hidden');
+    const word = document.getElementById('word');
     word.classList.add('hidden');
     word.innerText = `${this.correctAnswer.word} - ${this.correctAnswer.wordTranslate}`;
     wordImg.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.correctAnswer.image}`;
     audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.correctAnswer.audio}`;
     audio.play();
+
     const answerBtns = Array.from(document.getElementsByClassName('answer-btn')) as HTMLButtonElement[];
     this.supportWords = shuffle(this.supportWords);
-    const answers = shuffle([this.correctAnswer.wordTranslate, ...this.supportWords.slice(0, 4)]);
+    const answers: string[] = shuffle(
+      [this.correctAnswer.wordTranslate, ...this.supportWords.slice(0, 4)],
+    );
     for (let i = 0; i < answerBtns.length; i += 1) {
       answerBtns[i].style.backgroundColor = '';
       answerBtns[i].innerText = answers[i];
@@ -95,7 +93,7 @@ class Audiocall extends Loader {
     this.counter += 1;
   }
 
-  showAnswers(results: WordStructure[], title: string) {
+  showAnswers(results: WordStructure[], title: string): HTMLElement {
     const answers = this.NewElement.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
     for (let i = 0; i < results.length; i += 1) {
       const answer = this.NewElement.createNewElement('div', ['results-item']);
@@ -110,7 +108,7 @@ class Audiocall extends Loader {
     return answers;
   }
 
-  showResults() {
+  showResults(): HTMLElement {
     const resultsWrapper = this.NewElement.createNewElement('div', ['results-wrapper']);
     const resultsTitle = this.NewElement.createNewElement('div', ['results-title'], '<span>Результаты</span>');
     this.NewElement.insertChilds(resultsWrapper, [resultsTitle, this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
