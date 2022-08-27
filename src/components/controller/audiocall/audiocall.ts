@@ -1,8 +1,10 @@
+/* eslint-disable max-len */
 // import AudiocallGame from '../../view/audiocall/audiocall-render';
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import { WordStructure } from '../../../types/loadServerData/interfaces';
 import { shuffle, getRandomInt } from '../../utils/utils';
 import Loader from '../load';
+import NewElement from '../newcomponent';
 import CustomStorage from '../storage';
 
 class Audiocall extends Loader {
@@ -25,6 +27,8 @@ class Audiocall extends Loader {
   supportWords: any[];
 
   correctAnswer: Record<string, string>;
+
+  NewElement: NewElement;
   // получать слова, левел в локалсторэдж от 0 до 5
 
   constructor() {
@@ -37,6 +41,7 @@ class Audiocall extends Loader {
     this.wrongAnswers = [];
     this.level = localStorage.getItem('audiocallLevel');
     this.storage = new CustomStorage();
+    this.NewElement = new NewElement();
   }
 
   async getWords(level: number): Promise<WordStructure[]> {
@@ -71,8 +76,12 @@ class Audiocall extends Loader {
       console.log(this.supportWords);
     // eslint-disable-next-line no-alert
     } else if (index === 20) {
-      console.log('correct', this.correctAnswers);
-      console.log('wrong', this.wrongAnswers);
+      console.log({ correct: this.correctAnswers, wrong: this.wrongAnswers });
+      // console.log('wrong', this.wrongAnswers);
+      const audiocallWrapper = document.querySelector('.audiocall-wrapper');
+      audiocallWrapper.innerHTML = '';
+      audiocallWrapper.appendChild(this.showResults());
+      // audiocallWrapper.appendChild(this.showResults(this.wrongAnswers, 'Ошибки'));
       return { correct: this.correctAnswers, wrong: this.wrongAnswers };
     }
 
@@ -93,6 +102,39 @@ class Audiocall extends Loader {
     // console.log('слово', this.words[index].word, this.words[index].wordTranslate);
     // console.log('answers', answers);
     this.counter += 1;
+  }
+
+  showAnswers(results: WordStructure[], title: string) {
+    const answers = this.NewElement.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
+    for (let i = 0; i < results.length; i += 1) {
+      const answer = this.NewElement.createNewElement('div', ['results-item']);
+      const soundImg = this.NewElement.createNewElement('img', ['results-item__img']) as HTMLImageElement;
+      soundImg.src = '../../../assets/svg/audio.svg';
+      const audio = this.NewElement.createNewElement('div', ['results-item__audio']) as HTMLAudioElement;
+      audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${results[i].audio}`;
+      const word = this.NewElement.createNewElement('div', ['results-item__word'], `<span>${results[i].word}-${results[i].wordTranslate}</span>`);
+      this.NewElement.insertChilds(answer, [soundImg, audio, word]);
+      answers.appendChild(answer);
+    }
+    return answers;
+  }
+
+  showResults() {
+    const resultsWrapper = this.NewElement.createNewElement('div', ['results-wrapper']);
+    const resultsTitle = this.NewElement.createNewElement('div', ['results-title'], '<span>Результаты</span>');
+    // const answers = this.NewElement.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
+    // for (let i = 0; i < results.length; i += 1) {
+    //   const answer = this.NewElement.createNewElement('div', ['results-item']);
+    //   const soundImg = this.NewElement.createNewElement('img', ['results-item__img']) as HTMLImageElement;
+    //   soundImg.src = '../../../assets/svg/audio.svg';
+    //   const audio = this.NewElement.createNewElement('div', ['results-item__audio']) as HTMLAudioElement;
+    //   audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${results[i].audio}`;
+    //   const word = this.NewElement.createNewElement('div', ['results-item__word'], `<span>${results[i].word}-${results[i].wordTranslate}</span>`);
+    //   this.NewElement.insertChilds(answer, [soundImg, audio, word]);
+    //   answers.appendChild(answer);
+    // }
+    this.NewElement.insertChilds(resultsWrapper, [resultsTitle, this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
+    return resultsWrapper;
   }
 
   async listen(): Promise<void> {
