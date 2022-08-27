@@ -45,7 +45,7 @@ class Page {
     const nav = NewElement.createNewElement('ul', ['nav']);
     const linkToMainPage = NewElement.createNewElement('a', ['nav__link'], 'главная');
     const linkToTextbook = NewElement.createNewElement('a', ['nav__link'], 'учебник');
-    const linkToGames = NewElement.createNewElement('a', ['nav__link'], 'мини игры');
+    const linkToGames = NewElement.createNewElement('a', ['nav__link sprint-game-link'], 'мини игры');
     const linkToStatistics = NewElement.createNewElement('a', ['nav__link'], 'статистика');
 
     const linksToPages = [linkToMainPage, linkToTextbook, linkToGames, linkToStatistics];
@@ -123,6 +123,10 @@ class Page {
     NewElement.insertChilds(footer, [wrapper]);
 
     return footer;
+  }
+
+  static clearBody() {
+    this.body.innerHTML = '';
   }
 
   private static createBlockWithImg(blockClassName: string, path: string, alt: string):HTMLElement {
