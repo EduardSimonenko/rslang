@@ -1,10 +1,10 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import { ResponseData } from '../../../types/textbook/type';
-import CustomStorage from '../../controller/storage';
 import ControllerTextbook from '../../controller/textbook/controller';
 import TextbookWordsSection from './textbookWordsSection';
 import textbookLevel from '../../../mocks/textbook.json';
 import CreateDomElements from '../../controller/newElement';
+import CustomStorage from '../../controller/storage';
 
 class TextbookTitlePage {
   private body;
@@ -12,8 +12,6 @@ class TextbookTitlePage {
   private cotroller: ControllerTextbook;
 
   private wrapper: HTMLElement;
-
-  private customStorage: CustomStorage;
 
   private isLogin: string | null;
 
@@ -24,11 +22,10 @@ class TextbookTitlePage {
   private footer: HTMLElement;
 
   constructor() {
-    this.customStorage = new CustomStorage();
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cotroller = new ControllerTextbook();
     this.wrapper = CreateDomElements.createNewElement('div', ['wrapper-textbook']);
-    this.isLogin = this.customStorage.getStorage('token');
+    this.isLogin = CustomStorage.getStorage('token');
     this.allLevelWithLogin = 7;
     this.header = CreateDomElements.createNewElement('div', ['header']);
     this.footer = CreateDomElements.createNewElement('div', ['footer']);
@@ -58,7 +55,7 @@ class TextbookTitlePage {
     for (let i = 0; i < this.allLevelWithLogin; i += 1) {
       const level: HTMLElement = CreateDomElements.createNewElement('img', ['img__book']);
       let btnBook: HTMLElement;
-      if (i === (this.allLevelWithLogin - 1) && !this.customStorage.getStorage('token')) {
+      if (i === (this.allLevelWithLogin - 1) && !CustomStorage.getStorage('token')) {
         btnBook = CreateDomElements.createNewElement('button', ['btn__book', 'btn__book-visability']);
       } else {
         btnBook = CreateDomElements.createNewElement('button', ['btn__book']);

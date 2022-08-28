@@ -8,13 +8,10 @@ class ControllerTextbook extends Loader {
 
   private userId: string;
 
-  private customStorage: CustomStorage;
-
   constructor() {
     super();
-    this.customStorage = new CustomStorage();
-    this.token = this.customStorage.getStorage('token');
-    this.userId = this.customStorage.getStorage('userId');
+    this.token = CustomStorage.getStorage('token');
+    this.userId = CustomStorage.getStorage('userId');
   }
 
   public getWordsUnloginUser(group: string, page: string): Promise<Response> {
