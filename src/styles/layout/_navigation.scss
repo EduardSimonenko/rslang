@@ -20,3 +20,31 @@
   @include font($font-size: 2.0rem, $color: white);
   padding-top: 18px;
 }
+
+.submenu {
+  display: none;
+  width: 130px;
+  position: absolute;
+  top: 70px;
+  z-index: 10;
+}
+
+.link-to-games{
+  position: relative;
+}
+
+.link-to-games:hover .submenu {
+  display: block;
+}
+.submenu__item a{
+  display: block;
+  font-size: 1.9rem;
+  color: black;
+  height: 100%;
+  border: 2px solid $main-color;
+
+  &:hover{
+    background-color: $main-color;
+    color: white;
+  }
+}
