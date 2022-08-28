@@ -3,8 +3,6 @@ import Loader from '../load';
 import CustomStorage from '../storage';
 
 class Authorization extends Loader {
-  storage: CustomStorage;
-
   message: HTMLElement;
 
   emailInput: HTMLInputElement;
@@ -15,7 +13,6 @@ class Authorization extends Loader {
 
   constructor() {
     super();
-    this.storage = new CustomStorage();
     this.message = document.getElementById('login-error');
     this.emailInput = document.getElementById('email') as HTMLInputElement;
     this.nameInput = document.getElementById('name') as HTMLInputElement;
@@ -61,10 +58,10 @@ class Authorization extends Loader {
         name, userId, token, refreshToken,
       }: Record<string, string> = await result.json();
 
-      this.storage.setStorage('name', name);
-      this.storage.setStorage('userId', userId);
-      this.storage.setStorage('token', token);
-      this.storage.setStorage('refreshToken', refreshToken);
+      CustomStorage.setStorage('name', name);
+      CustomStorage.setStorage('userId', userId);
+      CustomStorage.setStorage('token', token);
+      CustomStorage.setStorage('refreshToken', refreshToken);
 
       this.message.innerText = 'Вы вошли в систему';
       this.message.style.color = 'green';
@@ -75,14 +72,14 @@ class Authorization extends Loader {
   }
 
   private async refreshToken(): Promise<void> {
-    const userId = this.storage.getStorage('userId');
+    const userId = CustomStorage.getStorage('userId');
     const result = await super.load(
       {
         method: MethodEnum.get,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          authorization: `Bearer ${this.storage.getStorage('refreshToken')}`,
+          authorization: `Bearer ${CustomStorage.getStorage('refreshToken')}`,
         },
       },
       [UrlFolderEnum.users, userId, 'tokens'],
@@ -93,20 +90,20 @@ class Authorization extends Loader {
         token, refreshToken,
       }: Record<string, string> = await result.json();
 
-      this.storage.setStorage('token', token);
-      this.storage.setStorage('refreshToken', refreshToken);
+      CustomStorage.setStorage('token', token);
+      CustomStorage.setStorage('refreshToken', refreshToken);
     }
   }
 
   private async getUserById(): Promise<Record<string, string>> {
-    const userId = this.storage.getStorage('userId');
+    const userId = CustomStorage.getStorage('userId');
     const result = await super.load(
       {
         method: MethodEnum.get,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          authorization: `Bearer ${this.storage.getStorage('token')}`,
+          authorization: `Bearer ${CustomStorage.getStorage('token')}`,
         },
       },
       [UrlFolderEnum.users, userId],

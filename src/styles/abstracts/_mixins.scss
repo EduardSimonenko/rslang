@@ -29,3 +29,8 @@
   text-align: center;
   line-height: 100%;
 }
+
+@mixin wh ($width, $height) {
+  width: $width;
+  height: $height;
+}
