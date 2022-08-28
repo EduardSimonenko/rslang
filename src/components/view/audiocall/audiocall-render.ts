@@ -1,5 +1,5 @@
 import CreateDomElements from '../../controller/newElement';
-import '../../../styles/pages/_audiocall.scss';
+// import '../../../styles/pages/_audiocall.scss';
 import CustomStorage from '../../controller/storage';
 
 class AudiocallGame {
@@ -33,7 +33,7 @@ class AudiocallGame {
     CreateDomElements.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
     const levels = ['1', '2', '3', '4', '5', '6'];
     levels.forEach((item) => {
-      const node = CreateDomElements.createNewElement('div', ['audiocall__level-btn'], `${item}`);
+      const node = CreateDomElements.createNewElement('btn', ['audiocall__level-btn'], `${item}`);
       CreateDomElements.setAttributes(node, { id: 'level-btn' });
       node.dataset.level = String(Number(item) - 1);
       node.addEventListener('click', () => {

@@ -1,73 +1,113 @@
 .audiocall-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  // flex-direction: column;
-  // // height: 705px; // удалить позже 
-  font-size: 2.5rem;
-  // background-color: aqua;
+  @include flex();
+  color: $light-font-color;
+  @include font($color: $light-font-color);
   position: fixed;
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: white;
+  background: linear-gradient(-45deg, #2C3639, #A27B5C, #3F4E4F, #DCD7C9);
+	background-size: 400% 400%;
+	animation: gradient 25s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }
 
 .audiocall__start-screen {
-  border: 1px solid black;
+  border: 1px solid $light-section-background;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 70px;
+}
+
+.audiocall__close-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
   padding: 50px;
-  gap: 20px;
+  cursor: pointer;
+}
+
+.audiocall__close-btn_img {
+  transition: ease-in-out 0.3s;
+  filter: brightness(0) invert(1);
+  @include wh(32px, 32px);
+}
+.audiocall__close-btn_img:hover {
+  filter: brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
+}
+
+.audiocall__title {
+  @include font($title-font, $color: $light-font-color);
+  font-size: $title-font-size;
+  margin-bottom: 100px;
+}
+
+.audiocall__subtitle {
+  margin-bottom: 30px;
+}
+
+.audiocall__level-title {
+  text-align: center;
+  margin-bottom: 25px;
 }
 
 .audiocall__level-btns {
   display: flex;
-  gap: 5px;
+  gap: 10px;
+  margin-bottom: 50px
 }
 
 .audiocall__level-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
+  @include flex();
+  font-weight: bold;
+  @include wh(50px, 50px);
   border-radius: 30px;
-  opacity: 0.7;
-  border: 1px solid black;
+  opacity: 0.8;
+  border: 2px solid $light-font-color;
   cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.audiocall__level-btn:hover {
+  background-color: $light-section-background;
+  color: $font-color;
+}
+
+.active {
+  border: 2px solid gold;
+  background-color: gold;
+  color: $font-color;
 }
 
 .btn {
-  margin: 10px;
-  // width: 130px;
-  height: 40px;
-  padding: 10px 25px;
-  border: 2px solid #000;
-  font-family: 'Lato', sans-serif;
-  font-weight: 500;
-  background: transparent;
+  @include button($border-color: $light-font-color);
+  font-size: 2rem;
+  background-color: rgba($color: transparent, $alpha: 0.2);
+  color: $light-font-color;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-block;
-  text-align: center;
+  transition: ease-in-out 0.3s;
 }
 
 .btn:hover {
-  background-color: gold;
-  border: 2px solid gold;
+  background-color: $light-section-background;
+  color: $font-color;
 }
 
 .audiocall__next-btn {
   width: 150px;
-}
-
-.audiocall__level-btn:hover {
-  background-color: gold;
 }
 
 .play-field {
@@ -90,9 +130,9 @@
   width: 300px;
 }
 
-.word {
-  font-size: 2rem;
-}
+// .word {
+//   // font-size: 2rem;
+// }
 
 .sound-img {
   width: 100px;
@@ -138,7 +178,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 2rem;
+  // font-size: 2rem;
   max-height: 70%;
   max-width: 30%;
   width: 100%;
@@ -171,16 +211,4 @@
 
 .results-item__img:hover {
   transform: translate(0.8);
-}
-
-.audiocall__close-btn {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 50px;
-  cursor: pointer;
-}
-
-.audiocall__close-btn_img:hover {
-  filter: brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
 }
