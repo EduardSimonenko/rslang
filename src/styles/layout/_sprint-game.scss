@@ -1,0 +1,67 @@
+// @mixin flex($justify-content: center, $align-items: center, $flex-wrap: nowrap, $flex-direction: row) 
+// @mixin button($width: 240px, $height: 50px, $color: $font-color, $border-color: $font-color) 
+// @mixin font($font-family: $main-font, $font-size: $main-font-size, $font-weight: 300, $line-height: 3.3rem, $color: #000000)
+
+  
+.sprint-game {
+  @include flex();
+  height: 100vh;
+  background-image: url(../assets/images/sprint-background.jpg);
+}
+.card {
+  margin: auto;
+  width: 550px;
+  @include flex($flex-direction: column);
+  gap: 20px;
+  background-color: rgb(247, 247, 240);
+  border-radius: 10px;
+}
+.card__circles-block {
+  @include flex();
+  padding: 25px 0 0;
+  gap: 10px;
+}
+.card__circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 100%;
+  background-color: rgb(202, 202, 202);
+}
+.card__circle_correct {
+  background-image: url(../assets/images/correct-answer.svg);
+}
+.card__image-block {
+}
+.word {
+  padding: 20px 0 0;
+  @include font($font-family: $title-font, $font-size: 3.5rem)
+
+}
+.word-translation {
+  @include font($font-family: $title-font, $font-size: 3.0rem, $color: #4b4949)
+}
+.card__buttons {
+  @include flex();
+  gap: 20px;
+  padding: 15px 0 30px;
+}
+.card__button {
+  width: 130px;
+  height: 50px;
+  border-radius: 7px;
+
+}
+.card__button_wrong {
+  background-color: rgb(212, 33, 33);
+  &:hover{
+    font-size: initial;
+    background-color: rgb(187, 6, 6);
+  }
+}
+.card__button_correct {
+  background-color: rgb(129, 223, 7);
+  &:hover{
+    font-size: initial;
+    background-color: rgb(107, 185, 4);
+  }
+}
