@@ -2,7 +2,7 @@ import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import { WordStructure } from '../../../types/loadServerData/interfaces';
 import { shuffle, getRandomInt } from '../../utils/utils';
 import Loader from '../load';
-import NewElement from '../newcomponent';
+import CreateDomElements from '../newElement';
 import CustomStorage from '../storage';
 
 class Audiocall extends Loader {
@@ -22,7 +22,7 @@ class Audiocall extends Loader {
 
   correctAnswer: WordStructure;
 
-  NewElement: NewElement;
+  NewElement: CreateDomElements;
 
   constructor() {
     super();
@@ -34,7 +34,7 @@ class Audiocall extends Loader {
     this.wrongAnswers = [];
     this.level = localStorage.getItem('audiocallLevel');
     this.storage = new CustomStorage();
-    this.NewElement = new NewElement();
+    this.NewElement = new CreateDomElements();
   }
 
   async getWords(level: number): Promise<WordStructure[]> {
@@ -60,7 +60,7 @@ class Audiocall extends Loader {
       const supportArray1 = await this.getWords(getRandomInt(0, 5));
       const supportArray2 = await this.getWords(getRandomInt(0, 5));
       this.supportWords = shuffle(supportArray1.concat(supportArray2))
-        .map((item) => item.wordTranslate);
+        .map((item: WordStructure) => item.wordTranslate);
       console.log(this.supportWords);
     } else if (index === this.words.length) {
       // console.log({ correct: this.correctAnswers, wrong: this.wrongAnswers });
@@ -94,24 +94,24 @@ class Audiocall extends Loader {
   }
 
   showAnswers(results: WordStructure[], title: string): HTMLElement {
-    const answers = this.NewElement.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
+    const answers = CreateDomElements.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
     for (let i = 0; i < results.length; i += 1) {
-      const answer = this.NewElement.createNewElement('div', ['results-item']);
-      const soundImg = this.NewElement.createNewElement('img', ['results-item__img']) as HTMLImageElement;
+      const answer = CreateDomElements.createNewElement('div', ['results-item']);
+      const soundImg = CreateDomElements.createNewElement('img', ['results-item__img']) as HTMLImageElement;
       soundImg.src = '../../../assets/svg/audio.svg';
-      const audio = this.NewElement.createNewElement('audio', ['results-item__audio']) as HTMLAudioElement;
+      const audio = CreateDomElements.createNewElement('audio', ['results-item__audio']) as HTMLAudioElement;
       audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${results[i].audio}`;
-      const word = this.NewElement.createNewElement('div', ['results-item__word'], `<span>${results[i].word}-${results[i].wordTranslate}</span>`);
-      this.NewElement.insertChilds(answer, [soundImg, audio, word]);
+      const word = CreateDomElements.createNewElement('div', ['results-item__word'], `<span>${results[i].word}-${results[i].wordTranslate}</span>`);
+      CreateDomElements.insertChilds(answer, [soundImg, audio, word]);
       answers.appendChild(answer);
     }
     return answers;
   }
 
   showResults(): HTMLElement {
-    const resultsWrapper = this.NewElement.createNewElement('div', ['results-wrapper']);
-    const resultsTitle = this.NewElement.createNewElement('div', ['results-title'], '<span>Результаты</span>');
-    this.NewElement.insertChilds(resultsWrapper, [resultsTitle, this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
+    const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
+    const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
+    CreateDomElements.insertChilds(resultsWrapper, [resultsTitle, this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
     return resultsWrapper;
   }
 

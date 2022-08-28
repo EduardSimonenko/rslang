@@ -1,44 +1,44 @@
-import NewElement from '../../controller/newcomponent';
+import CreateDomElements from '../../controller/newElement';
 import '../../../styles/pages/_audiocall.scss';
 import CustomStorage from '../../controller/storage';
 
 class AudiocallGame {
-  NewElement: NewElement;
+  NewElement: CreateDomElements;
 
   gameWrapper: HTMLElement;
 
   customStorage: CustomStorage;
 
   constructor() {
-    this.NewElement = new NewElement();
-    this.gameWrapper = this.NewElement.createNewElement('div', ['audiocall-wrapper']);
+    this.NewElement = new CreateDomElements();
+    this.gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
     this.customStorage = new CustomStorage();
   }
 
   renderStartScreen(): void {
-    const gameStartScreen = this.NewElement.createNewElement('div', ['audiocall__start-screen']);
-    const gameTitle = this.NewElement.createNewElement('div', ['audiocall__title'], '<h2>Аудиовызов</h2>');
-    const gameSubtitle = this.NewElement.createNewElement('div', ['audiocall__subtitle'], '<span>Такая тренировка улучшает твое восприятие речи на слух</span>');
-    const gameLevel = this.NewElement.createNewElement('div', ['audiocall__level']);
-    const gameLevelTitle = this.NewElement.createNewElement('div', ['audiocall__level-title'], '<span>Выберите сложность</span>');
-    const gameLevelBtns = this.NewElement.createNewElement('div', ['audiocall__level-btns']);
-    const gameStartBtn = this.NewElement.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Начать игру');
-    this.NewElement.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
+    const gameStartScreen = CreateDomElements.createNewElement('div', ['audiocall__start-screen']);
+    const gameTitle = CreateDomElements.createNewElement('div', ['audiocall__title'], '<h2>Аудиовызов</h2>');
+    const gameSubtitle = CreateDomElements.createNewElement('div', ['audiocall__subtitle'], '<span>Такая тренировка улучшает твое восприятие речи на слух</span>');
+    const gameLevel = CreateDomElements.createNewElement('div', ['audiocall__level']);
+    const gameLevelTitle = CreateDomElements.createNewElement('div', ['audiocall__level-title'], '<span>Выберите сложность</span>');
+    const gameLevelBtns = CreateDomElements.createNewElement('div', ['audiocall__level-btns']);
+    const gameStartBtn = CreateDomElements.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Начать игру');
+    CreateDomElements.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
     const levels = ['1', '2', '3', '4', '5', '6'];
     levels.forEach((item) => {
-      const node = this.NewElement.createNewElement('div', ['audiocall__level-btn'], `${item}`);
-      this.NewElement.setAttributes(node, { id: 'level-btn' });
+      const node = CreateDomElements.createNewElement('div', ['audiocall__level-btn'], `${item}`);
+      CreateDomElements.setAttributes(node, { id: 'level-btn' });
       node.dataset.level = String(Number(item) - 1);
       node.addEventListener('click', () => {
-        this.customStorage.setStorage('audiocallLevel', node.dataset.level);
+        CustomStorage.setStorage('audiocallLevel', node.dataset.level);
         node.classList.toggle('active');
         gameStartBtn.toggleAttribute('disabled');
       });
       gameLevelBtns.appendChild(node);
     });
-    this.NewElement.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
+    CreateDomElements.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
 
-    this.NewElement.insertChilds(gameStartScreen, [
+    CreateDomElements.insertChilds(gameStartScreen, [
       gameTitle, gameSubtitle, gameLevel, gameStartBtn]);
     this.gameWrapper.appendChild(gameStartScreen);
 
@@ -48,29 +48,29 @@ class AudiocallGame {
   }
 
   renderGame(): void {
-    const playField = this.NewElement.createNewElement('div', ['play-field']);
-    const soundSection = this.NewElement.createNewElement('div', ['sound-section']);
-    const wordImg = this.NewElement.createNewElement('img', ['word-img', 'hidden']);
-    this.NewElement.setAttributes(wordImg, { id: 'word-img', src: '', alt: 'word image' });
-    const soundImg = this.NewElement.createNewElement('img', ['sound-img']);
-    this.NewElement.setAttributes(soundImg, { id: 'sound-img', src: '../../../assets/svg/audio.svg', alt: 'audio image' });
-    const audio = this.NewElement.createNewElement('audio', ['audio']) as HTMLAudioElement;
-    const word = this.NewElement.createNewElement('span', ['word', 'hidden']);
+    const playField = CreateDomElements.createNewElement('div', ['play-field']);
+    const soundSection = CreateDomElements.createNewElement('div', ['sound-section']);
+    const wordImg = CreateDomElements.createNewElement('img', ['word-img', 'hidden']);
+    CreateDomElements.setAttributes(wordImg, { id: 'word-img', src: '', alt: 'word image' });
+    const soundImg = CreateDomElements.createNewElement('img', ['sound-img']);
+    CreateDomElements.setAttributes(soundImg, { id: 'sound-img', src: '../../../assets/svg/audio.svg', alt: 'audio image' });
+    const audio = CreateDomElements.createNewElement('audio', ['audio']) as HTMLAudioElement;
+    const word = CreateDomElements.createNewElement('span', ['word', 'hidden']);
     word.setAttribute('id', 'word');
     soundImg.addEventListener('click', () => audio.play());
-    this.NewElement.setAttributes(audio, { id: 'audio', src: '' }); // add src
-    this.NewElement.insertChilds(soundSection, [wordImg, soundImg, audio, word]);
+    CreateDomElements.setAttributes(audio, { id: 'audio', src: '' }); // add src
+    CreateDomElements.insertChilds(soundSection, [wordImg, soundImg, audio, word]);
 
-    const answersSection = this.NewElement.createNewElement('div', ['answers-wrapper']);
+    const answersSection = CreateDomElements.createNewElement('div', ['answers-wrapper']);
     for (let i = 0; i < 5; i += 1) {
-      const answerBtn = this.NewElement.createNewElement('button', ['answer-btn', 'btn'], 'Загрузка');
+      const answerBtn = CreateDomElements.createNewElement('button', ['answer-btn', 'btn'], 'Загрузка');
       answerBtn.setAttribute('id', 'answer-btn');
       answersSection.appendChild(answerBtn);
     }
-    const nextBtn = this.NewElement.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
-    this.NewElement.setAttributes(nextBtn, { id: 'next-btn', type: 'button' });
+    const nextBtn = CreateDomElements.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
+    CreateDomElements.setAttributes(nextBtn, { id: 'next-btn', type: 'button' });
 
-    this.NewElement.insertChilds(playField, [soundSection, answersSection, nextBtn]);
+    CreateDomElements.insertChilds(playField, [soundSection, answersSection, nextBtn]);
 
     this.gameWrapper.innerHTML = '';
     this.gameWrapper.appendChild(playField);
