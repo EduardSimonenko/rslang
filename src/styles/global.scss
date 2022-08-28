@@ -12,16 +12,20 @@
 
 // components
 @import
-  './components/button';
+  './components/button',
+  './components/cardWord';
 
 // layout
 @import 
   './layout/footer',
   './layout/header',
+  './layout/textbookGroup',
+  './components/buttonPag',
   './layout/game-benefits',
   './layout/team',
   './layout/navigation';
 
 // pages
 @import
-  './pages/home';
+  './pages/home',
+  './pages/textbook';

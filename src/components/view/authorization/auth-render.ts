@@ -1,48 +1,42 @@
-import NewElement from '../../controller/newcomponent';
 import '../../../styles/pages/_auth.scss';
+import CreateDomElements from '../../controller/newElement';
 
 class AuthForm {
-  NewElement: NewElement;
-
-  constructor() {
-    this.NewElement = new NewElement();
-  }
-
   public render(): void {
-    const loginWrapper = this.NewElement.createNewElement('div', ['login-wrapper']);
-    const loginForm = this.NewElement.createNewElement('form', ['login-form']);
-    const closeBtn = this.NewElement.createNewElement('div', ['login-form__close-btn']);
-    const closeBtnImg = this.NewElement.createNewElement('img', ['close-btn-img']);
-    this.NewElement.setAttributes(closeBtnImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
-    this.NewElement.insertChilds(closeBtn, [closeBtnImg]);
-    const loginTitle = this.NewElement.createNewElement('div', ['login-form-title'], '<h2>Изучать слова удобнее, если у вас есть профиль</h2>');
-    const loginSubtitle = this.NewElement.createNewElement('div', ['login-form-subtitle'], 'Вы получите доступ к долгосрочному хранению статистики, а также сможете формировать собственный словарь.');
-    const loginFormFields = this.NewElement.createNewElement('div', ['login-form-fields']);
-    const emailInput = this.NewElement.createNewElement('input', ['login-form__input']);
-    this.NewElement.setAttributes(emailInput, {
+    const loginWrapper = CreateDomElements.createNewElement('div', ['login-wrapper']);
+    const loginForm = CreateDomElements.createNewElement('form', ['login-form']);
+    const closeBtn = CreateDomElements.createNewElement('div', ['login-form__close-btn']);
+    const closeBtnImg = CreateDomElements.createNewElement('img', ['close-btn-img']);
+    CreateDomElements.setAttributes(closeBtnImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    CreateDomElements.insertChilds(closeBtn, [closeBtnImg]);
+    const loginTitle = CreateDomElements.createNewElement('div', ['login-form-title'], '<h2>Изучать слова удобнее, если у вас есть профиль</h2>');
+    const loginSubtitle = CreateDomElements.createNewElement('div', ['login-form-subtitle'], 'Вы получите доступ к долгосрочному хранению статистики, а также сможете формировать собственный словарь.');
+    const loginFormFields = CreateDomElements.createNewElement('div', ['login-form-fields']);
+    const emailInput = CreateDomElements.createNewElement('input', ['login-form__input']);
+    CreateDomElements.setAttributes(emailInput, {
       id: 'email', type: 'email', placeholder: 'E-mail', required: '',
     });
-    const nameInput = this.NewElement.createNewElement('input', ['login-form__input', 'hidden']);
-    this.NewElement.setAttributes(nameInput, {
+    const nameInput = CreateDomElements.createNewElement('input', ['login-form__input', 'hidden']);
+    CreateDomElements.setAttributes(nameInput, {
       id: 'name', type: 'text', placeholder: 'Имя',
     });
-    const passwordInput = this.NewElement.createNewElement('input', ['login-form__input']);
-    this.NewElement.setAttributes(passwordInput, {
+    const passwordInput = CreateDomElements.createNewElement('input', ['login-form__input']);
+    CreateDomElements.setAttributes(passwordInput, {
       id: 'password', type: 'password', placeholder: 'Пароль', required: '',
     });
-    this.NewElement.insertChilds(loginFormFields, [emailInput, nameInput, passwordInput]);
-    const loginFormError = this.NewElement.createNewElement('div', ['login-form-error']);
-    this.NewElement.setAttributes(loginFormError, { id: 'login-error' });
-    const registrationBtn = this.NewElement.createNewElement('button', ['btn', 'registration-btn', 'hidden'], 'Регистрация');
-    this.NewElement.setAttributes(registrationBtn, { id: 'registration-btn', type: 'submit' });
-    const loginBtn = this.NewElement.createNewElement('button', ['btn', 'login-btn'], 'Войти');
-    this.NewElement.setAttributes(loginBtn, { id: 'login-btn', type: 'submit' });
-    const cancelBtn = this.NewElement.createNewElement('button', ['btn', 'cancel-btn'], 'Отменить');
-    this.NewElement.setAttributes(cancelBtn, { id: 'cancel-btn', type: 'button' });
-    const logoutBtn = this.NewElement.createNewElement('button', ['btn', 'logout-btn', 'hidden'], 'Выйти из аккаунта');
-    this.NewElement.setAttributes(logoutBtn, { id: 'logout-btn', type: 'button' });
-    const loginAuthChange = this.NewElement.createNewElement('div', ['login-form-registration'], 'Нет аккаунта? | Регистрация');
-    this.NewElement.insertChilds(loginForm, [closeBtn, loginTitle, loginSubtitle, loginFormFields,
+    CreateDomElements.insertChilds(loginFormFields, [emailInput, nameInput, passwordInput]);
+    const loginFormError = CreateDomElements.createNewElement('div', ['login-form-error']);
+    CreateDomElements.setAttributes(loginFormError, { id: 'login-error' });
+    const registrationBtn = CreateDomElements.createNewElement('button', ['btn', 'registration-btn', 'hidden'], 'Регистрация');
+    CreateDomElements.setAttributes(registrationBtn, { id: 'registration-btn', type: 'submit' });
+    const loginBtn = CreateDomElements.createNewElement('button', ['btn', 'login-btn'], 'Войти');
+    CreateDomElements.setAttributes(loginBtn, { id: 'login-btn', type: 'submit' });
+    const cancelBtn = CreateDomElements.createNewElement('button', ['btn', 'cancel-btn'], 'Отменить');
+    CreateDomElements.setAttributes(cancelBtn, { id: 'cancel-btn', type: 'button' });
+    const logoutBtn = CreateDomElements.createNewElement('button', ['btn', 'logout-btn', 'hidden'], 'Выйти из аккаунта');
+    CreateDomElements.setAttributes(logoutBtn, { id: 'logout-btn', type: 'button' });
+    const loginAuthChange = CreateDomElements.createNewElement('div', ['login-form-registration'], 'Нет аккаунта? | Регистрация');
+    CreateDomElements.insertChilds(loginForm, [closeBtn, loginTitle, loginSubtitle, loginFormFields,
       loginFormError, registrationBtn, loginBtn, cancelBtn, logoutBtn, loginAuthChange]);
     loginWrapper.appendChild(loginForm);
     document.body.appendChild(loginWrapper);
