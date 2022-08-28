@@ -1,5 +1,7 @@
 /* eslint-disable linebreak-style */
+import Audiocall from '../controller/audiocall/audiocall';
 import Authorization from '../controller/authorization/authorization';
+import AudiocallGame from './audiocall/audiocall-render';
 import AuthForm from './authorization/auth-render';
 
 class AppView {
@@ -13,6 +15,13 @@ class AppView {
     this.authForm.render();
     const authorization = new Authorization();
     authorization.listen();
+  }
+
+  static startAudiocall(): void {
+    const audiocallGame = new AudiocallGame();
+    audiocallGame.start();
+    const audiocall = new Audiocall();
+    audiocall.start();
   }
 }
 

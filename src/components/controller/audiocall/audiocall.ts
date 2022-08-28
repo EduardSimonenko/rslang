@@ -109,10 +109,27 @@ class Audiocall extends Loader {
   }
 
   showResults(): HTMLElement {
+    const resultsContainer = CreateDomElements.createNewElement('div', ['results-container']);
     const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
     const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
-    CreateDomElements.insertChilds(resultsWrapper, [resultsTitle, this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
-    return resultsWrapper;
+    const resultsBtn = CreateDomElements.createNewElement('button', ['results-btn', 'btn'], 'Завершить игру');
+    CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button' });
+    CreateDomElements.insertChilds(resultsWrapper, [this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
+    CreateDomElements.insertChilds(resultsContainer, [resultsTitle, resultsWrapper, resultsBtn]);
+    return resultsContainer;
+  }
+
+  quitGame(): void {
+    const gameWrapper = document.querySelector('.audiocall-wrapper');
+    gameWrapper.innerHTML = '';
+    document.body.removeChild(gameWrapper);
+    document.body.style.overflowY = '';
+    this.counter = 0;
+    this.words = [];
+    this.supportWords = [];
+    this.correctAnswer = {} as WordStructure;
+    this.correctAnswers = [];
+    this.wrongAnswers = [];
   }
 
   async listen(): Promise<void> {
@@ -120,6 +137,19 @@ class Audiocall extends Loader {
       event.preventDefault();
       const target = event.target as HTMLElement;
       console.log(event.target);
+
+      if (target.id === 'close-game') {
+        console.log('click');
+        this.quitGame();
+        // console.log('counter', this.counter);
+        // console.log('words', this.words);
+        // console.log('correctAnswer', this.correctAnswer);
+        // console.log('correctAnswers', this.correctAnswers);
+      }
+
+      if (target.id === 'results-btn') {
+        this.quitGame();
+      }
 
       if (target.id === 'start-btn') {
         this.buildGameLogic(0);
@@ -166,6 +196,33 @@ class Audiocall extends Loader {
 
       if (target.classList.contains('results-item__img')) {
         (target.nextSibling as HTMLAudioElement).play();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      // event.preventDefault();
+      switch (event.code) {
+        case 'Digit1':
+          (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit2':
+          (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit3':
+          (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit4':
+          (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit5':
+          (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
+          break;
+        case 'Space':
+          event.preventDefault();
+          (document.getElementById('next-btn') as HTMLButtonElement).click();
+          break;
+        default:
+          break;
       }
     });
   }

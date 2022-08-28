@@ -10,12 +10,19 @@ class AudiocallGame {
   customStorage: CustomStorage;
 
   constructor() {
-    this.NewElement = new CreateDomElements();
+    // this.NewElement = new CreateDomElements();
     this.gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
-    this.customStorage = new CustomStorage();
+    // this.customStorage = new CustomStorage();
   }
 
   renderStartScreen(): void {
+    // const gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
+    const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
+    const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
+    CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    gameCloseImg.setAttribute('id', 'close-game');
+    gameClose.appendChild(gameCloseImg);
+
     const gameStartScreen = CreateDomElements.createNewElement('div', ['audiocall__start-screen']);
     const gameTitle = CreateDomElements.createNewElement('div', ['audiocall__title'], '<h2>Аудиовызов</h2>');
     const gameSubtitle = CreateDomElements.createNewElement('div', ['audiocall__subtitle'], '<span>Такая тренировка улучшает твое восприятие речи на слух</span>');
@@ -38,16 +45,24 @@ class AudiocallGame {
     });
     CreateDomElements.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
 
-    CreateDomElements.insertChilds(gameStartScreen, [
+    CreateDomElements.insertChilds(gameStartScreen, [gameClose,
       gameTitle, gameSubtitle, gameLevel, gameStartBtn]);
     this.gameWrapper.appendChild(gameStartScreen);
 
-    const main = document.querySelector('.main');
-    main.innerHTML = '';
-    main.appendChild(this.gameWrapper);
+    // const main = document.querySelector('.main');
+    // main.innerHTML = '';
+    document.body.appendChild(this.gameWrapper);
+    document.body.style.overflowY = 'hidden';
   }
 
   renderGame(): void {
+    // const gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
+    const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
+    const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
+    CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    gameCloseImg.setAttribute('id', 'close-game');
+    gameClose.appendChild(gameCloseImg);
+
     const playField = CreateDomElements.createNewElement('div', ['play-field']);
     const soundSection = CreateDomElements.createNewElement('div', ['sound-section']);
     const wordImg = CreateDomElements.createNewElement('img', ['word-img', 'hidden']);
@@ -65,27 +80,50 @@ class AudiocallGame {
     for (let i = 0; i < 5; i += 1) {
       const answerBtn = CreateDomElements.createNewElement('button', ['answer-btn', 'btn'], 'Загрузка');
       answerBtn.setAttribute('id', 'answer-btn');
+      answerBtn.dataset.id = `${i}`;
       answersSection.appendChild(answerBtn);
     }
     const nextBtn = CreateDomElements.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
     CreateDomElements.setAttributes(nextBtn, { id: 'next-btn', type: 'button' });
 
-    CreateDomElements.insertChilds(playField, [soundSection, answersSection, nextBtn]);
+    CreateDomElements.insertChilds(playField, [gameClose, soundSection, answersSection, nextBtn]);
 
     this.gameWrapper.innerHTML = '';
     this.gameWrapper.appendChild(playField);
+    document.body.style.overflowY = 'hidden';
   }
 
   listen(): void {
-    const gameStartBtn = document.getElementById('start-btn');
-    gameStartBtn.addEventListener('click', (event) => {
+    document.addEventListener('click', (event) => {
       event.preventDefault();
-      this.renderGame();
+      const target = event.target as HTMLElement;
+      if (target.id === 'start-btn') {
+        this.renderGame();
+      }
+      // if (target.id === 'close-game') {
+      //   console.log('click');
+      //   this.gameWrapper.innerHTML = '';
+      //   document.body.removeChild(this.gameWrapper);
+      //   document.body.style.overflowY = '';
+      // }
     });
+    // const gameStartBtn = document.getElementById('start-btn');
+    // gameStartBtn.addEventListener('click', (event) => {
+    //   event.preventDefault();
+    //   this.renderGame();
+    // });
+
+    // const gameClose = document.getElementById('close-game');
+    // gameClose.addEventListener('click', () => {
+    //   console.log('click');
+    //   this.gameWrapper.innerHTML = '';
+    //   document.body.removeChild(this.gameWrapper);
+    //   document.body.style.overflowY = '';
+    // });
   }
 
   start() {
-    const enterGame = document.querySelector('.nav__link');
+    const enterGame = document.querySelector('[data-page="games"]');
 
     enterGame.addEventListener('click', () => {
       this.renderStartScreen();
