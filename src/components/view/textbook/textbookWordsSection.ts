@@ -1,7 +1,7 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import { ControlMenu, PageElements } from '../../../types/textbook/interfaces';
 import { RemoveElements, ResponseData } from '../../../types/textbook/type';
-import ControllerTextbook from '../../controller/textbook/controller';
+import Api from '../../controller/textbook/controller';
 import baseUrl from '../../model/baseUrl';
 import TextbookPagination from './textbookPagination';
 import TextbookUsers from './textbookUsers';
@@ -14,8 +14,6 @@ class TextbookWordsSection {
   private wrapper: HTMLElement;
 
   private cleanPage: RemoveElements;
-
-  private cotroller: ControllerTextbook;
 
   private containerWords: HTMLElement;
 
@@ -36,7 +34,6 @@ class TextbookWordsSection {
   constructor(partPage: PageElements) {
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cleanPage = partPage.clean;
-    this.cotroller = new ControllerTextbook();
     this.pagination = new TextbookPagination();
     this.activeUser = new TextbookUsers(partPage.isLogin);
     this.containerWords = CreateDomElements.createNewElement('div', ['container__words']);
@@ -249,15 +246,15 @@ class TextbookWordsSection {
     const hardGroup = '6';
 
     if (this.isLogin && group === hardGroup) {
-      response = (await this.cotroller.getDifficultWords()) as Response;
+      response = (await Api.getDifficultWords()) as Response;
       data = await response.json() as AuthorizeUserWords[];
       this.renderSectionTextbook(data[0].paginatedResults, true);
     } else if (this.isLogin) {
-      response = (await this.cotroller.getWordsLoginUser(group, page)) as Response;
+      response = (await Api.getWordsWithOption(group, page)) as Response;
       data = await response.json() as AuthorizeUserWords[];
       this.renderSectionTextbook(data[0].paginatedResults);
     } else {
-      response = (await this.cotroller.getWordsUnloginUser(group, page)) as Response;
+      response = (await Api.getAllWords(group, page)) as Response;
       data = await response.json() as WordStructure[];
       this.renderSectionTextbook(data);
     }

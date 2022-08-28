@@ -14,7 +14,7 @@ export interface WordStructure {
   wordTranslate: string,
   textMeaningTranslate: string,
   textExampleTranslate: string,
-  userWord?: UserWord,
+  userWord?: UserWordStructure,
   id?: string,
   _id?: string
 }
@@ -25,13 +25,15 @@ export interface QueryOptions {
   body?: string;
 }
 
-export interface UserWord {
+export interface UserWordStructure {
   difficulty: string,
   optional: OptionalUserWord
 }
 
 export interface OptionalUserWord {
-  progress: string
+  isLearned: boolean,
+  learnStep?: number,
+  startLearningAt?: number
 }
 
 export interface AuthorizeUserWords {

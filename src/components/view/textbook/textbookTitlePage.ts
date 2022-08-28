@@ -1,6 +1,6 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import { ResponseData } from '../../../types/textbook/type';
-import ControllerTextbook from '../../controller/textbook/controller';
+import Api from '../../controller/textbook/controller';
 import TextbookWordsSection from './textbookWordsSection';
 import textbookLevel from '../../../mocks/textbook.json';
 import CreateDomElements from '../../controller/newElement';
@@ -8,8 +8,6 @@ import CustomStorage from '../../controller/storage';
 
 class TextbookTitlePage {
   private body;
-
-  private cotroller: ControllerTextbook;
 
   private wrapper: HTMLElement;
 
@@ -23,7 +21,6 @@ class TextbookTitlePage {
 
   constructor() {
     this.body = document.querySelector('.body') as HTMLBodyElement;
-    this.cotroller = new ControllerTextbook();
     this.wrapper = CreateDomElements.createNewElement('div', ['wrapper-textbook']);
     this.isLogin = CustomStorage.getStorage('token');
     this.allLevelWithLogin = 7;
@@ -109,7 +106,7 @@ class TextbookTitlePage {
     let data: ResponseData;
 
     if (this.isLogin && group === '6') {
-      response = (await this.cotroller.getDifficultWords()) as Response;
+      response = (await Api.getDifficultWords()) as Response;
       data = await response.json() as AuthorizeUserWords[];
       sectionPage.renderPageWithWords(
         data[0].paginatedResults,
@@ -117,14 +114,14 @@ class TextbookTitlePage {
         true,
       );
     } else if (this.isLogin) {
-      response = (await this.cotroller.getWordsLoginUser(group, page)) as Response;
+      response = (await Api.getWordsWithOption(group, page)) as Response;
       data = await response.json() as AuthorizeUserWords[];
       sectionPage.renderPageWithWords(
         data[0].paginatedResults,
         { header: this.header, footer: this.footer },
       );
     } else {
-      response = (await this.cotroller.getWordsUnloginUser(group, page)) as Response;
+      response = (await Api.getAllWords(group, page)) as Response;
       data = await response.json() as WordStructure[];
       sectionPage.renderPageWithWords(data, { header: this.header, footer: this.footer });
     }
