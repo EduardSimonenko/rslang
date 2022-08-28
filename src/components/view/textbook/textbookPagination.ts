@@ -1,9 +1,7 @@
 import { BtnPaginationEnum } from '../../../types/textbook/enum';
-import NewElement from '../../controller/newcomponent';
+import CreateDomElements from '../../controller/newElement';
 
 class TextbookPagination {
-  private newElement: NewElement;
-
   private btnsPagination: number;
 
   private startNumPagination: string[];
@@ -19,7 +17,6 @@ class TextbookPagination {
   private averagePageOfGroup: number;
 
   constructor() {
-    this.newElement = new NewElement();
     this.btnsPagination = 9;
     this.startNumPagination = ['2', '3', '4', '5'];
     this.selectPage = false;
@@ -36,7 +33,7 @@ class TextbookPagination {
     let addClass: string[];
 
     const curPage = `${+this.chooseNumPage + 1}`;
-    const container: HTMLElement = this.newElement.createNewElement('div', ['container__pag']);
+    const container: HTMLElement = CreateDomElements.createNewElement('div', ['container__pag']);
 
     if ((+this.startNumPagination[0]) > this.averagePageOfGroup) {
       startOrEndNum = 2;
@@ -72,10 +69,10 @@ class TextbookPagination {
       } else {
         addClass = ['btn__pag', 'btn__pag-style'];
       }
-      const btnPagination: HTMLElement = this.newElement.createNewElement('button', addClass, elementBtn);
-      this.newElement.setAttributes(btnPagination, { 'data-page': `${elementBtn}` });
+      const btnPagination: HTMLElement = CreateDomElements.createNewElement('button', addClass, elementBtn);
+      CreateDomElements.setAttributes(btnPagination, { 'data-page': `${elementBtn}` });
 
-      this.newElement.insertChilds(container, [btnPagination]);
+      CreateDomElements.insertChilds(container, [btnPagination]);
     }
 
     if (choosePage) {
@@ -83,7 +80,7 @@ class TextbookPagination {
       while (containerPag.firstElementChild) {
         containerPag.firstElementChild.remove();
       }
-      this.newElement.insertChilds(containerPag, [container]);
+      CreateDomElements.insertChilds(containerPag, [container]);
       return;
     }
 

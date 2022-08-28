@@ -1,5 +1,5 @@
 import { ControlMenu } from '../../../types/textbook/interfaces';
-import NewElement from '../../controller/newElement';
+import CreateDomElements from '../../controller/newElement';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
 import AppView from '../appView';
@@ -13,7 +13,7 @@ class Page {
     const main = this.renderMain();
     const footer = this.renderFooter();
 
-    NewElement.insertChilds(this.body, [header, main, footer]);
+    CreateDomElements.insertChilds(this.body, [header, main, footer]);
   }
 
   static renderHeader(): HTMLElement {
@@ -23,15 +23,15 @@ class Page {
       }
     }
 
-    const wrapper = NewElement.createNewElement('div', ['wrapper']);
-    const header = NewElement.createNewElement('header', ['header']);
-    const logo = NewElement.createNewElement('div', ['logo']);
-    const login = NewElement.createNewElement('button', ['login']);
+    const wrapper = CreateDomElements.createNewElement('div', ['wrapper']);
+    const header = CreateDomElements.createNewElement('header', ['header']);
+    const logo = CreateDomElements.createNewElement('div', ['logo']);
+    const login = CreateDomElements.createNewElement('button', ['login']);
     const navbar = this.renderMenu();
 
-    const logoLink = NewElement.createNewElement('a', ['logo__link']) as HTMLImageElement;
-    const logoImg = NewElement.createNewElement('img', ['logo__img']) as HTMLImageElement;
-    const loginImg = NewElement.createNewElement('img', ['login__img']) as HTMLImageElement;
+    const logoLink = CreateDomElements.createNewElement('a', ['logo__link']) as HTMLImageElement;
+    const logoImg = CreateDomElements.createNewElement('img', ['logo__img']) as HTMLImageElement;
+    const loginImg = CreateDomElements.createNewElement('img', ['login__img']) as HTMLImageElement;
 
     loginImg.src = '../../assets/images/login-icon.svg';
     logoImg.src = '../../assets/images/logo-icon.svg';
@@ -39,14 +39,14 @@ class Page {
     logoImg.alt = 'logo image';
     loginImg.alt = 'login image';
 
-    NewElement.setAttributes(loginImg, { 'data-page': 'login' });
+    CreateDomElements.setAttributes(loginImg, { 'data-page': 'login' });
 
-    NewElement.insertChilds(logoLink, [logoImg]);
-    NewElement.insertChilds(logo, [logoLink]);
-    NewElement.insertChilds(login, [loginImg]);
+    CreateDomElements.insertChilds(logoLink, [logoImg]);
+    CreateDomElements.insertChilds(logo, [logoLink]);
+    CreateDomElements.insertChilds(login, [loginImg]);
 
-    NewElement.insertChilds(wrapper, [logo, navbar, login]);
-    NewElement.insertChilds(header, [wrapper]);
+    CreateDomElements.insertChilds(wrapper, [logo, navbar, login]);
+    CreateDomElements.insertChilds(header, [wrapper]);
 
     this.listenMenu(header, this.renderFooter());
 
@@ -54,122 +54,122 @@ class Page {
   }
 
   private static renderMenu(): HTMLElement {
-    const navbar = NewElement.createNewElement('nav', ['navbar']);
-    const nav = NewElement.createNewElement('ul', ['nav']);
-    const linkToMainPage = NewElement.createNewElement('a', ['nav__link'], 'главная');
-    const linkToTextbook = NewElement.createNewElement('a', ['nav__link'], 'учебник');
-    const linkToGames = NewElement.createNewElement('a', ['nav__link'], 'мини игры');
-    const linkToStatistics = NewElement.createNewElement('a', ['nav__link'], 'статистика');
+    const navbar = CreateDomElements.createNewElement('nav', ['navbar']);
+    const nav = CreateDomElements.createNewElement('ul', ['nav']);
+    const linkToMainPage = CreateDomElements.createNewElement('a', ['nav__link'], 'главная');
+    const linkToTextbook = CreateDomElements.createNewElement('a', ['nav__link'], 'учебник');
+    const linkToGames = CreateDomElements.createNewElement('a', ['nav__link'], 'мини игры');
+    const linkToStatistics = CreateDomElements.createNewElement('a', ['nav__link'], 'статистика');
 
-    NewElement.setAttributes(linkToMainPage, { 'data-page': 'main' });
-    NewElement.setAttributes(linkToTextbook, { 'data-page': 'textbook' });
-    NewElement.setAttributes(linkToGames, { 'data-page': 'games' });
-    NewElement.setAttributes(linkToStatistics, { 'data-page': 'statistics' });
+    CreateDomElements.setAttributes(linkToMainPage, { 'data-page': 'main' });
+    CreateDomElements.setAttributes(linkToTextbook, { 'data-page': 'textbook' });
+    CreateDomElements.setAttributes(linkToGames, { 'data-page': 'games' });
+    CreateDomElements.setAttributes(linkToStatistics, { 'data-page': 'statistics' });
 
     const linksToPages = [linkToMainPage, linkToTextbook, linkToGames, linkToStatistics];
 
     linksToPages.forEach((el) => {
-      const newItem = NewElement.createNewElement('li', ['nav__item']);
-      NewElement.insertChilds(newItem, [el]);
-      NewElement.insertChilds(nav, [newItem]);
+      const newItem = CreateDomElements.createNewElement('li', ['nav__item']);
+      CreateDomElements.insertChilds(newItem, [el]);
+      CreateDomElements.insertChilds(nav, [newItem]);
     });
 
-    NewElement.insertChilds(navbar, [nav]);
+    CreateDomElements.insertChilds(navbar, [nav]);
 
     return navbar;
   }
 
   private static renderMain(): HTMLElement {
-    const main = NewElement.createNewElement('main', ['main']);
-    const wrapper = NewElement.createNewElement('div', ['wrapper']);
-    const gameBenefitsSection = NewElement.createNewElement('section', ['game-benefits']);
-    const gameBenefitsTitle = NewElement.createNewElement('h1', ['game-benefits__title'], 'Rs-lang разработано на базовых принципах');
+    const main = CreateDomElements.createNewElement('main', ['main']);
+    const wrapper = CreateDomElements.createNewElement('div', ['wrapper']);
+    const gameBenefitsSection = CreateDomElements.createNewElement('section', ['game-benefits']);
+    const gameBenefitsTitle = CreateDomElements.createNewElement('h1', ['game-benefits__title'], 'Rs-lang разработано на базовых принципах');
     const teamSection = this.renderTeamSection();
 
     descrBlocks.forEach((el, index) => {
-      const benefitDescriptionBlock = NewElement.createNewElement('div', ['game-benefits__description', 'description-block']);
-      const subtitle = NewElement.createNewElement('h3', ['description-block__title'], el.titleContent);
-      const quote = NewElement.createNewElement('blockquote', ['description-block__blockquote'], el.quote);
-      NewElement.insertChilds(benefitDescriptionBlock, [subtitle, quote]);
+      const benefitDescriptionBlock = CreateDomElements.createNewElement('div', ['game-benefits__description', 'description-block']);
+      const subtitle = CreateDomElements.createNewElement('h3', ['description-block__title'], el.titleContent);
+      const quote = CreateDomElements.createNewElement('blockquote', ['description-block__blockquote'], el.quote);
+      CreateDomElements.insertChilds(benefitDescriptionBlock, [subtitle, quote]);
 
       if (el.additionalContent) {
-        const additionalContent = NewElement.createNewElement('p', ['description-block__content'], el.additionalContent);
-        NewElement.insertChilds(benefitDescriptionBlock, [additionalContent]);
+        const additionalContent = CreateDomElements.createNewElement('p', ['description-block__content'], el.additionalContent);
+        CreateDomElements.insertChilds(benefitDescriptionBlock, [additionalContent]);
       }
 
       const imageBlock = this.createBlockWithImg('game-benefits__img-block', `../../assets/images/benefit${index}.png`, 'benefit image');
       if (index % 2 === 0) {
-        NewElement.insertChilds(gameBenefitsSection, [imageBlock, benefitDescriptionBlock]);
+        CreateDomElements.insertChilds(gameBenefitsSection, [imageBlock, benefitDescriptionBlock]);
       } else {
-        NewElement.insertChilds(gameBenefitsSection, [benefitDescriptionBlock, imageBlock]);
+        CreateDomElements.insertChilds(gameBenefitsSection, [benefitDescriptionBlock, imageBlock]);
       }
     });
 
-    NewElement.insertChilds(wrapper, [gameBenefitsTitle, gameBenefitsSection, teamSection]);
-    NewElement.insertChilds(main, [wrapper]);
+    CreateDomElements.insertChilds(wrapper, [gameBenefitsTitle, gameBenefitsSection, teamSection]);
+    CreateDomElements.insertChilds(main, [wrapper]);
 
     return main;
   }
 
   static renderFooter(): HTMLElement {
-    const wrapper = NewElement.createNewElement('div', ['wrapper']);
-    const footer = NewElement.createNewElement('footer', ['footer']);
-    const logoRSBlock = NewElement.createNewElement('div', ['rs-school-logo']);
-    const logoRSLink = NewElement.createNewElement('a', ['rs-school-logo__link']);
-    const logoRSImg = NewElement.createNewElement('img', ['rs-school-logo__link']) as HTMLImageElement;
-    const githubLinksBlock = NewElement.createNewElement('div', ['github-links']);
-    const yearBlock = NewElement.createNewElement('div', ['creation-year']);
-    const yearBlockContent = NewElement.createNewElement('p', ['creation-year__content'], '2022');
+    const wrapper = CreateDomElements.createNewElement('div', ['wrapper']);
+    const footer = CreateDomElements.createNewElement('footer', ['footer']);
+    const logoRSBlock = CreateDomElements.createNewElement('div', ['rs-school-logo']);
+    const logoRSLink = CreateDomElements.createNewElement('a', ['rs-school-logo__link']);
+    const logoRSImg = CreateDomElements.createNewElement('img', ['rs-school-logo__link']) as HTMLImageElement;
+    const githubLinksBlock = CreateDomElements.createNewElement('div', ['github-links']);
+    const yearBlock = CreateDomElements.createNewElement('div', ['creation-year']);
+    const yearBlockContent = CreateDomElements.createNewElement('p', ['creation-year__content'], '2022');
 
     logoRSImg.src = './assets/images/rs-school-logo.png';
 
     teammates.forEach((el) => {
-      const linkToTeammate = NewElement.createNewElement('a', ['github-links__item']) as HTMLLinkElement;
-      const githubImage = NewElement.createNewElement('img', ['github-links__image']) as HTMLImageElement;
+      const linkToTeammate = CreateDomElements.createNewElement('a', ['github-links__item']) as HTMLLinkElement;
+      const githubImage = CreateDomElements.createNewElement('img', ['github-links__image']) as HTMLImageElement;
 
       linkToTeammate.href = el.linkToGithub;
       githubImage.src = el.pathToGithubFoto;
       githubImage.alt = 'teammate github logo';
-      NewElement.insertChilds(linkToTeammate, [githubImage]);
-      NewElement.insertChilds(githubLinksBlock, [linkToTeammate]);
+      CreateDomElements.insertChilds(linkToTeammate, [githubImage]);
+      CreateDomElements.insertChilds(githubLinksBlock, [linkToTeammate]);
     });
 
-    NewElement.insertChilds(logoRSLink, [logoRSImg]);
-    NewElement.insertChilds(logoRSBlock, [logoRSLink]);
-    NewElement.insertChilds(yearBlock, [yearBlockContent]);
-    NewElement.insertChilds(wrapper, [logoRSBlock, githubLinksBlock, yearBlock]);
-    NewElement.insertChilds(footer, [wrapper]);
+    CreateDomElements.insertChilds(logoRSLink, [logoRSImg]);
+    CreateDomElements.insertChilds(logoRSBlock, [logoRSLink]);
+    CreateDomElements.insertChilds(yearBlock, [yearBlockContent]);
+    CreateDomElements.insertChilds(wrapper, [logoRSBlock, githubLinksBlock, yearBlock]);
+    CreateDomElements.insertChilds(footer, [wrapper]);
 
     return footer;
   }
 
   private static createBlockWithImg(blockClassName: string, path: string, alt: string):HTMLElement {
-    const gameBenefitsImgBlock = NewElement.createNewElement('div', [blockClassName]);
-    const gameBenefitsImg = NewElement.createNewElement('img', ['game-benefits__img']) as HTMLImageElement;
+    const gameBenefitsImgBlock = CreateDomElements.createNewElement('div', [blockClassName]);
+    const gameBenefitsImg = CreateDomElements.createNewElement('img', ['game-benefits__img']) as HTMLImageElement;
     gameBenefitsImg.src = path;
     gameBenefitsImg.alt = alt;
-    NewElement.insertChilds(gameBenefitsImgBlock, [gameBenefitsImg]);
+    CreateDomElements.insertChilds(gameBenefitsImgBlock, [gameBenefitsImg]);
 
     return gameBenefitsImgBlock;
   }
 
   private static renderTeamSection(): HTMLElement {
-    const teamSection = NewElement.createNewElement('section', ['team']);
-    const teamTitle = NewElement.createNewElement('h2', ['team-title'], 'Лучшие разработчики РБ');
+    const teamSection = CreateDomElements.createNewElement('section', ['team']);
+    const teamTitle = CreateDomElements.createNewElement('h2', ['team-title'], 'Лучшие разработчики РБ');
 
-    NewElement.insertChilds(teamSection, [teamTitle]);
+    CreateDomElements.insertChilds(teamSection, [teamTitle]);
 
     teammates.forEach((el) => {
-      const teammate = NewElement.createNewElement('div', ['teammate']);
-      const teammateFoto = NewElement.createNewElement('img', ['teammate__foto']) as HTMLImageElement;
-      const linkToGithub = NewElement.createNewElement('a', ['teammate__link'], el.name) as HTMLLinkElement;
+      const teammate = CreateDomElements.createNewElement('div', ['teammate']);
+      const teammateFoto = CreateDomElements.createNewElement('img', ['teammate__foto']) as HTMLImageElement;
+      const linkToGithub = CreateDomElements.createNewElement('a', ['teammate__link'], el.name) as HTMLLinkElement;
 
       teammateFoto.src = el.pathToFoto;
       teammateFoto.alt = 'handsome man photo';
       linkToGithub.href = el.linkToGithub;
 
-      NewElement.insertChilds(teammate, [teammateFoto, linkToGithub]);
-      NewElement.insertChilds(teamSection, [teammate]);
+      CreateDomElements.insertChilds(teammate, [teammateFoto, linkToGithub]);
+      CreateDomElements.insertChilds(teamSection, [teammate]);
     });
 
     return teamSection;

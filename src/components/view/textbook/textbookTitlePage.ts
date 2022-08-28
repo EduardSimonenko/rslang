@@ -1,15 +1,13 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import { ResponseData } from '../../../types/textbook/type';
-import NewElement from '../../controller/newcomponent';
 import CustomStorage from '../../controller/storage';
 import ControllerTextbook from '../../controller/textbook/controller';
 import TextbookWordsSection from './textbookWordsSection';
 import textbookLevel from '../../../mocks/textbook.json';
+import CreateDomElements from '../../controller/newElement';
 
 class TextbookTitlePage {
   private body;
-
-  private newElement: NewElement;
 
   private cotroller: ControllerTextbook;
 
@@ -26,15 +24,14 @@ class TextbookTitlePage {
   private footer: HTMLElement;
 
   constructor() {
-    this.newElement = new NewElement();
     this.customStorage = new CustomStorage();
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cotroller = new ControllerTextbook();
-    this.wrapper = this.newElement.createNewElement('div', ['wrapper-textbook']);
+    this.wrapper = CreateDomElements.createNewElement('div', ['wrapper-textbook']);
     this.isLogin = this.customStorage.getStorage('token');
     this.allLevelWithLogin = 7;
-    this.header = this.newElement.createNewElement('div', ['header']);
-    this.footer = this.newElement.createNewElement('div', ['footer']);
+    this.header = CreateDomElements.createNewElement('div', ['header']);
+    this.footer = CreateDomElements.createNewElement('div', ['footer']);
   }
 
   public renderPageTextBook(header: HTMLElement, footer: HTMLElement): void {
@@ -43,31 +40,31 @@ class TextbookTitlePage {
     if (this.body.firstElementChild) {
       this.cleanPage();
     }
-    const wrapperTitle: HTMLElement = this.newElement.createNewElement('div', ['wrapper-title']);
-    const containerBook: HTMLElement = this.newElement.createNewElement('div', ['container__book']);
-    const lineBook1: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
-    const lineBook2: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
-    const lineBook3: HTMLElement = this.newElement.createNewElement('div', ['line__book']);
-    const title: HTMLElement = this.newElement.createNewElement('h1', ['title__book'], 'Учебник');
+    const wrapperTitle: HTMLElement = CreateDomElements.createNewElement('div', ['wrapper-title']);
+    const containerBook: HTMLElement = CreateDomElements.createNewElement('div', ['container__book']);
+    const lineBook1: HTMLElement = CreateDomElements.createNewElement('div', ['line__book']);
+    const lineBook2: HTMLElement = CreateDomElements.createNewElement('div', ['line__book']);
+    const lineBook3: HTMLElement = CreateDomElements.createNewElement('div', ['line__book']);
+    const title: HTMLElement = CreateDomElements.createNewElement('h1', ['title__book'], 'Учебник');
     const imgTextbookLevel: Record<string, string> = textbookLevel;
 
-    this.newElement.insertChilds(
+    CreateDomElements.insertChilds(
       wrapperTitle,
       [this.header, this.wrapper, this.footer],
     );
-    this.newElement.insertChilds(this.body, [wrapperTitle]);
-    this.newElement.insertChilds(this.wrapper, [title, containerBook]);
+    CreateDomElements.insertChilds(this.body, [wrapperTitle]);
+    CreateDomElements.insertChilds(this.wrapper, [title, containerBook]);
 
     for (let i = 0; i < this.allLevelWithLogin; i += 1) {
-      const level: HTMLElement = this.newElement.createNewElement('img', ['img__book']);
+      const level: HTMLElement = CreateDomElements.createNewElement('img', ['img__book']);
       let btnBook: HTMLElement;
       if (i === (this.allLevelWithLogin - 1) && !this.customStorage.getStorage('token')) {
-        btnBook = this.newElement.createNewElement('button', ['btn__book', 'btn__book-visability']);
+        btnBook = CreateDomElements.createNewElement('button', ['btn__book', 'btn__book-visability']);
       } else {
-        btnBook = this.newElement.createNewElement('button', ['btn__book']);
+        btnBook = CreateDomElements.createNewElement('button', ['btn__book']);
       }
 
-      this.newElement.setAttributes(
+      CreateDomElements.setAttributes(
         level,
         {
           src: imgTextbookLevel[`book${i}`],
@@ -77,18 +74,18 @@ class TextbookTitlePage {
           alt: `book level ${i + 1}`,
         },
       );
-      this.newElement.insertChilds(btnBook, [level]);
+      CreateDomElements.insertChilds(btnBook, [level]);
 
       if (i < 3) {
-        this.newElement.insertChilds(lineBook1, [btnBook]);
+        CreateDomElements.insertChilds(lineBook1, [btnBook]);
       } else if (i === 6) {
-        this.newElement.insertChilds(lineBook2, [btnBook]);
+        CreateDomElements.insertChilds(lineBook2, [btnBook]);
       } else {
-        this.newElement.insertChilds(lineBook3, [btnBook]);
+        CreateDomElements.insertChilds(lineBook3, [btnBook]);
       }
     }
 
-    this.newElement.insertChilds(containerBook, [lineBook1, lineBook2, lineBook3]);
+    CreateDomElements.insertChilds(containerBook, [lineBook1, lineBook2, lineBook3]);
 
     this.listener(containerBook);
   }

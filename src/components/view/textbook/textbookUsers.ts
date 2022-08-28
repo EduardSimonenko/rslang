@@ -3,12 +3,10 @@ import { WordStructure } from '../../../types/loadServerData/interfaces';
 import {
   BtndifficultyEnum, BtnUserControlEnum, GroupWordsEnum, WordProgressEnum,
 } from '../../../types/textbook/enum';
-import NewElement from '../../controller/newcomponent';
+import CreateDomElements from '../../controller/newElement';
 import ControllerTextbook from '../../controller/textbook/controller';
 
 class TextbookUsers {
-  private newElement: NewElement;
-
   private cotroller: ControllerTextbook;
 
   private isLogin: string | null;
@@ -18,7 +16,6 @@ class TextbookUsers {
   private prePage :string;
 
   constructor(isLogin: string | null) {
-    this.newElement = new NewElement();
     this.cotroller = new ControllerTextbook();
     this.isLogin = isLogin;
     this.hardGroup = '6';
@@ -26,20 +23,20 @@ class TextbookUsers {
   }
 
   public renderControlBtn(group: string): HTMLElement {
-    const containerBtnUser: HTMLElement = this.newElement.createNewElement('div', ['container__user']);
-    const btnDone: HTMLElement = this.newElement.createNewElement('button', ['btn__user'], 'Изучено');
+    const containerBtnUser: HTMLElement = CreateDomElements.createNewElement('div', ['container__user']);
+    const btnDone: HTMLElement = CreateDomElements.createNewElement('button', ['btn__user'], 'Изучено');
     let btnHard: HTMLElement;
 
     if (group === this.hardGroup) {
-      btnHard = this.newElement.createNewElement('button', ['btn__user'], 'Удалить');
+      btnHard = CreateDomElements.createNewElement('button', ['btn__user'], 'Удалить');
     } else {
-      btnHard = this.newElement.createNewElement('button', ['btn__user'], 'Сложное');
+      btnHard = CreateDomElements.createNewElement('button', ['btn__user'], 'Сложное');
     }
 
-    this.newElement.setAttributes(btnDone, { 'data-control': 'done' });
-    this.newElement.setAttributes(btnHard, { 'data-control': 'hard' });
+    CreateDomElements.setAttributes(btnDone, { 'data-control': 'done' });
+    CreateDomElements.setAttributes(btnHard, { 'data-control': 'hard' });
 
-    this.newElement.insertChilds(containerBtnUser, [btnHard, btnDone]);
+    CreateDomElements.insertChilds(containerBtnUser, [btnHard, btnDone]);
     this.listenBtnUser(containerBtnUser, group);
     this.stylePageGroup(group, [btnHard, btnDone]);
     this.stylePageGroupPag(group);

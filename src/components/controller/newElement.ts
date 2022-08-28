@@ -1,4 +1,4 @@
-class NewElement {
+class CreateDomElements {
   static createNewElement(tag: string, classNames: Array<string>, innerText = ''): HTMLElement {
     const tagElement = document.createElement(tag);
     tagElement.classList.add(...classNames);
@@ -15,4 +15,4 @@ class NewElement {
   }
 }
 
-export default NewElement;
+export default CreateDomElements;

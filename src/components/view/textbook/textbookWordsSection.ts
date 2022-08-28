@@ -1,12 +1,12 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import { ControlMenu, PageElements } from '../../../types/textbook/interfaces';
 import { RemoveElements, ResponseData } from '../../../types/textbook/type';
-import NewElement from '../../controller/newcomponent';
 import ControllerTextbook from '../../controller/textbook/controller';
 import baseUrl from '../../model/baseUrl';
 import TextbookPagination from './textbookPagination';
 import TextbookUsers from './textbookUsers';
 import textbookLevel from '../../../mocks/textbook.json';
+import CreateDomElements from '../../controller/newElement';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -14,8 +14,6 @@ class TextbookWordsSection {
   private wrapper: HTMLElement;
 
   private cleanPage: RemoveElements;
-
-  private newElement: NewElement;
 
   private cotroller: ControllerTextbook;
 
@@ -38,14 +36,13 @@ class TextbookWordsSection {
   constructor(partPage: PageElements) {
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cleanPage = partPage.clean;
-    this.newElement = new NewElement();
     this.cotroller = new ControllerTextbook();
     this.pagination = new TextbookPagination();
     this.activeUser = new TextbookUsers(partPage.isLogin);
-    this.containerWords = this.newElement.createNewElement('div', ['container__words']);
-    this.wrapperPagination = this.newElement.createNewElement('div', ['wrapper__pag']);
-    this.wrapper = this.newElement.createNewElement('div', ['wrapper-textbook']);
-    this.hardWord = this.newElement.createNewElement('h1', ['title__section'], 'Сложные слова!');
+    this.containerWords = CreateDomElements.createNewElement('div', ['container__words']);
+    this.wrapperPagination = CreateDomElements.createNewElement('div', ['wrapper__pag']);
+    this.wrapper = CreateDomElements.createNewElement('div', ['wrapper-textbook']);
+    this.hardWord = CreateDomElements.createNewElement('h1', ['title__section'], 'Сложные слова!');
     this.currentGroup = partPage.group;
     this.allLevel = 6;
     this.isLogin = partPage.isLogin;
@@ -54,9 +51,12 @@ class TextbookWordsSection {
   public renderPageWithWords(words: WordStructure[], menu: ControlMenu, groupHard?: boolean): void {
     this.cleanPage();
 
-    this.newElement.insertChilds(this.wrapperPagination, [this.pagination.renderPaginationMenu()]);
+    CreateDomElements.insertChilds(
+      this.wrapperPagination,
+      [this.pagination.renderPaginationMenu()],
+    );
 
-    this.newElement.insertChilds(
+    CreateDomElements.insertChilds(
       this.wrapper,
       [
         this.renderGroupTextbook(),
@@ -65,7 +65,7 @@ class TextbookWordsSection {
         this.containerWords,
       ],
     );
-    this.newElement.insertChilds(
+    CreateDomElements.insertChilds(
       this.body,
       [menu.header, this.wrapper, menu.footer],
     );
@@ -86,91 +86,91 @@ class TextbookWordsSection {
 
     this.cleanSectionWords();
     words.forEach((word) => {
-      const card: HTMLElement = this.newElement.createNewElement('div', ['card']);
-      const img: HTMLElement = this.newElement.createNewElement('img', ['card__img']);
-      const containerText: HTMLElement = this.newElement.createNewElement('div', ['card__text']);
-      const wordEng: HTMLElement = this.newElement.createNewElement('h2', ['card__word'], word.word);
-      const transcription: HTMLElement = this.newElement.createNewElement(
+      const card: HTMLElement = CreateDomElements.createNewElement('div', ['card']);
+      const img: HTMLElement = CreateDomElements.createNewElement('img', ['card__img']);
+      const containerText: HTMLElement = CreateDomElements.createNewElement('div', ['card__text']);
+      const wordEng: HTMLElement = CreateDomElements.createNewElement('h2', ['card__word'], word.word);
+      const transcription: HTMLElement = CreateDomElements.createNewElement(
         'p',
         ['card__transcription'],
         word.transcription,
       );
-      const translateWord: HTMLElement = this.newElement.createNewElement(
+      const translateWord: HTMLElement = CreateDomElements.createNewElement(
         'div',
         ['card__translate'],
         word.wordTranslate,
       );
-      const textMeaning: HTMLElement = this.newElement.createNewElement(
+      const textMeaning: HTMLElement = CreateDomElements.createNewElement(
         'p',
         ['card__mean'],
         word.textMeaning,
       );
-      const textMeaningTranslate: HTMLElement = this.newElement.createNewElement(
+      const textMeaningTranslate: HTMLElement = CreateDomElements.createNewElement(
         'p',
         ['card__translate'],
         word.textMeaningTranslate,
       );
-      const textExample: HTMLElement = this.newElement.createNewElement(
+      const textExample: HTMLElement = CreateDomElements.createNewElement(
         'p',
         ['card__example'],
         word.textExample,
       );
-      const textExampleTranslate: HTMLElement = this.newElement.createNewElement(
+      const textExampleTranslate: HTMLElement = CreateDomElements.createNewElement(
         'p',
         ['card__translate'],
         word.textExampleTranslate,
       );
-      const containerWord: HTMLElement = this.newElement.createNewElement('div', ['container__word']);
-      const containerMean: HTMLElement = this.newElement.createNewElement('div', ['container__mean']);
-      const containerExample: HTMLElement = this.newElement.createNewElement('div', ['container__example']);
+      const containerWord: HTMLElement = CreateDomElements.createNewElement('div', ['container__word']);
+      const containerMean: HTMLElement = CreateDomElements.createNewElement('div', ['container__mean']);
+      const containerExample: HTMLElement = CreateDomElements.createNewElement('div', ['container__example']);
 
-      this.newElement.setAttributes(img, {
+      CreateDomElements.setAttributes(img, {
         src: `${baseUrl}/${word.image}`, width: '250', height: '250', alt: 'image word',
       });
 
-      this.newElement.insertChilds(containerWord, [wordEng, transcription, translateWord]);
-      this.newElement.insertChilds(containerMean, [textMeaning, textMeaningTranslate]);
-      this.newElement.insertChilds(containerExample, [textExample, textExampleTranslate]);
+      CreateDomElements.insertChilds(containerWord, [wordEng, transcription, translateWord]);
+      CreateDomElements.insertChilds(containerMean, [textMeaning, textMeaningTranslate]);
+      CreateDomElements.insertChilds(containerExample, [textExample, textExampleTranslate]);
 
       if (this.isLogin) {
-        this.newElement.setAttributes(card, { id: word._id });
+        CreateDomElements.setAttributes(card, { id: word._id });
         this.activeUser.markWordsUser(card, word);
-        this.newElement.insertChilds(
+        CreateDomElements.insertChilds(
           containerText,
           [containerWord, containerMean, containerExample,
             this.activeUser.renderControlBtn(this.currentGroup)],
         );
       } else {
-        this.newElement.setAttributes(card, { id: word.id });
-        this.newElement.insertChilds(
+        CreateDomElements.setAttributes(card, { id: word.id });
+        CreateDomElements.insertChilds(
           containerText,
           [containerWord, containerMean, containerExample],
         );
         this.activeUser.stylePageGroupPag(this.currentGroup);
       }
 
-      this.newElement.insertChilds(
+      CreateDomElements.insertChilds(
         card,
         [img, containerText, this.renderAudioIcons(word)],
       );
 
-      this.newElement.insertChilds(this.containerWords, [card]);
+      CreateDomElements.insertChilds(this.containerWords, [card]);
     });
   }
 
   private renderAudioIcons(word: WordStructure): HTMLElement {
-    const containerVoice: HTMLElement = this.newElement.createNewElement('div', ['container__voice']);
-    const imgVoicePlay: HTMLElement = this.newElement.createNewElement('img', ['card__voice']);
-    const imgVoiceStop: HTMLElement = this.newElement.createNewElement('img', ['card__voice', 'disable']);
+    const containerVoice: HTMLElement = CreateDomElements.createNewElement('div', ['container__voice']);
+    const imgVoicePlay: HTMLElement = CreateDomElements.createNewElement('img', ['card__voice']);
+    const imgVoiceStop: HTMLElement = CreateDomElements.createNewElement('img', ['card__voice', 'disable']);
 
-    this.newElement.setAttributes(imgVoicePlay, {
+    CreateDomElements.setAttributes(imgVoicePlay, {
       src: textbookLevel.play, width: '30', height: '30', alt: 'image voice',
     });
-    this.newElement.setAttributes(imgVoiceStop, {
+    CreateDomElements.setAttributes(imgVoiceStop, {
       src: textbookLevel.stop, width: '25', height: '25', alt: 'image voice',
     });
 
-    this.newElement.insertChilds(
+    CreateDomElements.insertChilds(
       containerVoice,
       [imgVoicePlay, imgVoiceStop, this.renderAudio(word)],
     );
@@ -180,20 +180,20 @@ class TextbookWordsSection {
   }
 
   private renderAudio(word: WordStructure): HTMLElement {
-    const containerAudio: HTMLElement = this.newElement.createNewElement('div', ['container__audio']);
-    const audio1: HTMLElement = this.newElement.createNewElement('audio', ['card__audio']);
-    const audio2: HTMLElement = this.newElement.createNewElement('audio', ['card__audio']);
-    const audio3: HTMLElement = this.newElement.createNewElement('audio', ['card__audio']);
-    this.newElement.setAttributes(audio1, { src: `${baseUrl}/${word.audio}` });
-    this.newElement.setAttributes(audio2, { src: `${baseUrl}/${word.audioMeaning}` });
-    this.newElement.setAttributes(audio3, { src: `${baseUrl}/${word.audioExample}` });
+    const containerAudio: HTMLElement = CreateDomElements.createNewElement('div', ['container__audio']);
+    const audio1: HTMLElement = CreateDomElements.createNewElement('audio', ['card__audio']);
+    const audio2: HTMLElement = CreateDomElements.createNewElement('audio', ['card__audio']);
+    const audio3: HTMLElement = CreateDomElements.createNewElement('audio', ['card__audio']);
+    CreateDomElements.setAttributes(audio1, { src: `${baseUrl}/${word.audio}` });
+    CreateDomElements.setAttributes(audio2, { src: `${baseUrl}/${word.audioMeaning}` });
+    CreateDomElements.setAttributes(audio3, { src: `${baseUrl}/${word.audioExample}` });
 
-    this.newElement.insertChilds(containerAudio, [audio1, audio2, audio3]);
+    CreateDomElements.insertChilds(containerAudio, [audio1, audio2, audio3]);
     return containerAudio;
   }
 
   private renderGroupTextbook(): HTMLElement {
-    const containerGroup: HTMLElement = this.newElement.createNewElement('div', ['container__group']);
+    const containerGroup: HTMLElement = CreateDomElements.createNewElement('div', ['container__group']);
     const imgTextbookLevel: Record<string, string> = textbookLevel;
     let heightLevel = 60;
     let chooseGroup: string[];
@@ -203,15 +203,15 @@ class TextbookWordsSection {
     }
 
     for (let i = 0; i < this.allLevel; i += 1) {
-      const level: HTMLElement = this.newElement.createNewElement('img', ['img__book']);
+      const level: HTMLElement = CreateDomElements.createNewElement('img', ['img__book']);
       if (i === +this.currentGroup) {
         chooseGroup = ['btn__group', 'btn__shadow'];
       } else {
         chooseGroup = ['btn__group'];
       }
-      const btnBook: HTMLElement = this.newElement.createNewElement('button', chooseGroup);
+      const btnBook: HTMLElement = CreateDomElements.createNewElement('button', chooseGroup);
 
-      this.newElement.setAttributes(
+      CreateDomElements.setAttributes(
         level,
         {
           src: imgTextbookLevel[`book${i}`],
@@ -221,8 +221,8 @@ class TextbookWordsSection {
           alt: `book level ${i + 1}`,
         },
       );
-      this.newElement.insertChilds(btnBook, [level]);
-      this.newElement.insertChilds(containerGroup, [btnBook]);
+      CreateDomElements.insertChilds(btnBook, [level]);
+      CreateDomElements.insertChilds(containerGroup, [btnBook]);
       heightLevel += 5;
     }
     this.listener(containerGroup);
