@@ -78,7 +78,7 @@ class Page {
     CreateDomElements.setAttributes(linkToTextbook, { 'data-page': 'textbook' });
     CreateDomElements.setAttributes(linkToGames, { 'data-page': 'games' });
     CreateDomElements.setAttributes(linkToSprintGame, { 'data-page': 'sprint' });
-    CreateDomElements.setAttributes(linkToAudioGame, { 'data-page': 'audioGame' });
+    CreateDomElements.setAttributes(linkToAudioGame, { 'data-page': 'audioCall' });
     CreateDomElements.setAttributes(linkToStatistics, { 'data-page': 'statistics' });
 
     const linksToPages = [linkToMainPage, linkToTextbook, linkToGames, linkToStatistics];
@@ -212,6 +212,16 @@ class Page {
 
       case 'main':
         this.renderMainPage();
+        break;
+
+      case 'sprint':
+      // someFunction()
+        console.log('sprint');
+        break;
+
+      case 'audioCall':
+      // someFunction()
+        console.log('audiocall');
         break;
 
       default:
