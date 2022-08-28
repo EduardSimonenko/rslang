@@ -1,6 +1,7 @@
 import NewElement from '../../controller/newElement';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
+import SprintPage from '../sprintView/sprintPageRender';
 
 class Page {
   private static body = document.querySelector('body') as HTMLBodyElement;
@@ -45,7 +46,7 @@ class Page {
     const nav = NewElement.createNewElement('ul', ['nav']);
     const linkToMainPage = NewElement.createNewElement('a', ['nav__link'], 'главная');
     const linkToTextbook = NewElement.createNewElement('a', ['nav__link'], 'учебник');
-    const linkToGames = NewElement.createNewElement('a', ['nav__link sprint-game-link'], 'мини игры');
+    const linkToGames = NewElement.createNewElement('a', ['nav__link', 'sprint-game-link'], 'мини игры');
     const linkToStatistics = NewElement.createNewElement('a', ['nav__link'], 'статистика');
 
     const linksToPages = [linkToMainPage, linkToTextbook, linkToGames, linkToStatistics];
@@ -57,6 +58,12 @@ class Page {
     });
 
     NewElement.insertChilds(navbar, [nav]);
+
+    linkToGames.addEventListener('click', () => {
+      this.clearBody();
+      SprintPage.renderSprintPage();
+      console.log('yes');
+    });
 
     return navbar;
   }
