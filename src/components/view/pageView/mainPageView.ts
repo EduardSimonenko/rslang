@@ -58,12 +58,27 @@ class Page {
     const nav = CreateDomElements.createNewElement('ul', ['nav']);
     const linkToMainPage = CreateDomElements.createNewElement('a', ['nav__link'], 'главная');
     const linkToTextbook = CreateDomElements.createNewElement('a', ['nav__link'], 'учебник');
-    const linkToGames = CreateDomElements.createNewElement('a', ['nav__link'], 'мини игры');
+    const linkToGames = CreateDomElements.createNewElement('a', ['nav__link', 'link-to-games'], 'мини игры');
     const linkToStatistics = CreateDomElements.createNewElement('a', ['nav__link'], 'статистика');
+
+    const submenu = CreateDomElements.createNewElement('ul', ['submenu']);
+    const linkToSprintGame = CreateDomElements.createNewElement('a', ['link-to-games__content'], 'cпринт');
+    const linkToAudioGame = CreateDomElements.createNewElement('a', ['link-to-games__content'], 'аудиовызов');
+    const arrOfGamesLinks = [linkToSprintGame, linkToAudioGame];
+
+    arrOfGamesLinks.forEach((el) => {
+      const newItem = CreateDomElements.createNewElement('li', ['submenu__item']);
+      CreateDomElements.insertChilds(newItem, [el]);
+      CreateDomElements.insertChilds(submenu, [newItem]);
+    });
+
+    CreateDomElements.insertChilds(linkToGames, [submenu]);
 
     CreateDomElements.setAttributes(linkToMainPage, { 'data-page': 'main' });
     CreateDomElements.setAttributes(linkToTextbook, { 'data-page': 'textbook' });
     CreateDomElements.setAttributes(linkToGames, { 'data-page': 'games' });
+    CreateDomElements.setAttributes(linkToSprintGame, { 'data-page': 'sprint' });
+    CreateDomElements.setAttributes(linkToAudioGame, { 'data-page': 'audioGame' });
     CreateDomElements.setAttributes(linkToStatistics, { 'data-page': 'statistics' });
 
     const linksToPages = [linkToMainPage, linkToTextbook, linkToGames, linkToStatistics];
