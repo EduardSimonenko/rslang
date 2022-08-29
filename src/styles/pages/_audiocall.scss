@@ -30,6 +30,7 @@
   flex-direction: column;
   align-items: center;
   padding: 70px;
+  border-radius: 40px;
 }
 
 .audiocall__close-btn {
@@ -72,6 +73,8 @@
 
 .audiocall__level-btn {
   @include flex();
+  color: $title-color;
+  font-size: larger ;
   font-weight: bold;
   @include wh(50px, 50px);
   border-radius: 30px;
@@ -81,15 +84,18 @@
   transition: ease-in-out 0.3s;
 }
 
+// .audiocall__level-btn:disabled,
+
+
 .audiocall__level-btn:hover {
-  background-color: $light-section-background;
-  color: $font-color;
+  background-color: gold;
+  color: $light-font-color;
 }
 
 .active {
   border: 2px solid gold;
   background-color: gold;
-  color: $font-color;
+  color: $light-font-color;
 }
 
 .btn {
@@ -101,33 +107,45 @@
   transition: ease-in-out 0.3s;
 }
 
+.btn[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
 .btn:hover {
   background-color: $light-section-background;
   color: $font-color;
 }
 
-.audiocall__next-btn {
-  width: 150px;
-}
+// .audiocall__next-btn {
+//   width: 150px;
+// }
 
 .play-field {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid black;
+  // border: 1px solid $light-section-background;
+  padding: 70px;
+  gap: 50px;
 }
 
 .sound-section {
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 50px;
+  // border: 1px solid black;
+  @include flex($flex-direction: column);
+  gap: 20px;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: center;
+  // align-items: center;
+  // padding: 50px;
 }
 
 .word-img {
-  width: 300px;
+  // width: 300px;
+  max-height: 300px;
+  border-radius: 50px;
 }
 
 // .word {
@@ -135,9 +153,10 @@
 // }
 
 .sound-img {
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
+  @include wh(100px, 100px);
+  // width: 100px;
+  // height: 100px;
+  // border: 1px solid black;
   cursor: pointer;
   transition: ease-in-out 0.3s;
 }
@@ -146,16 +165,23 @@
   transform: scale(0.8);
 }
 
-.small {
-  width: 32px;
-  height: 32px;
-}
+// .small {
+//   @include wh(32px, 32px);
+// }
 
 .answers-wrapper {
   display: flex;
-  gap: 5px;
-  border: 1px solid black;
-  margin: 100px 0 50px 0;
+  gap: 15px;
+}
+
+.answer-btn {
+  border-radius: 25px;
+  border-color: transparent;
+}
+
+.audiocall__next-btn {
+  border-radius: 25px;
+  border-color: transparent;
 }
 
 .active {
@@ -168,13 +194,23 @@
 
 .results-container {
   width: 100%;
-  flex-direction: column;
-  align-items: center;
+  @include flex($flex-direction: column);
+  // flex-direction: column;
+  // align-items: center;
+  // justify-content: center;
   height: 80%;
-  display: flex;
+  gap: 35px;
+  // display: flex;
+}
+
+.results-title {
+  font-size: 5rem;
+  font-weight: bold;
 }
 
 .results-wrapper {
+  // @include flex($flex-direction: column);
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -185,30 +221,57 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 25px;
-  border: 1px solid black;
+  border: 1px solid $light-font-color;
+  border-radius: 25px;
+  background-color: rgba($color: $light-font-color, $alpha: 0.2);
+  gap: 20px;
+}
+
+.results-wrapper::-webkit-scrollbar-track {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.results-wrapper::-webkit-scrollbar {
+	width: 6px;
+	background-color: transparent
+  // height: 40%;
+}
+
+.results-wrapper::-webkit-scrollbar-thumb {
+	background-color: $light-font-color;
+  // height: 250px;
+  
 }
 
 .results-items {
   display: flex;
   flex-direction: column;
   // align-items: center;
-  border: 1px solid black;
+  // border: 1px solid black;
   width: 100%;
+  span {
+    font-weight: bold;
+  }
 }
 
 .results-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  border: 1px solid black;
+  gap: 15px;
+  border-bottom: 1px solid $light-font-color;
+  // border: 1px solid black;
 }
 
 .results-item__img {
-  height: 40px;
-  width: 40px;
+  @include wh(40px, 40px);
+  // height: 40px;
+  // width: 40px;
   cursor: pointer;
+  transition: ease-in-out 0.3s;
 }
 
 .results-item__img:hover {
-  transform: translate(0.8);
+  // transform: translate(0.8);
+  filter: invert(1);
 }

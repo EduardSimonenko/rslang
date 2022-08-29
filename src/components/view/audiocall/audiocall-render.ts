@@ -9,9 +9,20 @@ class AudiocallGame {
 
   customStorage: CustomStorage;
 
+  correctAudio: HTMLAudioElement;
+
+  wrongAudio: HTMLAudioElement;
+
   constructor() {
     // this.NewElement = new CreateDomElements();
     this.gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
+    this.correctAudio = CreateDomElements.createNewElement('audio', ['audio']) as HTMLAudioElement;
+    CreateDomElements.setAttributes(this.correctAudio, { src: '../../../assets/audio/correct.mp3', id: 'correct-audio' });
+    // this.correctAudio.setAttribute('src', '../../../assets/audio/correct.mp3');
+    this.wrongAudio = CreateDomElements.createNewElement('audio', ['audio']) as HTMLAudioElement;
+    CreateDomElements.setAttributes(this.wrongAudio, { src: '../../../assets/audio/wrong.mp3', id: 'wrong-audio' });
+    // this.wrongAudio.setAttribute('src', '../../../assets/audio/wrong.mp3');
+    // CreateDomElements.insertChilds(this.gameWrapper, [this.correctAudio, this.wrongAudio]);
     // this.customStorage = new CustomStorage();
   }
 
@@ -33,14 +44,14 @@ class AudiocallGame {
     CreateDomElements.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
     const levels = ['1', '2', '3', '4', '5', '6'];
     levels.forEach((item) => {
-      const node = CreateDomElements.createNewElement('btn', ['audiocall__level-btn'], `${item}`);
+      const node = CreateDomElements.createNewElement('button', ['audiocall__level-btn'], `${item}`);
       CreateDomElements.setAttributes(node, { id: 'level-btn' });
       node.dataset.level = String(Number(item) - 1);
-      node.addEventListener('click', () => {
-        CustomStorage.setStorage('audiocallLevel', node.dataset.level);
-        node.classList.toggle('active');
-        gameStartBtn.toggleAttribute('disabled');
-      });
+      // node.addEventListener('click', () => {
+      //   CustomStorage.setStorage('audiocallLevel', node.dataset.level);
+      //   node.classList.toggle('active');
+      //   gameStartBtn.toggleAttribute('disabled');
+      // });
       gameLevelBtns.appendChild(node);
     });
     CreateDomElements.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
@@ -78,18 +89,23 @@ class AudiocallGame {
 
     const answersSection = CreateDomElements.createNewElement('div', ['answers-wrapper']);
     for (let i = 0; i < 5; i += 1) {
-      const answerBtn = CreateDomElements.createNewElement('button', ['answer-btn', 'btn'], 'Загрузка');
+      const answerBtn = CreateDomElements.createNewElement('button', ['answer-btn', 'btn'], 'Загрузка...');
       answerBtn.setAttribute('id', 'answer-btn');
+      answerBtn.setAttribute('disabled', '');
       answerBtn.dataset.id = `${i}`;
       answersSection.appendChild(answerBtn);
     }
     const nextBtn = CreateDomElements.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
-    CreateDomElements.setAttributes(nextBtn, { id: 'next-btn', type: 'button' });
+    CreateDomElements.setAttributes(nextBtn, { id: 'next-btn', type: 'button', disabled: '' });
 
     CreateDomElements.insertChilds(playField, [gameClose, soundSection, answersSection, nextBtn]);
 
     this.gameWrapper.innerHTML = '';
-    this.gameWrapper.appendChild(playField);
+    CreateDomElements.insertChilds(
+      this.gameWrapper,
+      [playField, this.correctAudio, this.wrongAudio],
+    );
+    // this.gameWrapper.appendChild(playField);
     document.body.style.overflowY = 'hidden';
   }
 
