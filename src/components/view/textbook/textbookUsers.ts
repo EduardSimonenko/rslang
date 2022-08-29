@@ -1,23 +1,16 @@
-import { MethodEnum } from '../../../types/loadServerData/enum';
 import { WordStructure } from '../../../types/loadServerData/interfaces';
 import {
-  BtndifficultyEnum, BtnUserControlEnum, GroupWordsEnum, WordProgressEnum,
+  BtndifficultyEnum, BtnUserControlEnum, GroupWordsEnum,
 } from '../../../types/textbook/enum';
 import CreateDomElements from '../../controller/newElement';
-import ControllerTextbook from '../../controller/textbook/controller';
+import Api from '../../controller/textbook/controller';
 
 class TextbookUsers {
-  private cotroller: ControllerTextbook;
-
-  private isLogin: string | null;
-
   private hardGroup: string;
 
   private prePage :string;
 
-  constructor(isLogin: string | null) {
-    this.cotroller = new ControllerTextbook();
-    this.isLogin = isLogin;
+  constructor() {
     this.hardGroup = '6';
     this.prePage = '0';
   }
@@ -61,24 +54,19 @@ class TextbookUsers {
 
     switch (btn) {
       case BtnUserControlEnum.done:
-        await this.cotroller.CreateOrUpdateUserWord(
+        await Api.updateUserWord(
+          wordId,
           {
-            difficulty: BtndifficultyEnum.easy,
-            progress: WordProgressEnum.end,
-            wordId,
-            request: MethodEnum.put,
+            difficulty: BtndifficultyEnum.normal,
+            optional: { isLearned: true },
+
           },
         ) as Response;
         word.remove();
         break;
 
       case BtnUserControlEnum.hard:
-        await this.cotroller.GetOrDeleteWordUser(
-          {
-            wordId,
-            request: MethodEnum.delete,
-          },
-        ) as Response;
+        await Api.deleteWordUser(wordId) as Response;
         word.remove();
         break;
 
@@ -88,23 +76,21 @@ class TextbookUsers {
   }
 
   private async setWordForUser(button: HTMLButtonElement, word: HTMLDivElement): Promise<void> {
-    let method: string = MethodEnum.post;
-    let difficulty: string = BtndifficultyEnum.easy;
-    const wordId = word.getAttribute('id');
+    const wordId: string = word.getAttribute('id');
     const btn: string = button.dataset.control;
     try {
-      const checkWord = await this.cotroller.GetOrDeleteWordUser({
-        wordId,
-        request: MethodEnum.get,
-      }) as Response;
+      const checkWord = await Api.getWordUser(wordId) as Response;
 
       if (checkWord.ok) {
-        method = MethodEnum.put;
-        ({ difficulty } = await checkWord.json());
-        if (difficulty === 'easy' && btn !== 'hard') {
+        this.updateWordForUser(btn, wordId, word);
+
+        const { optional } = await checkWord.json();
+
+        if (optional.isLearned === true && btn !== 'hard') {
           this.unmarkDoneWord(word);
           return;
         }
+        return;
       }
     } catch (error) {
       console.error(error);
@@ -112,12 +98,11 @@ class TextbookUsers {
 
     switch (btn) {
       case BtnUserControlEnum.done:
-        await this.cotroller.CreateOrUpdateUserWord(
+        await Api.createUserWord(
+          wordId,
           {
-            difficulty: BtndifficultyEnum.easy,
-            progress: WordProgressEnum.end,
-            wordId,
-            request: method,
+            difficulty: BtndifficultyEnum.normal,
+            optional: { isLearned: true },
           },
         ) as Response;
         word.classList.remove('card__hard');
@@ -125,12 +110,49 @@ class TextbookUsers {
         break;
 
       case BtnUserControlEnum.hard:
-        await this.cotroller.CreateOrUpdateUserWord(
+        await Api.createUserWord(
+          wordId,
           {
             difficulty: BtndifficultyEnum.hard,
-            progress: WordProgressEnum.start,
-            wordId,
-            request: method,
+            optional: { isLearned: false },
+
+          },
+        ) as Response;
+        word.classList.remove('card__done');
+        word.classList.add('card__hard');
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  private async updateWordForUser(
+    btn: string,
+    wordId: string,
+    word: HTMLDivElement,
+  ): Promise<void> {
+    switch (btn) {
+      case BtnUserControlEnum.done:
+        await Api.updateUserWord(
+          wordId,
+          {
+            difficulty: BtndifficultyEnum.normal,
+            optional: { isLearned: true },
+
+          },
+        ) as Response;
+        word.classList.remove('card__hard');
+        word.classList.add('card__done');
+        break;
+
+      case BtnUserControlEnum.hard:
+        await Api.updateUserWord(
+          wordId,
+          {
+            difficulty: BtndifficultyEnum.hard,
+            optional: { isLearned: false },
+
           },
         ) as Response;
         word.classList.remove('card__done');
@@ -158,10 +180,7 @@ class TextbookUsers {
 
   private async unmarkDoneWord(word: HTMLDivElement): Promise<void> {
     const wordId = word.getAttribute('id');
-    await this.cotroller.GetOrDeleteWordUser({
-      wordId,
-      request: MethodEnum.delete,
-    }) as Response;
+    await Api.deleteWordUser(wordId) as Response;
 
     word.classList.remove('card__done');
   }
