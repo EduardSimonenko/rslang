@@ -84,9 +84,6 @@
   transition: ease-in-out 0.3s;
 }
 
-// .audiocall__level-btn:disabled,
-
-
 .audiocall__level-btn:hover {
   background-color: gold;
   color: $light-font-color;
@@ -118,45 +115,26 @@
   color: $font-color;
 }
 
-// .audiocall__next-btn {
-//   width: 150px;
-// }
-
 .play-field {
   display: flex;
   flex-direction: column;
   align-items: center;
-  // border: 1px solid $light-section-background;
   padding: 70px;
   gap: 50px;
 }
 
 .sound-section {
-  // border: 1px solid black;
   @include flex($flex-direction: column);
   gap: 20px;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: center;
-  // align-items: center;
-  // padding: 50px;
 }
 
 .word-img {
-  // width: 300px;
   max-height: 300px;
   border-radius: 50px;
 }
 
-// .word {
-//   // font-size: 2rem;
-// }
-
 .sound-img {
   @include wh(100px, 100px);
-  // width: 100px;
-  // height: 100px;
-  // border: 1px solid black;
   cursor: pointer;
   transition: ease-in-out 0.3s;
 }
@@ -164,10 +142,6 @@
 .sound-img:hover {
   transform: scale(0.8);
 }
-
-// .small {
-//   @include wh(32px, 32px);
-// }
 
 .answers-wrapper {
   display: flex;
@@ -195,12 +169,8 @@
 .results-container {
   width: 100%;
   @include flex($flex-direction: column);
-  // flex-direction: column;
-  // align-items: center;
-  // justify-content: center;
   height: 80%;
   gap: 35px;
-  // display: flex;
 }
 
 .results-title {
@@ -209,12 +179,9 @@
 }
 
 .results-wrapper {
-  // @include flex($flex-direction: column);
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  // font-size: 2rem;
   max-height: 70%;
   max-width: 30%;
   width: 100%;
@@ -235,20 +202,15 @@
 .results-wrapper::-webkit-scrollbar {
 	width: 6px;
 	background-color: transparent
-  // height: 40%;
 }
 
 .results-wrapper::-webkit-scrollbar-thumb {
 	background-color: $light-font-color;
-  // height: 250px;
-  
 }
 
 .results-items {
   display: flex;
   flex-direction: column;
-  // align-items: center;
-  // border: 1px solid black;
   width: 100%;
   span {
     font-weight: bold;
@@ -260,18 +222,14 @@
   align-items: center;
   gap: 15px;
   border-bottom: 1px solid $light-font-color;
-  // border: 1px solid black;
 }
 
 .results-item__img {
   @include wh(40px, 40px);
-  // height: 40px;
-  // width: 40px;
   cursor: pointer;
   transition: ease-in-out 0.3s;
 }
 
 .results-item__img:hover {
-  // transform: translate(0.8);
   filter: invert(1);
 }

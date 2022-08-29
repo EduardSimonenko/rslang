@@ -1,33 +1,21 @@
 import CreateDomElements from '../../controller/newElement';
-// import '../../../styles/pages/_audiocall.scss';
-import CustomStorage from '../../controller/storage';
 
 class AudiocallGame {
-  NewElement: CreateDomElements;
-
   gameWrapper: HTMLElement;
-
-  customStorage: CustomStorage;
 
   correctAudio: HTMLAudioElement;
 
   wrongAudio: HTMLAudioElement;
 
   constructor() {
-    // this.NewElement = new CreateDomElements();
     this.gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
     this.correctAudio = CreateDomElements.createNewElement('audio', ['audio']) as HTMLAudioElement;
     CreateDomElements.setAttributes(this.correctAudio, { src: '../../../assets/audio/correct.mp3', id: 'correct-audio' });
-    // this.correctAudio.setAttribute('src', '../../../assets/audio/correct.mp3');
     this.wrongAudio = CreateDomElements.createNewElement('audio', ['audio']) as HTMLAudioElement;
     CreateDomElements.setAttributes(this.wrongAudio, { src: '../../../assets/audio/wrong.mp3', id: 'wrong-audio' });
-    // this.wrongAudio.setAttribute('src', '../../../assets/audio/wrong.mp3');
-    // CreateDomElements.insertChilds(this.gameWrapper, [this.correctAudio, this.wrongAudio]);
-    // this.customStorage = new CustomStorage();
   }
 
   renderStartScreen(): void {
-    // const gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
     const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
@@ -42,32 +30,25 @@ class AudiocallGame {
     const gameLevelBtns = CreateDomElements.createNewElement('div', ['audiocall__level-btns']);
     const gameStartBtn = CreateDomElements.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Начать игру');
     CreateDomElements.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
+
     const levels = ['1', '2', '3', '4', '5', '6'];
     levels.forEach((item) => {
       const node = CreateDomElements.createNewElement('button', ['audiocall__level-btn'], `${item}`);
       CreateDomElements.setAttributes(node, { id: 'level-btn' });
       node.dataset.level = String(Number(item) - 1);
-      // node.addEventListener('click', () => {
-      //   CustomStorage.setStorage('audiocallLevel', node.dataset.level);
-      //   node.classList.toggle('active');
-      //   gameStartBtn.toggleAttribute('disabled');
-      // });
       gameLevelBtns.appendChild(node);
     });
-    CreateDomElements.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
 
+    CreateDomElements.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
     CreateDomElements.insertChilds(gameStartScreen, [gameClose,
       gameTitle, gameSubtitle, gameLevel, gameStartBtn]);
     this.gameWrapper.appendChild(gameStartScreen);
 
-    // const main = document.querySelector('.main');
-    // main.innerHTML = '';
     document.body.appendChild(this.gameWrapper);
     document.body.style.overflowY = 'hidden';
   }
 
   renderGame(): void {
-    // const gameWrapper = CreateDomElements.createNewElement('div', ['audiocall-wrapper']);
     const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
@@ -84,7 +65,7 @@ class AudiocallGame {
     const word = CreateDomElements.createNewElement('span', ['word', 'hidden']);
     word.setAttribute('id', 'word');
     soundImg.addEventListener('click', () => audio.play());
-    CreateDomElements.setAttributes(audio, { id: 'audio', src: '' }); // add src
+    CreateDomElements.setAttributes(audio, { id: 'audio', src: '' });
     CreateDomElements.insertChilds(soundSection, [wordImg, soundImg, audio, word]);
 
     const answersSection = CreateDomElements.createNewElement('div', ['answers-wrapper']);
@@ -105,7 +86,6 @@ class AudiocallGame {
       this.gameWrapper,
       [playField, this.correctAudio, this.wrongAudio],
     );
-    // this.gameWrapper.appendChild(playField);
     document.body.style.overflowY = 'hidden';
   }
 
@@ -116,31 +96,11 @@ class AudiocallGame {
       if (target.id === 'start-btn') {
         this.renderGame();
       }
-      // if (target.id === 'close-game') {
-      //   console.log('click');
-      //   this.gameWrapper.innerHTML = '';
-      //   document.body.removeChild(this.gameWrapper);
-      //   document.body.style.overflowY = '';
-      // }
     });
-    // const gameStartBtn = document.getElementById('start-btn');
-    // gameStartBtn.addEventListener('click', (event) => {
-    //   event.preventDefault();
-    //   this.renderGame();
-    // });
-
-    // const gameClose = document.getElementById('close-game');
-    // gameClose.addEventListener('click', () => {
-    //   console.log('click');
-    //   this.gameWrapper.innerHTML = '';
-    //   document.body.removeChild(this.gameWrapper);
-    //   document.body.style.overflowY = '';
-    // });
   }
 
-  start() {
+  start(): void {
     const enterGame = document.querySelector('[data-page="games"]');
-
     enterGame.addEventListener('click', () => {
       this.renderStartScreen();
       this.listen();

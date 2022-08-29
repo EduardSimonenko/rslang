@@ -10,8 +10,6 @@ class Audiocall extends Loader {
 
   level: string;
 
-  storage: CustomStorage;
-
   correctAnswers: WordStructure[];
 
   wrongAnswers: WordStructure[];
@@ -22,12 +20,6 @@ class Audiocall extends Loader {
 
   correctAnswer: WordStructure;
 
-  NewElement: CreateDomElements;
-
-  correctAudio: HTMLAudioElement;
-
-  wrongAudio: HTMLAudioElement;
-
   constructor() {
     super();
     this.counter = 0;
@@ -37,8 +29,6 @@ class Audiocall extends Loader {
     this.correctAnswers = [];
     this.wrongAnswers = [];
     this.level = localStorage.getItem('audiocallLevel');
-    // this.storage = new CustomStorage();
-    // this.NewElement = new CreateDomElements();
   }
 
   async getWords(level: number): Promise<WordStructure[]> {
@@ -67,7 +57,6 @@ class Audiocall extends Loader {
         .map((item: WordStructure) => item.wordTranslate);
       console.log(this.supportWords);
     } else if (index === this.words.length) {
-      // console.log({ correct: this.correctAnswers, wrong: this.wrongAnswers });
       const audiocallWrapper = document.querySelector('.audiocall-wrapper');
       audiocallWrapper.innerHTML = '';
       audiocallWrapper.appendChild(this.showResults());
@@ -148,10 +137,6 @@ class Audiocall extends Loader {
       if (target.id === 'close-game') {
         console.log('click');
         this.quitGame();
-        // console.log('counter', this.counter);
-        // console.log('words', this.words);
-        // console.log('correctAnswer', this.correctAnswer);
-        // console.log('correctAnswers', this.correctAnswers);
       }
 
       if (target.id === 'level-btn') {
@@ -169,7 +154,6 @@ class Audiocall extends Loader {
 
       if (target.id === 'start-btn') {
         this.buildGameLogic(0);
-        // console.log('start');
       }
 
       if (target.id === 'next-btn') {
@@ -200,8 +184,6 @@ class Audiocall extends Loader {
           this.buildGameLogic(this.counter);
           answerBtns.forEach((item) => item.removeAttribute('disabled'));
         }
-        // console.log('wrong', this.wrongAnswers);
-        // console.log('correct', this.correctAnswers);
       }
 
       if (target.id === 'answer-btn') {
@@ -230,8 +212,6 @@ class Audiocall extends Loader {
         const word = document.getElementById('word');
         wordImg.classList.remove('hidden');
         word.classList.remove('hidden');
-        // console.log('wrong', this.wrongAnswers);
-        // console.log('correct', this.correctAnswers);
       }
 
       if (target.classList.contains('results-item__img')) {
@@ -240,7 +220,6 @@ class Audiocall extends Loader {
     });
 
     document.addEventListener('keydown', (event) => {
-      // event.preventDefault();
       switch (event.code) {
         case 'Digit1':
           (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
