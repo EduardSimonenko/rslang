@@ -6,14 +6,11 @@ import CreateDomElements from '../../controller/newElement';
 import Api from '../../controller/textbook/controller';
 
 class TextbookUsers {
-  private isLogin: string | null;
-
   private hardGroup: string;
 
   private prePage :string;
 
-  constructor(isLogin: string | null) {
-    this.isLogin = isLogin;
+  constructor() {
     this.hardGroup = '6';
     this.prePage = '0';
   }

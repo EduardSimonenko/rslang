@@ -29,6 +29,7 @@ class TextbookTitlePage {
   }
 
   public renderPageTextBook(header: HTMLElement, footer: HTMLElement): void {
+    CustomStorage.setStorage('page', 'textbookTitle');
     this.header = header;
     this.footer = footer;
     if (this.body.firstElementChild) {
@@ -95,6 +96,8 @@ class TextbookTitlePage {
   }
 
   private async getLevelBooks(group: string, page = '0'): Promise<void> {
+    CustomStorage.setStorage('textbookWords', { group, page });
+    CustomStorage.setStorage('page', 'textbookWords');
     const sectionPage: TextbookWordsSection = new TextbookWordsSection(
       {
         clean: this.cleanPage,

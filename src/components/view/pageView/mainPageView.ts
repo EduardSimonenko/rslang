@@ -1,5 +1,6 @@
 import { ControlMenu } from '../../../types/textbook/interfaces';
 import CreateDomElements from '../../controller/newElement';
+import CustomStorage from '../../controller/storage';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
 import AppView from '../appView';
@@ -211,6 +212,9 @@ class Page {
         break;
 
       case 'main':
+        CustomStorage.clearDataStorage('textbookWords');
+        CustomStorage.clearDataStorage('paginationBtn');
+        CustomStorage.setStorage('page', 'main');
         this.renderMainPage();
         break;
 
