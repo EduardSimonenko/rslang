@@ -1,12 +1,13 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import { ControlMenu, PageElements } from '../../../types/textbook/interfaces';
 import { RemoveElements, ResponseData } from '../../../types/textbook/type';
-import ControllerTextbook from '../../controller/textbook/controller';
+import Api from '../../controller/textbook/controller';
 import baseUrl from '../../model/baseUrl';
 import TextbookPagination from './textbookPagination';
 import TextbookUsers from './textbookUsers';
 import textbookLevel from '../../../mocks/textbook.json';
 import CreateDomElements from '../../controller/newElement';
+import CustomStorage from '../../controller/storage';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -14,8 +15,6 @@ class TextbookWordsSection {
   private wrapper: HTMLElement;
 
   private cleanPage: RemoveElements;
-
-  private cotroller: ControllerTextbook;
 
   private containerWords: HTMLElement;
 
@@ -33,12 +32,11 @@ class TextbookWordsSection {
 
   private isLogin: string | null;
 
-  constructor(partPage: PageElements) {
+  constructor(partPage?: PageElements) {
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.cleanPage = partPage.clean;
-    this.cotroller = new ControllerTextbook();
     this.pagination = new TextbookPagination();
-    this.activeUser = new TextbookUsers(partPage.isLogin);
+    this.activeUser = new TextbookUsers();
     this.containerWords = CreateDomElements.createNewElement('div', ['container__words']);
     this.wrapperPagination = CreateDomElements.createNewElement('div', ['wrapper__pag']);
     this.wrapper = CreateDomElements.createNewElement('div', ['wrapper-textbook']);
@@ -210,6 +208,7 @@ class TextbookWordsSection {
         chooseGroup = ['btn__group'];
       }
       const btnBook: HTMLElement = CreateDomElements.createNewElement('button', chooseGroup);
+      CreateDomElements.setAttributes(btnBook, { id: `${i}` });
 
       CreateDomElements.setAttributes(
         level,
@@ -235,11 +234,13 @@ class TextbookWordsSection {
       const target = e.target as HTMLImageElement;
       if (!target.classList.contains('img__book')) return;
 
-      const book = target.dataset.book as string;
-      this.currentGroup = book;
-      this.chooseLevel(target);
-      this.getWordsChooseGroup(book);
+      const group = target.dataset.book as string;
+
+      this.currentGroup = group;
+      this.chooseLevel(group);
+      this.getWordsChooseGroup(group);
       this.startNumPage();
+      CustomStorage.setStorage('textbookWords', { group, page: '0' });
     });
   }
 
@@ -249,25 +250,25 @@ class TextbookWordsSection {
     const hardGroup = '6';
 
     if (this.isLogin && group === hardGroup) {
-      response = (await this.cotroller.getDifficultWords()) as Response;
+      response = (await Api.getDifficultWords()) as Response;
       data = await response.json() as AuthorizeUserWords[];
       this.renderSectionTextbook(data[0].paginatedResults, true);
     } else if (this.isLogin) {
-      response = (await this.cotroller.getWordsLoginUser(group, page)) as Response;
+      response = (await Api.getWordsWithOption(group, page)) as Response;
       data = await response.json() as AuthorizeUserWords[];
       this.renderSectionTextbook(data[0].paginatedResults);
     } else {
-      response = (await this.cotroller.getWordsUnloginUser(group, page)) as Response;
+      response = (await Api.getAllWords(group, page)) as Response;
       data = await response.json() as WordStructure[];
       this.renderSectionTextbook(data);
     }
     this.currentGroup = group;
   }
 
-  private chooseLevel(book: HTMLImageElement): void {
+  public chooseLevel(group: string): void {
     const btns = document.querySelectorAll('.btn__group') as NodeListOf<Element>;
     btns.forEach((btn) => btn.classList.remove('btn__shadow'));
-    book.parentElement.classList.add('btn__shadow');
+    document.getElementById(group).classList.add('btn__shadow');
   }
 
   private cleanSectionWords(): void {
@@ -316,6 +317,8 @@ class TextbookWordsSection {
 
       this.pagination.changeNumPagination(page);
       this.getWordsChooseGroup(this.currentGroup, this.pagination.chooseNumPage);
+      CustomStorage.setStorage('textbookWords', { group: this.currentGroup, page: this.pagination.chooseNumPage });
+      CustomStorage.setStorage('paginationBtn', page);
     });
   }
 

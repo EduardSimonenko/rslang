@@ -13,13 +13,7 @@ export enum BtnUserControlEnum {
 
 export enum BtndifficultyEnum {
   hard = 'hard',
-  easy = 'easy',
-}
-
-export enum WordProgressEnum {
-  start = 'start',
-  middle = 'middle',
-  end = 'end',
+  normal = 'normal',
 }
 
 export enum GroupWordsEnum {

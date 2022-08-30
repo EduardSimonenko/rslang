@@ -1,20 +1,14 @@
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
-import { UserWord } from '../../../types/textbook/interfaces';
+import { UserWordStructure } from '../../../types/loadServerData/interfaces';
 import Loader from '../load';
 import CustomStorage from '../storage';
 
-class ControllerTextbook extends Loader {
-  private token: string;
+class Api extends Loader {
+  static token: string = CustomStorage.getStorage('token');
 
-  private userId: string;
+  static userId: string = CustomStorage.getStorage('userId');
 
-  constructor() {
-    super();
-    this.token = CustomStorage.getStorage('token');
-    this.userId = CustomStorage.getStorage('userId');
-  }
-
-  public getWordsUnloginUser(group: string, page: string): Promise<Response> {
+  static getAllWords(group: string, page: string): Promise<Response> {
     return super.load(
       {
         method: MethodEnum.get,
@@ -27,16 +21,10 @@ class ControllerTextbook extends Loader {
     );
   }
 
-  public CreateOrUpdateUserWord(userRequest: UserWord): Promise<Response> {
-    const wordOption = {
-      difficulty: userRequest.difficulty,
-      optional: {
-        progress: userRequest.progress,
-      },
-    };
+  static createUserWord(wordId: string, wordOption: UserWordStructure): Promise<Response> {
     return super.load(
       {
-        method: userRequest.request,
+        method: MethodEnum.post,
         headers: {
           Authorization: `Bearer ${this.token}`,
           Accept: 'application/json',
@@ -44,24 +32,52 @@ class ControllerTextbook extends Loader {
         },
         body: JSON.stringify(wordOption),
       },
-      [UrlFolderEnum.users, this.userId, UrlFolderEnum.words, userRequest.wordId],
+      [UrlFolderEnum.users, this.userId, UrlFolderEnum.words, wordId],
     );
   }
 
-  public async GetOrDeleteWordUser(userRequest: UserWord): Promise<Response> {
+  static updateUserWord(wordId: string, wordOption: UserWordStructure): Promise<Response> {
     return super.load(
       {
-        method: userRequest.request,
+        method: MethodEnum.put,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(wordOption),
+      },
+      [UrlFolderEnum.users, this.userId, UrlFolderEnum.words, wordId],
+    );
+  }
+
+  static async deleteWordUser(wordId: string): Promise<Response> {
+    return super.load(
+      {
+        method: MethodEnum.delete,
         headers: {
           Authorization: `Bearer ${this.token}`,
           Accept: 'application/json',
         },
       },
-      [UrlFolderEnum.users, this.userId, UrlFolderEnum.words, userRequest.wordId],
+      [UrlFolderEnum.users, this.userId, UrlFolderEnum.words, wordId],
     );
   }
 
-  public async getAllUserWord(): Promise<Response> {
+  static async getWordUser(wordId: string): Promise<Response> {
+    return super.load(
+      {
+        method: MethodEnum.get,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          Accept: 'application/json',
+        },
+      },
+      [UrlFolderEnum.users, this.userId, UrlFolderEnum.words, wordId],
+    );
+  }
+
+  static async getAllUserWord(): Promise<Response> {
     return super.load(
       {
         method: MethodEnum.get,
@@ -74,7 +90,7 @@ class ControllerTextbook extends Loader {
     );
   }
 
-  public async getWordsLoginUser(group: string, page: string): Promise<Response> {
+  static async getWordsWithOption(group: string, page: string): Promise<Response> {
     return super.load(
       {
         method: MethodEnum.get,
@@ -88,7 +104,7 @@ class ControllerTextbook extends Loader {
     );
   }
 
-  public async getDifficultWords(): Promise<Response> {
+  static async getDifficultWords(): Promise<Response> {
     const hardWords = JSON.stringify({ 'userWord.difficulty': 'hard' });
     return super.load(
       {
@@ -104,4 +120,4 @@ class ControllerTextbook extends Loader {
   }
 }
 
-export default ControllerTextbook;
+export default Api;

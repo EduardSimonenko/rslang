@@ -116,7 +116,7 @@ class TextbookPagination {
         break;
     }
     this.selectPage = true;
-    this.renderPaginationMenu(this.selectPage);
+    this.renderPaginationMenu();
     this.selectPage = false;
   }
 
