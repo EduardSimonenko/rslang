@@ -3,6 +3,7 @@
   "outDir": "./dist/",
   "moduleResolution": "node",
   "noImplicitAny": true,
+  "resolveJsonModule": true,
   "allowSyntheticDefaultImports": true,
   "module": "esnext",
   "target": "es2017",

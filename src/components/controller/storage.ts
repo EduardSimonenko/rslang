@@ -1,16 +1,22 @@
+import { StorageData } from '../../types/textbook/type';
+
 class CustomStorage {
-  public getStorage(key: string): string {
+  static getStorage(key: string): string {
     const value = localStorage.getItem(key);
     return value;
   }
 
-  public setStorage(key: string, value: string) {
+  static setStorage(key: string, value: StorageData) {
     if (typeof value !== 'string') {
       const valueJson = JSON.stringify(value);
       localStorage.setItem(key, valueJson);
     } else {
       localStorage.setItem(key, value);
     }
+  }
+
+  static clearDataStorage(key: string): void {
+    localStorage.removeItem(key);
   }
 }
 

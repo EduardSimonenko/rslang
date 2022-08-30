@@ -3,26 +3,23 @@ import Loader from '../load';
 import CustomStorage from '../storage';
 
 class Authorization extends Loader {
-  storage: CustomStorage;
+  static message: HTMLElement;
 
-  message: HTMLElement;
+  static emailInput: HTMLInputElement;
 
-  emailInput: HTMLInputElement;
+  static passwordInput: HTMLInputElement;
 
-  passwordInput: HTMLInputElement;
-
-  nameInput: HTMLInputElement;
+  static nameInput: HTMLInputElement;
 
   constructor() {
     super();
-    this.storage = new CustomStorage();
-    this.message = document.getElementById('login-error');
-    this.emailInput = document.getElementById('email') as HTMLInputElement;
-    this.nameInput = document.getElementById('name') as HTMLInputElement;
-    this.passwordInput = document.getElementById('password') as HTMLInputElement;
+    Authorization.message = document.getElementById('login-error');
+    Authorization.emailInput = document.getElementById('email') as HTMLInputElement;
+    Authorization.nameInput = document.getElementById('name') as HTMLInputElement;
+    Authorization.passwordInput = document.getElementById('password') as HTMLInputElement;
   }
 
-  private async createNewUser(): Promise<void> {
+  static async createNewUser(): Promise<void> {
     super.load(
       {
         method: MethodEnum.post,
@@ -40,7 +37,7 @@ class Authorization extends Loader {
     );
   }
 
-  private async logIn(): Promise<void> {
+  static async logIn(): Promise<void> {
     const result = await super.load(
       {
         method: MethodEnum.post,
@@ -56,15 +53,15 @@ class Authorization extends Loader {
       [UrlFolderEnum.signin],
     ) as Response;
 
-    if (result) {
+    if (result.ok) {
       const {
         name, userId, token, refreshToken,
       }: Record<string, string> = await result.json();
 
-      this.storage.setStorage('name', name);
-      this.storage.setStorage('userId', userId);
-      this.storage.setStorage('token', token);
-      this.storage.setStorage('refreshToken', refreshToken);
+      CustomStorage.setStorage('name', name);
+      CustomStorage.setStorage('userId', userId);
+      CustomStorage.setStorage('token', token);
+      CustomStorage.setStorage('refreshToken', refreshToken);
 
       this.message.innerText = 'Вы вошли в систему';
       this.message.style.color = 'green';
@@ -74,15 +71,15 @@ class Authorization extends Loader {
     }
   }
 
-  private async refreshToken(): Promise<void> {
-    const userId = this.storage.getStorage('userId');
+  static async refreshToken(): Promise<void> {
+    const userId = CustomStorage.getStorage('userId');
     const result = await super.load(
       {
         method: MethodEnum.get,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          authorization: `Bearer ${this.storage.getStorage('refreshToken')}`,
+          authorization: `Bearer ${CustomStorage.getStorage('refreshToken')}`,
         },
       },
       [UrlFolderEnum.users, userId, 'tokens'],
@@ -93,20 +90,20 @@ class Authorization extends Loader {
         token, refreshToken,
       }: Record<string, string> = await result.json();
 
-      this.storage.setStorage('token', token);
-      this.storage.setStorage('refreshToken', refreshToken);
+      CustomStorage.setStorage('token', token);
+      CustomStorage.setStorage('refreshToken', refreshToken);
     }
   }
 
-  private async getUserById(): Promise<Record<string, string>> {
-    const userId = this.storage.getStorage('userId');
+  static async getUserById(): Promise<Record<string, string>> {
+    const userId = CustomStorage.getStorage('userId');
     const result = await super.load(
       {
         method: MethodEnum.get,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          authorization: `Bearer ${this.storage.getStorage('token')}`,
+          authorization: `Bearer ${CustomStorage.getStorage('token')}`,
         },
       },
       [UrlFolderEnum.users, userId],
@@ -120,7 +117,7 @@ class Authorization extends Loader {
     window.location.reload();
   }
 
-  private clear(): void {
+  static clear(): void {
     this.emailInput.value = '';
     this.nameInput.value = '';
     this.passwordInput.value = '';
@@ -134,11 +131,11 @@ class Authorization extends Loader {
 
     registrationBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      this.createNewUser();
+      Authorization.createNewUser();
     });
     loginBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      this.logIn();
+      Authorization.logIn();
     });
     logoutBtn.addEventListener('click', (event) => {
       event.preventDefault();
@@ -146,7 +143,7 @@ class Authorization extends Loader {
     });
     cancelBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      this.clear();
+      Authorization.clear();
     });
   }
 }

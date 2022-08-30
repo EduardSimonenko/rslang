@@ -1,15 +1,22 @@
-// import { DataWords } from '../../types/loadServerData/interfaces';
-// import { Controller } from '../controller/controller';
+import CustomStorage from '../controller/storage';
 import Page from '../view/pageView/mainPageView';
+import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 
 export default class App {
-  // private controller: Controller;
-
-  // constructor() {
-  //   this.controller = new Controller();
-  // }
-
   static async start(): Promise<void> {
-    Page.renderMainPage();
+    const textbook = new TextbookTitlePage();
+    const page = CustomStorage.getStorage('page');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      switch (page) {
+        case 'textbookTitle':
+          textbook.renderPageTextBook(Page.renderHeader(), Page.renderFooter());
+          break;
+
+        default:
+          Page.renderMainPage();
+          break;
+      }
+    });
   }
 }
