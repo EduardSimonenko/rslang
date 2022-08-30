@@ -100,10 +100,12 @@ class AudiocallGame {
   }
 
   start(): void {
-    const enterGame = document.querySelector('[data-page="games"]');
-    enterGame.addEventListener('click', () => {
-      this.renderStartScreen();
-      this.listen();
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.getAttribute('data-page') === 'audioCall') {
+        this.renderStartScreen();
+        this.listen();
+      }
     });
   }
 }

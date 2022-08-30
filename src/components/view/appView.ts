@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import Audiocall from '../controller/audiocall/audiocall';
 import Authorization from '../controller/authorization/authorization';
 import AudiocallGame from './audiocall/audiocall-render';

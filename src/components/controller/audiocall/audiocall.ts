@@ -33,7 +33,7 @@ class Audiocall extends Loader {
 
   async getWords(level: number): Promise<WordStructure[]> {
     const randomPage = getRandomInt(0, 29);
-    const result = await super.load(
+    const result = await Loader.load(
       {
         method: MethodEnum.get,
         headers: {
