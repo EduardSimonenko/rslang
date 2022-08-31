@@ -1,6 +1,6 @@
 import CreateDomElements from '../../controller/newElement';
 
-class AudiocallGame {
+class AudiocallRender {
   gameWrapper: HTMLElement;
 
   correctAudio: HTMLAudioElement;
@@ -88,26 +88,6 @@ class AudiocallGame {
     );
     document.body.style.overflowY = 'hidden';
   }
-
-  listen(): void {
-    document.addEventListener('click', (event) => {
-      event.preventDefault();
-      const target = event.target as HTMLElement;
-      if (target.id === 'start-btn') {
-        this.renderGame();
-      }
-    });
-  }
-
-  start(): void {
-    document.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      if (target.getAttribute('data-page') === 'audioCall') {
-        this.renderStartScreen();
-        this.listen();
-      }
-    });
-  }
 }
 
-export default AudiocallGame;
+export default AudiocallRender;

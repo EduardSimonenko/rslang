@@ -1,11 +1,14 @@
+/* eslint-disable max-len */
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import { WordStructure } from '../../../types/loadServerData/interfaces';
+import baseUrl from '../../model/baseUrl';
 import { shuffle, getRandomInt } from '../../utils/utils';
+import AudiocallRender from '../../view/audiocall/audiocall-render';
 import Loader from '../load';
 import CreateDomElements from '../newElement';
 import CustomStorage from '../storage';
 
-class Audiocall extends Loader {
+class Audiocall extends AudiocallRender {
   words: WordStructure[];
 
   level: string;
@@ -48,21 +51,52 @@ class Audiocall extends Loader {
     return words;
   }
 
-  async buildGameLogic(index: number): Promise<void> {
-    if (index === 0) {
+  async buildAllWords(group: number): Promise<void> {
+    if (group === 0) {
       this.words = shuffle(await this.getWords(+this.level));
       const supportArray1 = await this.getWords(getRandomInt(0, 5));
       const supportArray2 = await this.getWords(getRandomInt(0, 5));
       this.supportWords = shuffle(supportArray1.concat(supportArray2))
         .map((item: WordStructure) => item.wordTranslate);
-      console.log(this.supportWords);
-    } else if (index === this.words.length) {
-      const audiocallWrapper = document.querySelector('.audiocall-wrapper');
-      audiocallWrapper.innerHTML = '';
-      audiocallWrapper.appendChild(this.showResults());
+    }
+  }
+
+  buildAnswers(results: WordStructure[], title: string): HTMLElement {
+    const answers = CreateDomElements.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
+    for (let i = 0; i < results.length; i += 1) {
+      const answer = CreateDomElements.createNewElement('div', ['results-item']);
+      const soundImg = CreateDomElements.createNewElement('img', ['results-item__img']) as HTMLImageElement;
+      soundImg.src = '../../../assets/svg/audio.svg';
+      const audio = CreateDomElements.createNewElement('audio', ['results-item__audio']) as HTMLAudioElement;
+      audio.src = `${baseUrl}/${results[i].audio}`;
+      const word = CreateDomElements.createNewElement('div', ['results-item__word'], `${results[i].word} - ${results[i].wordTranslate}`);
+      CreateDomElements.insertChilds(answer, [soundImg, audio, word]);
+      answers.appendChild(answer);
+    }
+    return answers;
+  }
+
+  showResults(index: number): void {
+    if (index === this.words.length) {
+      const gameWrapper = document.querySelector('.audiocall-wrapper');
+      gameWrapper.innerHTML = '';
+      const resultsContainer = CreateDomElements.createNewElement('div', ['results-container']);
+      const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
+      const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
+      const resultsBtn = CreateDomElements.createNewElement('button', ['results-btn', 'btn'], 'Завершить игру');
+      CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button' });
+      CreateDomElements.insertChilds(resultsWrapper, [this.buildAnswers(this.correctAnswers, 'Знаю'), this.buildAnswers(this.wrongAnswers, 'Ошибки')]);
+      CreateDomElements.insertChilds(resultsContainer, [resultsTitle, resultsWrapper, resultsBtn]);
+      gameWrapper.appendChild(resultsContainer);
+    }
+  }
+
+  async buildGameLogic(index: number): Promise<void> {
+    await this.buildAllWords(index);
+    if (index === this.words.length) {
+      this.showResults(index);
       return;
     }
-
     this.correctAnswer = this.words[index];
     const audio = document.getElementById('audio') as HTMLAudioElement;
     const wordImg = document.getElementById('word-img') as HTMLImageElement;
@@ -82,37 +116,20 @@ class Audiocall extends Loader {
       answerBtns[i].removeAttribute('disabled');
     }
     nextBtn.removeAttribute('disabled');
-    word.innerText = `${this.correctAnswer.word} - ${this.correctAnswer.wordTranslate}`;
-    wordImg.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.correctAnswer.image}`;
-    audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${this.correctAnswer.audio}`;
+    word.innerText = `${this.correctAnswer.word} - ${this.correctAnswer.transcription} - ${this.correctAnswer.wordTranslate}`;
+    wordImg.src = `${baseUrl}/${this.correctAnswer.image}`;
+    audio.src = `${baseUrl}/${this.correctAnswer.audio}`;
     audio.play();
     this.counter += 1;
   }
 
-  showAnswers(results: WordStructure[], title: string): HTMLElement {
-    const answers = CreateDomElements.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
-    for (let i = 0; i < results.length; i += 1) {
-      const answer = CreateDomElements.createNewElement('div', ['results-item']);
-      const soundImg = CreateDomElements.createNewElement('img', ['results-item__img']) as HTMLImageElement;
-      soundImg.src = '../../../assets/svg/audio.svg';
-      const audio = CreateDomElements.createNewElement('audio', ['results-item__audio']) as HTMLAudioElement;
-      audio.src = `https://rslang2022q1-learnwords.herokuapp.com/${results[i].audio}`;
-      const word = CreateDomElements.createNewElement('div', ['results-item__word'], `${results[i].word} - ${results[i].wordTranslate}`);
-      CreateDomElements.insertChilds(answer, [soundImg, audio, word]);
-      answers.appendChild(answer);
-    }
-    return answers;
-  }
-
-  showResults(): HTMLElement {
-    const resultsContainer = CreateDomElements.createNewElement('div', ['results-container']);
-    const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
-    const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
-    const resultsBtn = CreateDomElements.createNewElement('button', ['results-btn', 'btn'], 'Завершить игру');
-    CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button' });
-    CreateDomElements.insertChilds(resultsWrapper, [this.showAnswers(this.correctAnswers, 'Знаю'), this.showAnswers(this.wrongAnswers, 'Ошибки')]);
-    CreateDomElements.insertChilds(resultsContainer, [resultsTitle, resultsWrapper, resultsBtn]);
-    return resultsContainer;
+  selectLevel(target: HTMLElement): void {
+    const levelBtns = Array.from(document.querySelectorAll('.audiocall__level-btn')) as HTMLButtonElement[];
+    levelBtns.forEach((item) => item.toggleAttribute('disabled'));
+    CustomStorage.setStorage('audiocallLevel', target.dataset.level);
+    target.classList.toggle('active');
+    target.removeAttribute('disabled');
+    document.getElementById('start-btn').toggleAttribute('disabled');
   }
 
   quitGame(): void {
@@ -135,17 +152,11 @@ class Audiocall extends Loader {
       console.log(event.target);
 
       if (target.id === 'close-game') {
-        console.log('click');
         this.quitGame();
       }
 
       if (target.id === 'level-btn') {
-        const levelBtns = Array.from(document.querySelectorAll('.audiocall__level-btn')) as HTMLButtonElement[];
-        levelBtns.forEach((item) => item.toggleAttribute('disabled'));
-        CustomStorage.setStorage('audiocallLevel', target.dataset.level);
-        target.classList.toggle('active');
-        target.removeAttribute('disabled');
-        document.getElementById('start-btn').toggleAttribute('disabled');
+        this.selectLevel(target);
       }
 
       if (target.id === 'results-btn') {
@@ -153,10 +164,15 @@ class Audiocall extends Loader {
       }
 
       if (target.id === 'start-btn') {
+        super.renderGame();
         this.buildGameLogic(0);
       }
 
-      if (target.id === 'next-btn') {
+      if (target.getAttribute('data-page') === 'audioCall') {
+        super.renderStartScreen();
+      }
+
+      if (target.id === 'next-btn') { // refactor
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
         answerBtns.forEach((item) => item.setAttribute('disabled', ''));
         answerBtns.forEach((item) => {
@@ -184,9 +200,9 @@ class Audiocall extends Loader {
           this.buildGameLogic(this.counter);
           answerBtns.forEach((item) => item.removeAttribute('disabled'));
         }
-      }
+      } //
 
-      if (target.id === 'answer-btn') {
+      if (target.id === 'answer-btn') { // refactor
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
         answerBtns.forEach((item) => item.setAttribute('disabled', ''));
         if (target.innerText === this.correctAnswer.wordTranslate) {
@@ -217,7 +233,7 @@ class Audiocall extends Loader {
       if (target.classList.contains('results-item__img')) {
         (target.nextSibling as HTMLAudioElement).play();
       }
-    });
+    }); //
 
     document.addEventListener('keydown', (event) => {
       switch (event.code) {

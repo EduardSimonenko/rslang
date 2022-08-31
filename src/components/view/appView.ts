@@ -1,6 +1,6 @@
 import Audiocall from '../controller/audiocall/audiocall';
 import Authorization from '../controller/authorization/authorization';
-import AudiocallGame from './audiocall/audiocall-render';
+// import AudiocallRender from './audiocall/audiocall-render';
 import AuthForm from './authorization/auth-render';
 
 class AppView {
@@ -17,8 +17,8 @@ class AppView {
   }
 
   static startAudiocall(): void {
-    const audiocallGame = new AudiocallGame();
-    audiocallGame.start();
+    // const audiocallGame = new AudiocallGame();
+    // audiocallGame.start();
     const audiocall = new Audiocall();
     audiocall.start();
   }

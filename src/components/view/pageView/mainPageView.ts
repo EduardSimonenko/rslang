@@ -226,7 +226,7 @@ class Page {
       case 'audioCall':
       // someFunction()
         // AppView.startAudiocall();
-        console.log('audiocall');
+        // console.log('audiocall');
         break;
 
       default:
