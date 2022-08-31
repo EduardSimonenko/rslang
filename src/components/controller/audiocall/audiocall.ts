@@ -1,17 +1,17 @@
-/* eslint-disable max-len */
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
-import { WordStructure } from '../../../types/loadServerData/interfaces';
+import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import baseUrl from '../../model/baseUrl';
 import { shuffle, getRandomInt } from '../../utils/utils';
 import AudiocallRender from '../../view/audiocall/audiocall-render';
 import Loader from '../load';
 import CreateDomElements from '../newElement';
 import CustomStorage from '../storage';
+import Api from '../textbook/controller';
 
 class Audiocall extends AudiocallRender {
   words: WordStructure[];
 
-  level: string;
+  // level: string;
 
   correctAnswers: WordStructure[];
 
@@ -31,11 +31,10 @@ class Audiocall extends AudiocallRender {
     this.correctAnswer = {} as WordStructure;
     this.correctAnswers = [];
     this.wrongAnswers = [];
-    this.level = localStorage.getItem('audiocallLevel');
+    // this.level = localStorage.getItem('audiocallLevel');
   }
 
-  async getWords(level: number): Promise<WordStructure[]> {
-    const randomPage = getRandomInt(0, 29);
+  async getWords(group: number, page: number): Promise<WordStructure[]> {
     const result = await Loader.load(
       {
         method: MethodEnum.get,
@@ -45,58 +44,56 @@ class Audiocall extends AudiocallRender {
         },
       },
       [UrlFolderEnum.words],
-      [`page=${randomPage}`, `group=${level}`],
+      [`page=${page}`, `group=${group}`],
     ) as Response;
     const words: WordStructure[] = await result.json();
     return words;
   }
 
-  async buildAllWords(group: number): Promise<void> {
-    if (group === 0) {
-      this.words = shuffle(await this.getWords(+this.level));
-      const supportArray1 = await this.getWords(getRandomInt(0, 5));
-      const supportArray2 = await this.getWords(getRandomInt(0, 5));
-      this.supportWords = shuffle(supportArray1.concat(supportArray2))
-        .map((item: WordStructure) => item.wordTranslate);
-    }
+  async getUserWordsWithOpt() {
+    const args = JSON.parse(localStorage.getItem('textbookWords'));
+    const response = await Api.getWordsWithOption(args.group, args.page);
+    const wordArr: AuthorizeUserWords[] = await response.json();
+    const textbookWords = wordArr[0].paginatedResults; // array
+
+    const unmarkedWords = textbookWords.filter((word: WordStructure) => !word.userWord);
+    const hardWords = textbookWords.filter((word: WordStructure) => word.userWord)
+      .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
+
+    const words = [...unmarkedWords, ...hardWords];
+    // console.log('filtered', hardWords);
+    return words;
   }
 
-  buildAnswers(results: WordStructure[], title: string): HTMLElement {
-    const answers = CreateDomElements.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
-    for (let i = 0; i < results.length; i += 1) {
-      const answer = CreateDomElements.createNewElement('div', ['results-item']);
-      const soundImg = CreateDomElements.createNewElement('img', ['results-item__img']) as HTMLImageElement;
-      soundImg.src = '../../../assets/svg/audio.svg';
-      const audio = CreateDomElements.createNewElement('audio', ['results-item__audio']) as HTMLAudioElement;
-      audio.src = `${baseUrl}/${results[i].audio}`;
-      const word = CreateDomElements.createNewElement('div', ['results-item__word'], `${results[i].word} - ${results[i].wordTranslate}`);
-      CreateDomElements.insertChilds(answer, [soundImg, audio, word]);
-      answers.appendChild(answer);
-    }
-    return answers;
+  async buildSupportWords(): Promise<void> {
+    const supportArray1 = await this.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
+    const supportArray2 = await this.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
+    this.supportWords = shuffle(supportArray1.concat(supportArray2))
+      .map((item: WordStructure) => item.wordTranslate);
   }
 
-  showResults(index: number): void {
-    if (index === this.words.length) {
-      const gameWrapper = document.querySelector('.audiocall-wrapper');
-      gameWrapper.innerHTML = '';
-      const resultsContainer = CreateDomElements.createNewElement('div', ['results-container']);
-      const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
-      const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
-      const resultsBtn = CreateDomElements.createNewElement('button', ['results-btn', 'btn'], 'Завершить игру');
-      CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button' });
-      CreateDomElements.insertChilds(resultsWrapper, [this.buildAnswers(this.correctAnswers, 'Знаю'), this.buildAnswers(this.wrongAnswers, 'Ошибки')]);
-      CreateDomElements.insertChilds(resultsContainer, [resultsTitle, resultsWrapper, resultsBtn]);
-      gameWrapper.appendChild(resultsContainer);
+  async buildAllWords(index: number, group?: number, page?: number) {
+    if (index === 0 && localStorage.getItem('textbookWords') && CustomStorage.getStorage('token')) {
+      this.words = await this.getUserWordsWithOpt();
+    } else if (index === 0 && localStorage.getItem('textbookWords')) {
+      const args = JSON.parse(localStorage.getItem('textbookWords'));
+      this.words = shuffle(await this.getWords(args.group, args.page));
+    } else {
+      this.words = shuffle(await this.getWords(group, page));
     }
+    await this.buildSupportWords();
   }
 
   async buildGameLogic(index: number): Promise<void> {
-    await this.buildAllWords(index);
+    if (index === 0) {
+      await this.buildAllWords(index, +localStorage.getItem('audiocallLevel'), getRandomInt(0, 29));
+      console.log(this.words.length, this.words);
+    }
     if (index === this.words.length) {
-      this.showResults(index);
+      this.showResults();
       return;
     }
+
     this.correctAnswer = this.words[index];
     const audio = document.getElementById('audio') as HTMLAudioElement;
     const wordImg = document.getElementById('word-img') as HTMLImageElement;
@@ -132,6 +129,34 @@ class Audiocall extends AudiocallRender {
     document.getElementById('start-btn').toggleAttribute('disabled');
   }
 
+  buildAnswers(results: WordStructure[], title: string): HTMLElement {
+    const answers = CreateDomElements.createNewElement('div', ['results-items'], `<span>${title}: ${results.length}</span>`);
+    for (let i = 0; i < results.length; i += 1) {
+      const answer = CreateDomElements.createNewElement('div', ['results-item']);
+      const soundImg = CreateDomElements.createNewElement('img', ['results-item__img']) as HTMLImageElement;
+      soundImg.src = '../../../assets/svg/audio.svg';
+      const audio = CreateDomElements.createNewElement('audio', ['results-item__audio']) as HTMLAudioElement;
+      audio.src = `${baseUrl}/${results[i].audio}`;
+      const word = CreateDomElements.createNewElement('div', ['results-item__word'], `${results[i].word} - ${results[i].wordTranslate}`);
+      CreateDomElements.insertChilds(answer, [soundImg, audio, word]);
+      answers.appendChild(answer);
+    }
+    return answers;
+  }
+
+  showResults(): void {
+    const gameWrapper = document.querySelector('.audiocall-wrapper');
+    gameWrapper.innerHTML = '';
+    const resultsContainer = CreateDomElements.createNewElement('div', ['results-container']);
+    const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
+    const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
+    const resultsBtn = CreateDomElements.createNewElement('button', ['results-btn', 'btn'], 'Завершить игру');
+    CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button' });
+    CreateDomElements.insertChilds(resultsWrapper, [this.buildAnswers(this.correctAnswers, 'Знаю'), this.buildAnswers(this.wrongAnswers, 'Ошибки')]);
+    CreateDomElements.insertChilds(resultsContainer, [resultsTitle, resultsWrapper, resultsBtn]);
+    gameWrapper.appendChild(resultsContainer);
+  }
+
   quitGame(): void {
     const gameWrapper = document.querySelector('.audiocall-wrapper');
     gameWrapper.innerHTML = '';
@@ -145,11 +170,16 @@ class Audiocall extends AudiocallRender {
     this.wrongAnswers = [];
   }
 
+  startGame(): void {
+    super.renderGame();
+    this.buildGameLogic(0);
+  }
+
   async listen(): Promise<void> {
     document.addEventListener('click', async (event) => {
       event.preventDefault();
       const target = event.target as HTMLElement;
-      console.log(event.target);
+      // console.log(event.target);
 
       if (target.id === 'close-game') {
         this.quitGame();
@@ -164,12 +194,15 @@ class Audiocall extends AudiocallRender {
       }
 
       if (target.id === 'start-btn') {
-        super.renderGame();
-        this.buildGameLogic(0);
+        this.startGame();
       }
 
-      if (target.getAttribute('data-page') === 'audioCall') {
-        super.renderStartScreen();
+      if (target.getAttribute('data-page') === 'audioCall') { // refactor
+        if (CustomStorage.getStorage('textbookWords')) {
+          super.renderStartScreen();
+          document.getElementById('level-btn').click();
+          document.getElementById('start-btn').click();
+        } else super.renderStartScreen();
       }
 
       if (target.id === 'next-btn') { // refactor
@@ -235,34 +268,34 @@ class Audiocall extends AudiocallRender {
       }
     }); //
 
-    document.addEventListener('keydown', (event) => {
-      switch (event.code) {
-        case 'Digit1':
-          (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
-          break;
-        case 'Digit2':
-          (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
-          break;
-        case 'Digit3':
-          (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
-          break;
-        case 'Digit4':
-          (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
-          break;
-        case 'Digit5':
-          (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
-          break;
-        case 'Space':
-          event.preventDefault();
-          (document.getElementById('next-btn') as HTMLButtonElement).click();
-          break;
-        default:
-          break;
-      }
-    });
+    // document.addEventListener('keydown', (event) => {
+    //   switch (event.code) {
+    //     case 'Digit1':
+    //       (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
+    //       break;
+    //     case 'Digit2':
+    //       (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
+    //       break;
+    //     case 'Digit3':
+    //       (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
+    //       break;
+    //     case 'Digit4':
+    //       (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
+    //       break;
+    //     case 'Digit5':
+    //       (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
+    //       break;
+    //     case 'Space':
+    //       event.preventDefault();
+    //       (document.getElementById('next-btn') as HTMLButtonElement).click();
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // });
   }
 
-  async start(): Promise<void> {
+  start(): void {
     this.listen();
   }
 }
