@@ -2,6 +2,7 @@ import { WordStructure } from '../../../types/loadServerData/interfaces';
 import {
   BtndifficultyEnum, BtnUserControlEnum, GroupWordsEnum,
 } from '../../../types/textbook/enum';
+import getUserData from '../../utils/userLogin';
 import CreateDomElements from '../../controller/newElement';
 import Api from '../../controller/textbook/controller';
 
@@ -59,14 +60,14 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.normal,
             optional: { isLearned: true },
-
           },
+          getUserData(),
         ) as Response;
         word.remove();
         break;
 
       case BtnUserControlEnum.hard:
-        await Api.deleteWordUser(wordId) as Response;
+        await Api.deleteWordUser(wordId, getUserData()) as Response;
         word.remove();
         break;
 
@@ -79,7 +80,7 @@ class TextbookUsers {
     const wordId: string = word.getAttribute('id');
     const btn: string = button.dataset.control;
     try {
-      const checkWord = await Api.getWordUser(wordId) as Response;
+      const checkWord = await Api.getWordUser(wordId, getUserData()) as Response;
 
       if (checkWord.ok) {
         this.updateWordForUser(btn, wordId, word);
@@ -104,6 +105,7 @@ class TextbookUsers {
             difficulty: BtndifficultyEnum.normal,
             optional: { isLearned: true },
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__hard');
         word.classList.add('card__done');
@@ -115,8 +117,8 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.hard,
             optional: { isLearned: false },
-
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__done');
         word.classList.add('card__hard');
@@ -139,8 +141,8 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.normal,
             optional: { isLearned: true },
-
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__hard');
         word.classList.add('card__done');
@@ -152,8 +154,8 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.hard,
             optional: { isLearned: false },
-
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__done');
         word.classList.add('card__hard');
@@ -180,7 +182,7 @@ class TextbookUsers {
 
   private async unmarkDoneWord(word: HTMLDivElement): Promise<void> {
     const wordId = word.getAttribute('id');
-    await Api.deleteWordUser(wordId) as Response;
+    await Api.deleteWordUser(wordId, getUserData()) as Response;
 
     word.classList.remove('card__done');
   }

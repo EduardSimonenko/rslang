@@ -16,3 +16,8 @@ export interface ControlMenu {
   footer: HTMLElement,
   namePage?: string
 }
+
+export interface UserLogin {
+  token: string,
+  userId: string
+}

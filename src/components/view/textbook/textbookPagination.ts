@@ -26,7 +26,20 @@ class TextbookPagination {
     this.averagePageOfGroup = 15;
   }
 
-  public renderPaginationMenu(choosePage: boolean = this.selectPage): HTMLElement {
+  public renderPaginationMenu(
+    historyPage?: string,
+    choosePage: boolean = this.selectPage,
+  ): HTMLElement {
+    if (historyPage && +historyPage > 5 && +historyPage < 26) {
+      this.startNumPagination = [`${+historyPage - 1}`,
+        historyPage, `${+historyPage + 1}`, `${+historyPage + 2}`];
+      this.chooseNumPage = historyPage;
+      this.selectPage = true;
+    } else if (historyPage) {
+      this.chooseNumPage = historyPage;
+      this.selectPage = true;
+    }
+
     let elementBtn = '';
     let num = 0;
     let startOrEndNum = 6;
@@ -62,9 +75,9 @@ class TextbookPagination {
           break;
       }
 
-      if (elementBtn === curPage && choosePage) {
+      if (elementBtn === curPage && this.selectPage) {
         addClass = ['btn__pag', 'btn__pag-style', 'btn__choose'];
-      } else if (i === 1 && !choosePage) {
+      } else if (i === 1 && !this.selectPage) {
         addClass = ['btn__pag', 'btn__pag-style', 'btn__choose'];
       } else {
         addClass = ['btn__pag', 'btn__pag-style'];

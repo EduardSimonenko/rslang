@@ -1,6 +1,5 @@
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
-import { ControlMenu, PageElements } from '../../../types/textbook/interfaces';
-import { RemoveElements, ResponseData } from '../../../types/textbook/type';
+import { ResponseData } from '../../../types/textbook/type';
 import Api from '../../controller/textbook/controller';
 import baseUrl from '../../model/baseUrl';
 import TextbookPagination from './textbookPagination';
@@ -8,13 +7,14 @@ import TextbookUsers from './textbookUsers';
 import textbookLevel from '../../../mocks/textbook.json';
 import CreateDomElements from '../../controller/newElement';
 import CustomStorage from '../../controller/storage';
+import Page from '../pageView/mainPageView';
+import cleanPage from '../../utils/cleanPage';
+import getUserData from '../../utils/userLogin';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
 
   private wrapper: HTMLElement;
-
-  private cleanPage: RemoveElements;
 
   private containerWords: HTMLElement;
 
@@ -30,28 +30,47 @@ class TextbookWordsSection {
 
   private allLevel: number;
 
-  private isLogin: string | null;
+  private token: string | null;
 
-  constructor(partPage?: PageElements) {
+  private header: HTMLElement;
+
+  private footer: HTMLElement;
+
+  private userId: string;
+
+  private curPagination: string;
+
+  constructor(currentGroup?: string, curPagination?: string) {
     this.body = document.querySelector('.body') as HTMLBodyElement;
-    this.cleanPage = partPage.clean;
     this.pagination = new TextbookPagination();
     this.activeUser = new TextbookUsers();
     this.containerWords = CreateDomElements.createNewElement('div', ['container__words']);
     this.wrapperPagination = CreateDomElements.createNewElement('div', ['wrapper__pag']);
     this.wrapper = CreateDomElements.createNewElement('div', ['wrapper-textbook']);
     this.hardWord = CreateDomElements.createNewElement('h1', ['title__section'], 'Сложные слова!');
-    this.currentGroup = partPage.group;
+    this.currentGroup = currentGroup;
     this.allLevel = 6;
-    this.isLogin = partPage.isLogin;
+    this.token = CustomStorage.getStorage('token');
+    this.userId = CustomStorage.getStorage('userId');
+    this.header = Page.renderHeader();
+    this.footer = Page.renderFooter();
+    this.curPagination = curPagination;
   }
 
-  public renderPageWithWords(words: WordStructure[], menu: ControlMenu, groupHard?: boolean): void {
-    this.cleanPage();
+  public renderPage(): void {
+    cleanPage();
+    let pagMenu;
+    if (this.curPagination) {
+      pagMenu = this.pagination.renderPaginationMenu(this.curPagination);
+      this.getWordsChooseGroup(this.currentGroup, this.curPagination);
+    } else {
+      pagMenu = this.pagination.renderPaginationMenu();
+      this.getWordsChooseGroup(this.currentGroup);
+    }
 
     CreateDomElements.insertChilds(
       this.wrapperPagination,
-      [this.pagination.renderPaginationMenu()],
+      [pagMenu],
     );
 
     CreateDomElements.insertChilds(
@@ -63,14 +82,14 @@ class TextbookWordsSection {
         this.containerWords,
       ],
     );
+
     CreateDomElements.insertChilds(
       this.body,
-      [menu.header, this.wrapper, menu.footer],
+      [this.header, this.wrapper, this.footer],
     );
     this.wrapperPagination.style.display = 'none';
 
     this.listenBtnPagination(this.wrapperPagination);
-    this.renderSectionTextbook(words, groupHard);
   }
 
   private renderSectionTextbook(words: WordStructure[], groupHard?: boolean): void {
@@ -130,7 +149,7 @@ class TextbookWordsSection {
       CreateDomElements.insertChilds(containerMean, [textMeaning, textMeaningTranslate]);
       CreateDomElements.insertChilds(containerExample, [textExample, textExampleTranslate]);
 
-      if (this.isLogin) {
+      if (this.token) {
         CreateDomElements.setAttributes(card, { id: word._id });
         this.activeUser.markWordsUser(card, word);
         CreateDomElements.insertChilds(
@@ -196,7 +215,7 @@ class TextbookWordsSection {
     let heightLevel = 60;
     let chooseGroup: string[];
 
-    if (this.isLogin) {
+    if (this.token) {
       this.allLevel = 7;
     }
 
@@ -207,14 +226,16 @@ class TextbookWordsSection {
       } else {
         chooseGroup = ['btn__group'];
       }
-      const btnBook: HTMLElement = CreateDomElements.createNewElement('button', chooseGroup);
+      const btnBook: HTMLElement = CreateDomElements.createNewElement('a', chooseGroup);
       CreateDomElements.setAttributes(btnBook, { id: `${i}` });
+      CreateDomElements.setAttributes(btnBook, { href: `#textbook/words?group=${i}&page=0` });
 
       CreateDomElements.setAttributes(
         level,
         {
           src: imgTextbookLevel[`book${i}`],
           'data-book': `${i}`,
+          'data-page': 'textbook/words',
           width: '60',
           height: `${heightLevel}`,
           alt: `book level ${i + 1}`,
@@ -224,12 +245,12 @@ class TextbookWordsSection {
       CreateDomElements.insertChilds(containerGroup, [btnBook]);
       heightLevel += 5;
     }
-    this.listener(containerGroup);
+    this.listenerGroupWords(containerGroup);
 
     return containerGroup;
   }
 
-  private listener(books: HTMLElement): void {
+  private listenerGroupWords(books: HTMLElement): void {
     books.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLImageElement;
       if (!target.classList.contains('img__book')) return;
@@ -244,17 +265,17 @@ class TextbookWordsSection {
     });
   }
 
-  private async getWordsChooseGroup(group: string, page = '0'): Promise<void> {
+  public async getWordsChooseGroup(group: string, page = '0'): Promise<void> {
     let response: Response;
     let data: ResponseData;
     const hardGroup = '6';
 
-    if (this.isLogin && group === hardGroup) {
-      response = (await Api.getDifficultWords()) as Response;
+    if (this.token && group === hardGroup) {
+      response = (await Api.getDifficultWords(getUserData())) as Response;
       data = await response.json() as AuthorizeUserWords[];
       this.renderSectionTextbook(data[0].paginatedResults, true);
-    } else if (this.isLogin) {
-      response = (await Api.getWordsWithOption(group, page)) as Response;
+    } else if (this.token) {
+      response = (await Api.getWordsWithOption(group, page, getUserData())) as Response;
       data = await response.json() as AuthorizeUserWords[];
       this.renderSectionTextbook(data[0].paginatedResults);
     } else {
@@ -310,15 +331,14 @@ class TextbookWordsSection {
 
   private listenBtnPagination(btns: HTMLElement): void {
     btns.addEventListener('click', (e: Event) => {
-      const target = (e.target as HTMLButtonElement);
+      const target = (e.target as HTMLLinkElement);
       if (!target.classList.contains('btn__pag')) return;
 
       const page = target.dataset.page as string;
 
       this.pagination.changeNumPagination(page);
       this.getWordsChooseGroup(this.currentGroup, this.pagination.chooseNumPage);
-      CustomStorage.setStorage('textbookWords', { group: this.currentGroup, page: this.pagination.chooseNumPage });
-      CustomStorage.setStorage('paginationBtn', page);
+      this.saveData();
     });
   }
 
@@ -331,6 +351,19 @@ class TextbookWordsSection {
         b.classList.remove('btn__choose');
       }
     });
+  }
+
+  private saveData(): void {
+    CustomStorage.setStorage('textbookWords', { group: this.currentGroup, page: this.pagination.chooseNumPage });
+    CustomStorage.setStorage(
+      'page',
+      `textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
+    );
+    window.history.pushState(
+      `textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
+      null,
+      `../#textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
+    );
   }
 }
 
