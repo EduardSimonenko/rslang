@@ -58,6 +58,7 @@ class TextbookWordsSection {
   }
 
   public renderPage(): void {
+    const container = CreateDomElements.createNewElement('div', ['container__work']);
     cleanPage();
     let pagMenu;
     if (this.curPagination) {
@@ -68,20 +69,19 @@ class TextbookWordsSection {
       this.getWordsChooseGroup(this.currentGroup);
     }
 
-    CreateDomElements.insertChilds(
-      this.wrapperPagination,
-      [pagMenu],
-    );
+    CreateDomElements.insertChilds(this.wrapperPagination, [pagMenu]);
+    CreateDomElements.insertChilds(container, [this.renderGroupTextbook()]);
 
     CreateDomElements.insertChilds(
       this.wrapper,
       [this.renderBtnGames(),
         this.hardWord,
         this.wrapperPagination,
-        this.containerWords,
-        this.renderGroupTextbook(),
+        container,
       ],
     );
+
+    CreateDomElements.insertChilds(container, [this.containerWords]);
 
     CreateDomElements.insertChilds(
       this.body,
@@ -243,7 +243,6 @@ class TextbookWordsSection {
   private renderGroupTextbook(): HTMLElement {
     const containerGroup: HTMLElement = CreateDomElements.createNewElement('div', ['container__group']);
     const imgTextbookLevel: Record<string, string> = textbookLevel;
-    let heightLevel = 60;
     let chooseGroup: string[];
 
     if (this.token) {
@@ -268,13 +267,12 @@ class TextbookWordsSection {
           'data-book': `${i}`,
           'data-page': 'textbook/words',
           width: '60',
-          height: `${heightLevel}`,
+          height: '85',
           alt: `book level ${i + 1}`,
         },
       );
       CreateDomElements.insertChilds(btnBook, [level]);
       CreateDomElements.insertChilds(containerGroup, [btnBook]);
-      heightLevel += 5;
     }
     this.listenerGroupWords(containerGroup);
 

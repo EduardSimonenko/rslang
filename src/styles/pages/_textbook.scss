@@ -22,8 +22,8 @@
 }
 
 .container__words {
-  width: 60%;
-  margin: 0 auto;
+  width: 800px;
+  margin-right: 85px;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
@@ -32,9 +32,11 @@
 }
 
 .container__group {
-  @include flex();
-  width: 800px;
-  margin: 20px auto;
+  top: 100px;
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  width: 60px;
   gap: 2.3rem;
 }
 
@@ -58,4 +60,14 @@
   @include wh(800px, 100px);
   padding: 20px 0;
   margin: 0 auto;
+}
+
+.container__work {
+  @include wh (980px, auto);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 40px;
 }
