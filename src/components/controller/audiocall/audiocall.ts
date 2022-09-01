@@ -11,8 +11,6 @@ import Api from '../textbook/controller';
 class Audiocall extends AudiocallRender {
   words: WordStructure[];
 
-  // level: string;
-
   correctAnswers: WordStructure[];
 
   wrongAnswers: WordStructure[];
@@ -31,7 +29,6 @@ class Audiocall extends AudiocallRender {
     this.correctAnswer = {} as WordStructure;
     this.correctAnswers = [];
     this.wrongAnswers = [];
-    // this.level = localStorage.getItem('audiocallLevel');
   }
 
   async getWords(group: number, page: number): Promise<WordStructure[]> {
@@ -64,9 +61,12 @@ class Audiocall extends AudiocallRender {
     return words;
   }
 
-  async buildUserWordsWithOpt(group: number, page: number) {
-    const words = await this.getUserWordsWithOpt(group, page);
-    return words;
+  async addMoreWords(group: number, page: number) {
+    while (this.words.length < 20 && page > 0) {
+    // eslint-disable-next-line no-await-in-loop, no-param-reassign
+      this.words = this.words.concat(await this.getUserWordsWithOpt(group, page -= 1))
+        .slice(0, 20);
+    }
   }
 
   async buildSupportWords(): Promise<void> {
@@ -79,7 +79,10 @@ class Audiocall extends AudiocallRender {
   async buildAllWords(index: number, group?: number, page?: number) {
     if (index === 0 && localStorage.getItem('textbookWords') && CustomStorage.getStorage('token')) {
       const args = JSON.parse(localStorage.getItem('textbookWords'));
-      this.words = await this.buildUserWordsWithOpt(args.group, args.page);
+      this.words = await this.getUserWordsWithOpt(args.group, args.page);
+      if (this.words.length < 20) {
+        await this.addMoreWords(args.group, args.page);
+      }
     } else if (index === 0 && localStorage.getItem('textbookWords')) {
       const args = JSON.parse(localStorage.getItem('textbookWords'));
       this.words = shuffle(await this.getWords(args.group, args.page));
