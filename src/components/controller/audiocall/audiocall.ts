@@ -277,31 +277,34 @@ class Audiocall extends AudiocallRender {
       }
     }); //
 
-    // document.addEventListener('keydown', (event) => {
-    //   switch (event.code) {
-    //     case 'Digit1':
-    //       (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit2':
-    //       (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit3':
-    //       (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit4':
-    //       (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit5':
-    //       (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Space':
-    //       event.preventDefault();
-    //       (document.getElementById('next-btn') as HTMLButtonElement).click();
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // });
+    document.addEventListener('keydown', (event) => {
+      // event.preventDefault();
+      if (document.querySelector('.play-field')) {
+        switch (event.code) {
+          case 'Digit1':
+            (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
+            break;
+          case 'Digit2':
+            (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
+            break;
+          case 'Digit3':
+            (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
+            break;
+          case 'Digit4':
+            (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
+            break;
+          case 'Digit5':
+            (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
+            break;
+          case 'Space':
+            event.preventDefault();
+            (document.getElementById('next-btn') as HTMLButtonElement).click();
+            break;
+          default:
+            break;
+        }
+      }
+    });
   }
 
   start(): void {
