@@ -1,3 +1,4 @@
+import { StateTextbook } from '../../types/textbook/interfaces';
 import CustomStorage from '../controller/storage';
 import AppView from '../view/appView';
 import Page from '../view/pageView/mainPageView';
@@ -19,7 +20,6 @@ export default class App {
       } else {
         window.history.replaceState(savePage, 'словарь', `#${savePage}`);
       }
-
       this.renderPage();
       this.listenState();
     });
@@ -57,12 +57,12 @@ export default class App {
         currentPage = new TextbookWordsSection(this.chooseGroup, curPage);
         break;
 
-      case 'game-sprint':
-
+      case 'game/sprint':
+        currentPage = new TextbookWordsSection(this.chooseGroup, curPage);
         break;
 
-      case 'game-audio-call':
-
+      case 'game/audio-call':
+        currentPage = new TextbookWordsSection(this.chooseGroup, curPage);
         break;
 
       case 'statistics':
@@ -76,6 +76,9 @@ export default class App {
     currentPage.renderPage();
     this.listenLogIn();
     this.listenLink();
+    if (currentPage instanceof TextbookWordsSection) {
+      this.gameLaunchToTextbook();
+    }
   }
 
   static listenLogIn(): void {
@@ -101,6 +104,23 @@ export default class App {
 
         this.namePage = link;
         CustomStorage.setStorage('page', link);
+        this.renderPage();
+      });
+    });
+  }
+
+  static gameLaunchToTextbook(): void {
+    const games = document.querySelectorAll('.play');
+    games.forEach((game) => {
+      game.addEventListener('click', (e: MouseEvent) => {
+        const { name } = (e.target as HTMLParagraphElement).dataset;
+        const words: StateTextbook = JSON.parse(CustomStorage.getStorage('textbookWords'));
+        CustomStorage.setStorage('page', `${name}?group=${words.group}&page=${words.page}`);
+        window.history.pushState(
+          `${name}?group=${words.group}&page=${words.page}`,
+          'словарь',
+          `../#${name}?group=${words.group}&page=${words.page}`,
+        );
         this.renderPage();
       });
     });

@@ -75,11 +75,11 @@ class TextbookWordsSection {
 
     CreateDomElements.insertChilds(
       this.wrapper,
-      [
-        this.renderGroupTextbook(),
+      [this.renderBtnGames(),
         this.hardWord,
         this.wrapperPagination,
         this.containerWords,
+        this.renderGroupTextbook(),
       ],
     );
 
@@ -173,6 +173,37 @@ class TextbookWordsSection {
 
       CreateDomElements.insertChilds(this.containerWords, [card]);
     });
+  }
+
+  private renderBtnGames(): HTMLElement {
+    const containerGame: HTMLElement = CreateDomElements.createNewElement('div', ['container__game']);
+    const btnAudioGame: HTMLElement = CreateDomElements.createNewElement('button', ['game__audio']);
+    const btnSprintGame: HTMLElement = CreateDomElements.createNewElement('button', ['game__sprint']);
+    const btnBackgroundA: HTMLElement = CreateDomElements.createNewElement('img', ['game__img-audio']);
+    const btnBackgroundS: HTMLElement = CreateDomElements.createNewElement('img', ['game__img-sprint']);
+    const btnTextA: HTMLElement = CreateDomElements.createNewElement('p', ['game__text-audio'], 'Аудио Вызов');
+    const btnTextS: HTMLElement = CreateDomElements.createNewElement('p', ['game__text-sprint'], 'Спринт');
+    const btnPlayA: HTMLElement = CreateDomElements.createNewElement('p', ['game__play-audio', 'play'], 'Играть');
+    const btnPlayS: HTMLElement = CreateDomElements.createNewElement('p', ['game__play-sprint', 'play'], 'Играть');
+
+    CreateDomElements.setAttributes(btnBackgroundA, {
+      src: '../../../assets/svg/sprint.svg',
+      width: '60px',
+      height: '80px',
+    });
+    CreateDomElements.setAttributes(btnBackgroundS, {
+      src: '../../../assets/svg/audioCall.svg',
+      width: '60px',
+      height: '80px',
+    });
+    CreateDomElements.setAttributes(btnPlayA, { 'data-name': 'game/audio-call' });
+    CreateDomElements.setAttributes(btnPlayS, { 'data-name': 'game/sprint' });
+
+    CreateDomElements.insertChilds(btnAudioGame, [btnTextA, btnBackgroundS, btnPlayA]);
+    CreateDomElements.insertChilds(btnSprintGame, [btnTextS, btnBackgroundA, btnPlayS]);
+    CreateDomElements.insertChilds(containerGame, [btnAudioGame, btnSprintGame]);
+
+    return containerGame;
   }
 
   private renderAudioIcons(word: WordStructure): HTMLElement {
