@@ -50,9 +50,9 @@ class Audiocall extends AudiocallRender {
     return words;
   }
 
-  async getUserWordsWithOpt() {
-    const args = JSON.parse(localStorage.getItem('textbookWords'));
-    const response = await Api.getWordsWithOption(args.group, args.page);
+  async getUserWordsWithOpt(group: number, page: number) {
+    const response = await Api.getWordsWithOption(String(group), String(page));
+
     const wordArr: AuthorizeUserWords[] = await response.json();
     const textbookWords = wordArr[0].paginatedResults; // array
 
@@ -61,7 +61,11 @@ class Audiocall extends AudiocallRender {
       .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
 
     const words = [...unmarkedWords, ...hardWords];
-    // console.log('filtered', hardWords);
+    return words;
+  }
+
+  async buildUserWordsWithOpt(group: number, page: number) {
+    const words = await this.getUserWordsWithOpt(group, page);
     return words;
   }
 
@@ -74,7 +78,8 @@ class Audiocall extends AudiocallRender {
 
   async buildAllWords(index: number, group?: number, page?: number) {
     if (index === 0 && localStorage.getItem('textbookWords') && CustomStorage.getStorage('token')) {
-      this.words = await this.getUserWordsWithOpt();
+      const args = JSON.parse(localStorage.getItem('textbookWords'));
+      this.words = await this.buildUserWordsWithOpt(args.group, args.page);
     } else if (index === 0 && localStorage.getItem('textbookWords')) {
       const args = JSON.parse(localStorage.getItem('textbookWords'));
       this.words = shuffle(await this.getWords(args.group, args.page));
@@ -87,7 +92,7 @@ class Audiocall extends AudiocallRender {
   async buildGameLogic(index: number): Promise<void> {
     if (index === 0) {
       await this.buildAllWords(index, +localStorage.getItem('audiocallLevel'), getRandomInt(0, 29));
-      console.log(this.words.length, this.words);
+      console.log('this.words', this.words);
     }
     if (index === this.words.length) {
       this.showResults();
@@ -170,7 +175,7 @@ class Audiocall extends AudiocallRender {
     this.wrongAnswers = [];
   }
 
-  startGame(): void {
+  renderPage(): void {
     super.renderGame();
     this.buildGameLogic(0);
   }
@@ -194,7 +199,7 @@ class Audiocall extends AudiocallRender {
       }
 
       if (target.id === 'start-btn') {
-        this.startGame();
+        this.renderPage();
       }
 
       if (target.getAttribute('data-page') === 'audioCall') { // refactor
@@ -202,6 +207,7 @@ class Audiocall extends AudiocallRender {
           super.renderStartScreen();
           document.getElementById('level-btn').click();
           document.getElementById('start-btn').click();
+          localStorage.removeItem('audiocallLevel');
         } else super.renderStartScreen();
       }
 
