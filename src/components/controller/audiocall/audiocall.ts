@@ -54,10 +54,13 @@ class Audiocall extends AudiocallRender {
     const textbookWords = wordArr[0].paginatedResults; // array
 
     const unmarkedWords = textbookWords.filter((word: WordStructure) => !word.userWord);
+    const normalWords = textbookWords.filter((word: WordStructure) => word.userWord)
+      .filter((item: WordStructure) => item.userWord.difficulty === 'normal' && !item.userWord.optional.isLearned);
+    console.log('normalwords', normalWords);
     const hardWords = textbookWords.filter((word: WordStructure) => word.userWord)
       .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
 
-    const words = [...unmarkedWords, ...hardWords];
+    const words = [...unmarkedWords, ...normalWords, ...hardWords];
     return words;
   }
 
