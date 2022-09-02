@@ -10,6 +10,7 @@ import CustomStorage from '../../controller/storage';
 import Page from '../pageView/mainPageView';
 import cleanPage from '../../utils/cleanPage';
 import getUserData from '../../utils/userLogin';
+import { StateTextbook } from '../../../types/textbook/interfaces';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -183,8 +184,8 @@ class TextbookWordsSection {
     const btnBackgroundS: HTMLElement = CreateDomElements.createNewElement('img', ['game__img-sprint']);
     const btnTextA: HTMLElement = CreateDomElements.createNewElement('p', ['game__text-audio'], 'Аудио Вызов');
     const btnTextS: HTMLElement = CreateDomElements.createNewElement('p', ['game__text-sprint'], 'Спринт');
-    const btnPlayA: HTMLElement = CreateDomElements.createNewElement('p', ['game__play-audio', 'play'], 'Играть');
-    const btnPlayS: HTMLElement = CreateDomElements.createNewElement('p', ['game__play-sprint', 'play'], 'Играть');
+    const btnPlayA: HTMLElement = CreateDomElements.createNewElement('a', ['game__play-audio', 'play'], 'Играть');
+    const btnPlayS: HTMLElement = CreateDomElements.createNewElement('a', ['game__play-sprint', 'play'], 'Играть');
 
     CreateDomElements.setAttributes(btnBackgroundA, {
       src: '../../../assets/svg/sprint.svg',
@@ -202,6 +203,8 @@ class TextbookWordsSection {
     CreateDomElements.insertChilds(btnAudioGame, [btnTextA, btnBackgroundS, btnPlayA]);
     CreateDomElements.insertChilds(btnSprintGame, [btnTextS, btnBackgroundA, btnPlayS]);
     CreateDomElements.insertChilds(containerGame, [btnAudioGame, btnSprintGame]);
+
+    this.gameLaunchToTextbook([btnPlayA, btnPlayS]);
 
     return containerGame;
   }
@@ -393,6 +396,17 @@ class TextbookWordsSection {
       null,
       `../#textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
     );
+  }
+
+  private gameLaunchToTextbook(games: HTMLElement[]): void {
+    games.forEach((game) => {
+      game.addEventListener('click', (e: MouseEvent) => {
+        const { name } = (e.target as HTMLParagraphElement).dataset;
+        const words: StateTextbook = JSON.parse(CustomStorage.getStorage('textbookWords'));
+        const chooseGame = e.currentTarget as HTMLLinkElement;
+        chooseGame.href = `#${name}?group=${words.group}&page=${words.page}`;
+      });
+    });
   }
 }
 

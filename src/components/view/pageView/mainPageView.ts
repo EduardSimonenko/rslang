@@ -1,6 +1,7 @@
 import CreateDomElements from '../../controller/newElement';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
+import AppView from '../appView';
 
 class Page {
   private static body = document.querySelector('body') as HTMLBodyElement;
@@ -44,6 +45,7 @@ class Page {
 
     CreateDomElements.insertChilds(wrapper, [logo, navbar, login]);
     CreateDomElements.insertChilds(header, [wrapper]);
+    this.listenLogIn(loginImg);
 
     return header;
   }
@@ -184,6 +186,13 @@ class Page {
     });
 
     return teamSection;
+  }
+
+  static listenLogIn(log: HTMLElement): void {
+    log.addEventListener('click', () => {
+      const login: AppView = new AppView();
+      login.startAuth();
+    });
   }
 }
 
