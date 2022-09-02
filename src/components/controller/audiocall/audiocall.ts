@@ -102,7 +102,7 @@ class Audiocall extends AudiocallRender {
     }
     if (index === this.words.length) {
       this.showResults();
-      this.sendOptions();
+      this.sendOptions(this.correctAnswers);
       return;
     }
 
@@ -169,27 +169,34 @@ class Audiocall extends AudiocallRender {
     gameWrapper.appendChild(resultsContainer);
   }
 
-  async sendOptions() {
+  async sendOptions(words: WordStructure[]) {
     // this.correctAnswers.forEach((word: WordStructure) => {
     //   Api.updateUserWord(word._id, { difficulty: 'normal', optional: { isLearned: true } });
     // });
-    const correctHardWords = this.correctAnswers.filter((word: WordStructure) => word.userWord)
-      .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
-    correctHardWords.forEach((word: WordStructure) => {
-    // words.forEach((word: WordStructure) => {
+    // const correctHardWords = this.correctAnswers.filter((word: WordStructure) => word.userWord)
+    // .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
+    // correctHardWords.forEach((word: WordStructure) => {
+
+    words.forEach((word: WordStructure) => {
       const id = word._id ? word._id : word.id;
-      // const method = word.userWord ? Api.updateUserWord : Api.createUserWord;
-      let difficultyValue = word.userWord.difficulty ? word.userWord.difficulty : 'normal';
-      let step = word.userWord.optional.learnStep ? word.userWord.optional.learnStep : 0;
-      // eslint-disable-next-line max-len
-      let isLearnedValue = word.userWord.optional.isLearned ? word.userWord.optional.isLearned : false;
-      if (step === 2 && difficultyValue === 'hard') { isLearnedValue = true; difficultyValue = 'normal'; }
-      // eslint-disable-next-line max-len
-      const date = word.userWord.optional.startLearningAt ? word.userWord.optional.startLearningAt : Date.now();
-      // eslint-disable-next-line max-len
-      Api.updateUserWord(id, { difficulty: difficultyValue, optional: { isLearned: isLearnedValue, learnStep: step += 1, startLearningAt: date } });
+      if (!word.userWord) {
+        // eslint-disable-next-line max-len
+        Api.createUserWord(id, { difficulty: 'normal', optional: { isLearned: false, learnStep: 1, startLearningAt: Date.now() } });
+      } else {
+        // const id = word._id ? word._id : word.id;
+        // const method = word.userWord ? Api.updateUserWord : Api.createUserWord;
+        let difficultyValue = word.userWord.difficulty ? word.userWord.difficulty : 'normal';
+        let step = word.userWord.optional.learnStep ? word.userWord.optional.learnStep : 0;
+        // eslint-disable-next-line max-len
+        let isLearnedValue = word.userWord.optional.isLearned ? word.userWord.optional.isLearned : false;
+        if ((step >= 2 && difficultyValue === 'normal') || (step >= 4 && difficultyValue === 'hard')) { isLearnedValue = true; difficultyValue = 'normal'; }
+        // eslint-disable-next-line max-len
+        const date = word.userWord.optional.startLearningAt ? word.userWord.optional.startLearningAt : Date.now();
+        // eslint-disable-next-line max-len
+        Api.updateUserWord(id, { difficulty: difficultyValue, optional: { isLearned: isLearnedValue, learnStep: step += 1, startLearningAt: date } });
+      }
     });
-    console.log('words', correctHardWords);
+    console.log('words', words);
     // const correctUnmarkedWords = this.correctAnswers
     //   .filter((word: WordStructure) => !word.userWord);
     // console.log('correctUnmarkedWords', correctUnmarkedWords);
