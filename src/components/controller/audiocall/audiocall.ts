@@ -50,27 +50,23 @@ class Audiocall extends AudiocallRender {
     return words;
   }
 
-  async getUserWordsWithOpt(group: number, page: number) {
+  async getUserWordsWithOpt(group: number, page: number): Promise<WordStructure[]> {
     const response = await Api.getWordsWithOption(String(group), String(page));
-
     const wordArr: AuthorizeUserWords[] = await response.json();
     const textbookWords = wordArr[0].paginatedResults; // array
-
     const unmarkedWords = textbookWords.filter((word: WordStructure) => !word.userWord);
     const normalWords = textbookWords.filter((word: WordStructure) => word.userWord)
       .filter((item: WordStructure) => item.userWord.difficulty === 'normal' && !item.userWord.optional.isLearned);
-    console.log('normalwords', normalWords);
     const hardWords = textbookWords.filter((word: WordStructure) => word.userWord)
       .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
-
     const words = [...unmarkedWords, ...normalWords, ...hardWords];
     return words;
   }
 
-  async addMoreWords(group: number, page: number) {
+  async addMoreWords(group: number, page: number): Promise<void> {
     while (this.words.length < 20 && page > 0) {
     // eslint-disable-next-line no-await-in-loop, no-param-reassign
-      this.words = this.words.concat(await this.getUserWordsWithOpt(group, page -= 1))
+      this.words = this.words.concat(await this.getUserWordsWithOpt(group, page -= 1)) // не бейте
         .slice(0, 20);
     }
   }
@@ -82,10 +78,10 @@ class Audiocall extends AudiocallRender {
       .map((item: WordStructure) => item.wordTranslate);
   }
 
-  async buildAllWords(index: number, group?: number, page?: number) {
-    if (index === 0 && localStorage.getItem('textbookWords') && CustomStorage.getStorage('token')) {
+  async buildAllWords(index: number, group?: number, page?: number): Promise<void> {
+    if (index === 0 && localStorage.getItem('textbookWords') && this.isLogin) {
       const args = JSON.parse(localStorage.getItem('textbookWords'));
-      this.words = await this.getUserWordsWithOpt(args.group, args.page);
+      this.words = shuffle(await this.getUserWordsWithOpt(args.group, args.page));
       if (this.words.length < 20) {
         await this.addMoreWords(args.group, args.page);
       }
@@ -101,9 +97,8 @@ class Audiocall extends AudiocallRender {
   async buildGameLogic(index: number): Promise<void> {
     if (index === 0) {
       await this.buildAllWords(index, +localStorage.getItem('audiocallLevel'), getRandomInt(0, 29));
-      console.log('this.words', this.words);
-    }
-    if (index === this.words.length) {
+      // console.log('this.words', this.words);
+    } else if (index === this.words.length) {
       this.showResults();
       if (this.isLogin) {
         this.sendOptions(this.correctAnswers);
@@ -115,8 +110,8 @@ class Audiocall extends AudiocallRender {
     this.correctAnswer = this.words[index];
     const audio = document.getElementById('audio') as HTMLAudioElement;
     const wordImg = document.getElementById('word-img') as HTMLImageElement;
-    const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
     wordImg.classList.add('hidden');
+    const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
     const word = document.getElementById('word');
     word.classList.add('hidden');
 
@@ -179,7 +174,7 @@ class Audiocall extends AudiocallRender {
     gameWrapper.appendChild(resultsContainer);
   }
 
-  async sendOptions(words: WordStructure[]) {
+  async sendOptions(words: WordStructure[]): Promise<void> {
     words.forEach((word: WordStructure): void => {
       const id = word._id ? word._id : word.id;
       if (!word.userWord) {
@@ -217,7 +212,7 @@ class Audiocall extends AudiocallRender {
   }
 
   quitGame(): void {
-    const gameWrapper = document.querySelector('.audiocall-wrapper');
+    const gameWrapper: HTMLElement = document.querySelector('.audiocall-wrapper');
     gameWrapper.innerHTML = '';
     document.body.removeChild(gameWrapper);
     document.body.style.overflowY = '';
@@ -256,7 +251,7 @@ class Audiocall extends AudiocallRender {
         this.renderPage();
       }
 
-      if (target.getAttribute('data-page') === 'audioCall') { // refactor
+      if (target.getAttribute('data-page') === 'audioCall') { // отрефачу после подключения к учебнику через кнопки
         if (CustomStorage.getStorage('textbookWords')) {
           super.renderStartScreen();
           document.getElementById('level-btn').click();
@@ -293,7 +288,7 @@ class Audiocall extends AudiocallRender {
           this.buildGameLogic(this.counter);
           answerBtns.forEach((item) => item.removeAttribute('disabled'));
         }
-      } //
+      }
 
       if (target.id === 'answer-btn') { // refactor
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
@@ -326,10 +321,9 @@ class Audiocall extends AudiocallRender {
       if (target.classList.contains('results-item__img')) {
         (target.nextSibling as HTMLAudioElement).play();
       }
-    }); //
+    });
 
     document.addEventListener('keydown', (event) => {
-      // event.preventDefault();
       if (document.querySelector('.play-field')) {
         switch (event.code) {
           case 'Digit1':
