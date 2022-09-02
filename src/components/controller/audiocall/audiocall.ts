@@ -170,7 +170,11 @@ class Audiocall extends AudiocallRender {
     const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
     const resultsBtn = CreateDomElements.createNewElement('button', ['results-btn', 'btn'], 'Завершить игру');
     CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button' });
-    CreateDomElements.insertChilds(resultsWrapper, [this.buildAnswers(this.correctAnswers, 'Знаю'), this.buildAnswers(this.wrongAnswers, 'Ошибки')]);
+    if (this.correctAnswers.length === 0 && this.wrongAnswers.length === 0) {
+      resultsWrapper.innerHTML = '<span>В рамках этого уровня на данной и предыдущих страницах все слова изучены</span>';
+    } else {
+      CreateDomElements.insertChilds(resultsWrapper, [this.buildAnswers(this.correctAnswers, 'Знаю'), this.buildAnswers(this.wrongAnswers, 'Ошибки')]);
+    }
     CreateDomElements.insertChilds(resultsContainer, [resultsTitle, resultsWrapper, resultsBtn]);
     gameWrapper.appendChild(resultsContainer);
   }
