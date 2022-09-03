@@ -7,7 +7,7 @@ export type ResponseData = WordStructure[] | AuthorizeUserWords[];
 export type DataUrl = {
   group: string,
   page: string,
-  pageUrl?: string
+  path?: string
 };
 
 export type StorageData = DataUrl | string;

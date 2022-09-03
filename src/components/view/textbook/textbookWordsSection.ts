@@ -13,6 +13,7 @@ import getUserData from '../../utils/userLogin';
 import optsSpiner from '../../utils/spinner';
 import getGroupAndPage from '../../utils/getGroupAndPage';
 import { ResponseData } from '../../../types/textbook/type';
+import createUrlPath from '../../utils/createUrlPath';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -326,7 +327,13 @@ class TextbookWordsSection {
       this.chooseLevel(group);
       this.getWordsChooseGroup(group);
       this.startNumPage();
-      this.saveData();
+      createUrlPath(
+        {
+          group: this.currentGroup,
+          page: this.pagination.chooseNumPage,
+          path: 'textbook/words',
+        },
+      );
       CustomStorage.setStorage('textbookWords', { group, page: '0' });
     });
   }
@@ -412,7 +419,13 @@ class TextbookWordsSection {
 
       this.pagination.changeNumPagination(page);
       this.getWordsChooseGroup(this.currentGroup, this.pagination.chooseNumPage);
-      this.saveData();
+      createUrlPath(
+        {
+          group: this.currentGroup,
+          page: this.pagination.chooseNumPage,
+          path: 'textbook/words',
+        },
+      );
     });
   }
 
@@ -425,18 +438,6 @@ class TextbookWordsSection {
         b.classList.remove('btn__choose');
       }
     });
-  }
-
-  private saveData(): void {
-    CustomStorage.setStorage(
-      'page',
-      `textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
-    );
-    window.history.pushState(
-      `textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
-      null,
-      `../#textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
-    );
   }
 
   private gameLaunchToTextbook(e: PointerEvent): void {

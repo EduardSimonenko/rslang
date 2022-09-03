@@ -33,16 +33,16 @@ export default class App {
   }
 
   static renderPage(): void {
-    let pageUrl: string = CustomStorage.getStorage('page');
+    let pagePath: string = CustomStorage.getStorage('page');
     let group: string;
     let currentPage;
     let page: string;
 
-    if (pageUrl && pageUrl.includes('?')) {
-      [group, page, pageUrl] = getGroupAndPage(pageUrl) as string[];
+    if (pagePath && pagePath.includes('?')) {
+      [group, page, pagePath] = getGroupAndPage(pagePath) as string[];
     }
 
-    switch (pageUrl) {
+    switch (pagePath) {
       case 'textbook':
         currentPage = new TextbookTitlePage();
         break;
