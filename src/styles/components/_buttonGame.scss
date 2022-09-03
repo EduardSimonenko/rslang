@@ -1,0 +1,94 @@
+.container__game {
+  @include wh (350px, 80px);
+  margin: 0 auto;
+  @include flex ();
+  justify-content: space-between;
+  position: relative;
+  text-align: left;
+
+    .game__audio,
+    .game__sprint {
+      @include wh(150px,50px);
+      background-color: aqua;
+      cursor: pointer;
+      border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -ms-border-radius: 5px;
+      -o-border-radius: 5px;
+    }
+
+    .game__img-sprint {
+      position: absolute;
+      top: -15px;
+      left: 92px;
+    }
+    .game__img-audio {
+      position: absolute;
+      top: -15px;
+      left: 292px;
+    }
+
+    .game__audio {
+      background-color: rgb(112, 217, 178);
+    }
+    .game__sprint {
+      background-color: rgb(244, 135, 109);
+    }
+
+    .game__text-audio {
+      position: relative;
+      text-align: left;
+      padding-left: 5px;
+    }
+
+    .game__text-sprint {
+      position: relative;
+      text-align: left;
+      padding-left: 35px;
+    }
+
+    .game__text-audio,
+    .game__text-sprint {
+      @include font();
+      font-size: 1.5rem;
+    }
+
+    .game__play-audio,
+    .game__play-sprint {
+      position: absolute;
+      @include wh(150px,0);
+      @include flex ();
+      @include font();
+      overflow: hidden;
+      top: 15px;
+      transition: all 0.1s ease-in-out;
+      -webkit-transition: all 0.1s ease-in-out;
+      -moz-transition: all 0.1s ease-in-out;
+      -ms-transition: all 0.1s ease-in-out;
+      -o-transition: all 0.1s ease-in-out;
+      border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -ms-border-radius: 5px;
+      -o-border-radius: 5px;
+}
+
+    .game__play-audio {
+      background-color:  rgb(112, 217, 178);
+    }
+
+    .game__play-sprint {
+      background-color: rgb(244, 135, 109);
+    }
+
+    .game__audio:hover .game__play-audio,
+    .game__sprint:hover .game__play-sprint{
+      @include wh(150px,50px);
+      transition: all 0.1s ease-in-out ;
+      -webkit-transition: all 0.1s ease-in-out ;
+      -moz-transition: all 0.1s ease-in-out ;
+      -ms-transition: all 0.1s ease-in-out ;
+      -o-transition: all 0.1s ease-in-out ;
+}
+}
