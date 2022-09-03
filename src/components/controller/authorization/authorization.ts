@@ -1,3 +1,4 @@
+import AuthorizationEnum from '../../../types/authorization/enum';
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import Loader from '../load';
 import CustomStorage from '../storage';
@@ -11,16 +12,21 @@ class Authorization extends Loader {
 
   static nameInput: HTMLInputElement;
 
+  static isLogin: boolean;
+
   constructor() {
     super();
     Authorization.message = document.getElementById('login-error');
     Authorization.emailInput = document.getElementById('email') as HTMLInputElement;
     Authorization.nameInput = document.getElementById('name') as HTMLInputElement;
     Authorization.passwordInput = document.getElementById('password') as HTMLInputElement;
+    Authorization.isLogin = Boolean(CustomStorage.getStorage('token'));
   }
 
   static async createNewUser(): Promise<void> {
-    super.load(
+    this.message.innerText = '';
+    this.message.classList.add('loader');
+    const result = await super.load(
       {
         method: MethodEnum.post,
         headers: {
@@ -34,10 +40,23 @@ class Authorization extends Loader {
         }),
       },
       [UrlFolderEnum.users],
-    );
+    ) as Response;
+    if (result.ok) {
+      this.message.classList.remove('loader');
+      this.message.innerText = 'Вы успешно зарегистрированы и вошли в систему';
+      this.message.style.color = 'green';
+      await Authorization.logIn();
+      this.message.innerText = '';
+    } else {
+      this.message.classList.remove('loader');
+      this.message.style.color = 'red';
+      this.message.innerText = 'Такой пользователь не может быть создан';
+    }
   }
 
   static async logIn(): Promise<void> {
+    this.message.innerText = '';
+    this.message.classList.add('loader');
     const result = await super.load(
       {
         method: MethodEnum.post,
@@ -63,9 +82,17 @@ class Authorization extends Loader {
       CustomStorage.setStorage('token', token);
       CustomStorage.setStorage('refreshToken', refreshToken);
 
+      this.message.classList.remove('loader');
       this.message.innerText = 'Вы вошли в систему';
       this.message.style.color = 'green';
+
+      const closeBtnImg = document.getElementById('close-btn-img');
+      closeBtnImg.addEventListener('click', () => {
+        this.message.innerText = '';
+        window.location.reload();
+      });
     } else {
+      this.message.classList.remove('loader');
       this.message.style.color = 'red';
       this.message.innerText = 'Неверные учетные данные';
     }
@@ -113,7 +140,7 @@ class Authorization extends Loader {
   }
 
   private logOut(): void {
-    ['name', 'userId', 'token', 'refreshToken'].forEach((item) => localStorage.removeItem(item));
+    localStorage.clear();
     window.location.reload();
   }
 
@@ -124,26 +151,26 @@ class Authorization extends Loader {
   }
 
   public listen(): void {
-    const registrationBtn = document.getElementById('registration-btn');
-    const loginBtn = document.getElementById('login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const cancelBtn = document.getElementById('cancel-btn');
+    document.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = event.target as HTMLElement;
 
-    registrationBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      Authorization.createNewUser();
-    });
-    loginBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      Authorization.logIn();
-    });
-    logoutBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      this.logOut();
-    });
-    cancelBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      Authorization.clear();
+      switch (target.id) {
+        case AuthorizationEnum.registration:
+          Authorization.createNewUser();
+          break;
+        case AuthorizationEnum.login:
+          Authorization.logIn();
+          break;
+        case AuthorizationEnum.logout:
+          this.logOut();
+          break;
+        case AuthorizationEnum.cancel:
+          Authorization.clear();
+          break;
+        default:
+          break;
+      }
     });
   }
 }
