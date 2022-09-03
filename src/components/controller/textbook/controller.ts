@@ -1,11 +1,12 @@
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
-import { UserWordStructure } from '../../../types/loadServerData/interfaces';
+import { AuthorizeUserWords, UserWordStructure, WordStructure } from '../../../types/loadServerData/interfaces';
 import { UserLogin } from '../../../types/textbook/interfaces';
+import { ResponseData } from '../../../types/textbook/type';
 import Loader from '../load';
 
 class Api extends Loader {
-  static getAllWords(group: string, page: string): Promise<Response> {
-    return super.load(
+  static async getAllWords(group: string, page: string): Promise<WordStructure[]> {
+    const response: Response = await super.load(
       {
         method: MethodEnum.get,
         headers: {
@@ -15,6 +16,8 @@ class Api extends Loader {
       [UrlFolderEnum.words],
       [`page=${page}`, `group=${group}`],
     );
+    const data = await response.json() as WordStructure[];
+    return data;
   }
 
   static createUserWord(
@@ -94,8 +97,12 @@ class Api extends Loader {
     );
   }
 
-  static async getWordsWithOption(group: string, page: string, user: UserLogin): Promise<Response> {
-    return super.load(
+  static async getWordsWithOption(
+    group: string,
+    page: string,
+    user: UserLogin,
+  ): Promise<ResponseData> {
+    const response: Response = await super.load(
       {
         method: MethodEnum.get,
         headers: {
@@ -106,11 +113,13 @@ class Api extends Loader {
       [UrlFolderEnum.users, user.userId, UrlFolderEnum.aggregatedWords],
       [`page=${page}`, `group=${group}`, 'wordsPerPage=20'],
     );
+    const data = await response.json() as AuthorizeUserWords[];
+    return data;
   }
 
-  static async getDifficultWords(user: UserLogin): Promise<Response> {
+  static async getDifficultWords(user: UserLogin): Promise<ResponseData> {
     const hardWords = JSON.stringify({ 'userWord.difficulty': 'hard' });
-    return super.load(
+    const response: Response = await super.load(
       {
         method: MethodEnum.get,
         headers: {
@@ -121,6 +130,8 @@ class Api extends Loader {
       [UrlFolderEnum.users, user.userId, UrlFolderEnum.aggregatedWords],
       ['wordsPerPage=50', `filter=${hardWords}`],
     );
+    const data = await response.json() as AuthorizeUserWords[];
+    return data;
   }
 }
 

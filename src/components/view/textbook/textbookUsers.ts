@@ -97,12 +97,13 @@ class TextbookUsers {
     const wordId: string = word.getAttribute('id');
     const btn: string = button.dataset.control;
     try {
-      const checkWord = await Api.getWordUser(wordId, getUserData()) as Response;
+      const checkWord = await Api.getWordUser(wordId, getUserData());
 
       if (checkWord.ok) {
         this.updateWordForUser(btn, wordId, word);
 
         const { optional } = await checkWord.json();
+        console.log(optional);
 
         if (optional.isLearned === true && btn !== 'hard') {
           this.unmarkDoneWord(word);

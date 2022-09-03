@@ -339,29 +339,24 @@ class TextbookWordsSection {
   }
 
   public async getWordsChooseGroup(group: string, page = '0'): Promise<void> {
-    let response: Response;
-    let data: ResponseData;
+    let words: ResponseData;
     const hardGroup = '6';
     const container = document.querySelector('.body') as HTMLElement;
     const spinner = new Spinner(optsSpiner);
     spinner.spin(container);
 
     if (this.token && group === hardGroup) {
-      response = (await Api.getDifficultWords(getUserData())) as Response;
-      data = await response.json() as AuthorizeUserWords[];
+      words = (await Api.getDifficultWords(getUserData())) as AuthorizeUserWords[];
       this.cleanSectionWords();
-      this.renderSectionTextbook(data[0].paginatedResults, true);
+      this.renderSectionTextbook(words[0].paginatedResults, true);
     } else if (this.token) {
-      response = (await Api.getWordsWithOption(group, page, getUserData())) as Response;
-      data = await response.json() as AuthorizeUserWords[];
+      words = (await Api.getWordsWithOption(group, page, getUserData())) as AuthorizeUserWords[];
       this.cleanSectionWords();
-      this.renderSectionTextbook(data[0].paginatedResults);
+      this.renderSectionTextbook(words[0].paginatedResults);
     } else {
-      response = (await Api.getAllWords(group, page)) as Response;
-      data = await response.json() as WordStructure[];
-
+      words = (await Api.getAllWords(group, page)) as WordStructure[];
       this.cleanSectionWords();
-      this.renderSectionTextbook(data);
+      this.renderSectionTextbook(words);
     }
     this.currentGroup = group;
     spinner.stop();
