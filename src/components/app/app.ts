@@ -1,4 +1,5 @@
 import CustomStorage from '../controller/storage';
+import getGroupAndPage from '../utils/getGroupAndPage';
 import Page from '../view/pageView/mainPageView';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 import TextbookWordsSection from '../view/textbook/textbookWordsSection';
@@ -32,18 +33,16 @@ export default class App {
   }
 
   static renderPage(): void {
-    let pageStorage: string = CustomStorage.getStorage('page');
+    let pageUrl: string = CustomStorage.getStorage('page');
     let group: string;
     let currentPage;
     let page: string;
 
-    if (pageStorage && pageStorage.includes('?')) {
-      [pageStorage, group] = pageStorage.split('?');
-      [page] = group.match(/\d+$/);
-      [group] = group.match(/\d/);
+    if (pageUrl && pageUrl.includes('?')) {
+      [group, page, pageUrl] = getGroupAndPage(pageUrl) as string[];
     }
 
-    switch (pageStorage) {
+    switch (pageUrl) {
       case 'textbook':
         currentPage = new TextbookTitlePage();
         break;

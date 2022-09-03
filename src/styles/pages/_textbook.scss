@@ -9,7 +9,7 @@
     .wrapper-textbook {
       position: relative;
       width: inherit;
-      min-height: 100%;
+      min-height: calc(100vh - 160px);
       padding: 2rem;
     }
 }
@@ -23,7 +23,6 @@
 
 .container__words {
   width: 800px;
-  margin-right: 85px;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
@@ -36,13 +35,15 @@
   position: sticky;
   display: flex;
   flex-direction: column;
-  width: 60px;
-  gap: 2.3rem;
+  width: 100px;
+  gap: 0.2rem;
 }
 
 .title__section {
-  @include font($title-font, 3rem);
-  margin: 4.5rem 0 4.5rem 0;
+  @include font($title-font, 4rem);
+  @include wh (auto, 100px);
+  @include flex ();
+  color: rgba(255, 0, 0, 0.6);;
   text-align: center;
 }
 
@@ -63,11 +64,14 @@
 }
 
 .container__work {
-  @include wh (980px, auto);
+  @include wh(900px,auto);
   position: relative;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
   margin: 0 auto;
-  gap: 40px;
+  transform: translate(-5.9%, 0);
+  -webkit-transform: translate(-5.9%, 0);
+  -moz-transform: translate(-5.9%, 0);
+  -ms-transform: translate(-5.9%, 0);
+  -o-transform: translate(-5.9%, 0);
 }

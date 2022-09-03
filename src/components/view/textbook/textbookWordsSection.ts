@@ -1,5 +1,5 @@
+import { Spinner } from 'spin.js';
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
-import { ResponseData } from '../../../types/textbook/type';
 import Api from '../../controller/textbook/controller';
 import baseUrl from '../../model/baseUrl';
 import TextbookPagination from './textbookPagination';
@@ -10,7 +10,9 @@ import CustomStorage from '../../controller/storage';
 import Page from '../pageView/mainPageView';
 import cleanPage from '../../utils/cleanPage';
 import getUserData from '../../utils/userLogin';
-import { StateTextbook } from '../../../types/textbook/interfaces';
+import optsSpiner from '../../utils/spinner';
+import getGroupAndPage from '../../utils/getGroupAndPage';
+import { ResponseData } from '../../../types/textbook/type';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -41,6 +43,8 @@ class TextbookWordsSection {
 
   private curPagination: string;
 
+  private btnGames: HTMLElement;
+
   constructor(currentGroup?: string, curPagination?: string) {
     this.body = document.querySelector('.body') as HTMLBodyElement;
     this.pagination = new TextbookPagination();
@@ -56,10 +60,12 @@ class TextbookWordsSection {
     this.header = Page.renderHeader();
     this.footer = Page.renderFooter();
     this.curPagination = curPagination;
+    this.btnGames = this.renderBtnGames();
   }
 
   public renderPage(): void {
     const container = CreateDomElements.createNewElement('div', ['container__work']);
+
     cleanPage();
     let pagMenu;
     if (this.curPagination) {
@@ -71,24 +77,23 @@ class TextbookWordsSection {
     }
 
     CreateDomElements.insertChilds(this.wrapperPagination, [pagMenu]);
-    CreateDomElements.insertChilds(container, [this.renderGroupTextbook()]);
+    CreateDomElements.insertChilds(
+      container,
+      [this.renderGroupTextbook(), this.containerWords],
+    );
 
     CreateDomElements.insertChilds(
       this.wrapper,
-      [this.renderBtnGames(),
-        this.hardWord,
+      [this.btnGames,
         this.wrapperPagination,
         container,
       ],
     );
 
-    CreateDomElements.insertChilds(container, [this.containerWords]);
-
     CreateDomElements.insertChilds(
       this.body,
       [this.header, this.wrapper, this.footer],
     );
-    this.wrapperPagination.style.display = 'none';
 
     this.listenBtnPagination(this.wrapperPagination);
   }
@@ -96,13 +101,12 @@ class TextbookWordsSection {
   private renderSectionTextbook(words: WordStructure[], groupHard?: boolean): void {
     if (groupHard) {
       this.wrapperPagination.style.display = 'none';
-      this.hardWord.style.display = 'block';
+      this.btnGames.insertAdjacentElement('afterend', this.hardWord);
     } else {
       this.wrapperPagination.style.display = 'flex';
-      this.hardWord.style.display = 'none';
+      this.hardWord.remove();
     }
 
-    this.cleanSectionWords();
     words.forEach((word) => {
       const card: HTMLElement = CreateDomElements.createNewElement('div', ['card']);
       const img: HTMLElement = CreateDomElements.createNewElement('img', ['card__img']);
@@ -204,7 +208,7 @@ class TextbookWordsSection {
     CreateDomElements.insertChilds(btnSprintGame, [btnTextS, btnBackgroundA, btnPlayS]);
     CreateDomElements.insertChilds(containerGame, [btnAudioGame, btnSprintGame]);
 
-    this.gameLaunchToTextbook([btnPlayA, btnPlayS]);
+    [btnPlayA, btnPlayS].forEach((btn) => btn.addEventListener('click', this.gameLaunchToTextbook));
 
     return containerGame;
   }
@@ -259,9 +263,8 @@ class TextbookWordsSection {
       } else {
         chooseGroup = ['btn__group'];
       }
-      const btnBook: HTMLElement = CreateDomElements.createNewElement('a', chooseGroup);
+      const btnBook: HTMLElement = CreateDomElements.createNewElement('button', chooseGroup);
       CreateDomElements.setAttributes(btnBook, { id: `${i}` });
-      CreateDomElements.setAttributes(btnBook, { href: `#textbook/words?group=${i}&page=0` });
 
       CreateDomElements.setAttributes(
         level,
@@ -284,15 +287,15 @@ class TextbookWordsSection {
 
   private listenerGroupWords(books: HTMLElement): void {
     books.addEventListener('click', (e: Event) => {
-      const target = e.target as HTMLImageElement;
-      if (!target.classList.contains('img__book')) return;
-
-      const group = target.dataset.book as string;
+      const target = (e.target as HTMLImageElement).parentElement;
+      const group = target.getAttribute('id') as string;
 
       this.currentGroup = group;
+      this.pagination.chooseNumPage = '0';
       this.chooseLevel(group);
       this.getWordsChooseGroup(group);
       this.startNumPage();
+      this.saveData();
       CustomStorage.setStorage('textbookWords', { group, page: '0' });
     });
   }
@@ -301,21 +304,29 @@ class TextbookWordsSection {
     let response: Response;
     let data: ResponseData;
     const hardGroup = '6';
+    const container = document.querySelector('.body') as HTMLElement;
+    const spinner = new Spinner(optsSpiner);
+    spinner.spin(container);
 
     if (this.token && group === hardGroup) {
       response = (await Api.getDifficultWords(getUserData())) as Response;
       data = await response.json() as AuthorizeUserWords[];
+      this.cleanSectionWords();
       this.renderSectionTextbook(data[0].paginatedResults, true);
     } else if (this.token) {
       response = (await Api.getWordsWithOption(group, page, getUserData())) as Response;
       data = await response.json() as AuthorizeUserWords[];
+      this.cleanSectionWords();
       this.renderSectionTextbook(data[0].paginatedResults);
     } else {
       response = (await Api.getAllWords(group, page)) as Response;
       data = await response.json() as WordStructure[];
+
+      this.cleanSectionWords();
       this.renderSectionTextbook(data);
     }
     this.currentGroup = group;
+    spinner.stop();
   }
 
   public chooseLevel(group: string): void {
@@ -386,7 +397,6 @@ class TextbookWordsSection {
   }
 
   private saveData(): void {
-    CustomStorage.setStorage('textbookWords', { group: this.currentGroup, page: this.pagination.chooseNumPage });
     CustomStorage.setStorage(
       'page',
       `textbook/words?group=${this.currentGroup}&page=${this.pagination.chooseNumPage}`,
@@ -398,15 +408,12 @@ class TextbookWordsSection {
     );
   }
 
-  private gameLaunchToTextbook(games: HTMLElement[]): void {
-    games.forEach((game) => {
-      game.addEventListener('click', (e: MouseEvent) => {
-        const { name } = (e.target as HTMLParagraphElement).dataset;
-        const words: StateTextbook = JSON.parse(CustomStorage.getStorage('textbookWords'));
-        const chooseGame = e.currentTarget as HTMLLinkElement;
-        chooseGame.href = `#${name}?group=${words.group}&page=${words.page}`;
-      });
-    });
+  private gameLaunchToTextbook(e: PointerEvent): void {
+    const { name } = (e.target as HTMLParagraphElement).dataset;
+    const urlPage: string = CustomStorage.getStorage('page');
+    const chooseGame = e.currentTarget as HTMLLinkElement;
+    const data: string[] = getGroupAndPage(urlPage);
+    chooseGame.href = `#${name}?group=${data[0]}&page=${data[1]}`;
   }
 }
 
