@@ -1,17 +1,15 @@
 import CreateDomElements from '../../controller/newElement';
 import AudiocallGame from '../audiocall/audiocall-render';
-import { WordStructure } from '../../../types/loadServerData/interfaces';
 import IwordInfo from '../../../types/sprintGame/IwordInfo';
 
 class SprintPage {
   private static body = document.querySelector('body') as HTMLBodyElement;
 
-  private audioCalPage = new AudiocallGame();
-
-  static renderSprintPage(wordInfo: IwordInfo) {
+  static renderSprintPage(wordInfo: IwordInfo, score: number) {
     this.body.innerHTML = '';
     const sprintGameBlock = CreateDomElements.createNewElement('section', ['sprint-game']);
     const wordCard = CreateDomElements.createNewElement('div', ['sprint-game__card']);
+    const scoreBlock = CreateDomElements.createNewElement('div', ['sprint-game__score'], score.toString());
     const cardCirclesBlock = CreateDomElements.createNewElement('div', ['card__circles-block']);
     const cardImageBlock = CreateDomElements.createNewElement('div', ['card__image-block']);
     const cardImage = CreateDomElements.createNewElement('img', ['card__image']) as HTMLImageElement;
@@ -44,7 +42,7 @@ class SprintPage {
       wordCard,
       [cardCirclesBlock, cardImageBlock, word, translation, cardButtons],
     );
-    CreateDomElements.insertChilds(sprintGameBlock, [wordCard]);
+    CreateDomElements.insertChilds(sprintGameBlock, [scoreBlock, wordCard]);
     CreateDomElements.insertChilds(this.body, [sprintGameBlock]);
   }
 }

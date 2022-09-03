@@ -88,7 +88,7 @@ class SprintGame {
 
   private renderNewCard() {
     const cardInfo = this.getCurrentWordInfo();
-    SprintPage.renderSprintPage(cardInfo);
+    SprintPage.renderSprintPage(cardInfo, this.score);
     this.wordsCounter += 1;
     this.listen();
   }
@@ -101,11 +101,13 @@ class SprintGame {
 
     if (isTrueAnswer) {
       this.countOfCorrectAnswer += 1;
+      this.correctAudio.currentTime = 0;
       this.correctAudio.play();
       this.score += 10 * this.pointsMultiplier;
       console.log('Вы правы');
     } else {
       this.countOfCorrectAnswer -= 1;
+      this.wrongAudio.currentTime = 0;
       this.wrongAudio.play();
       this.pointsMultiplier = 1;
       console.log('Учи англ, сука');
@@ -122,12 +124,9 @@ class SprintGame {
       if (!buttonAnswer) return;
       if (this.currentWord.answer === buttonAnswer) {
         this.updateStatistics(true);
-        console.log(this.countOfCorrectAnswer);
       } else {
         this.updateStatistics(false);
-        console.log(this.countOfCorrectAnswer);
       }
-
       this.renderNewCard();
     });
   }

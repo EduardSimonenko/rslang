@@ -4,13 +4,13 @@
 
   
 .sprint-game {
-  @include flex();
+  @include flex($flex-direction: column);
   height: 100vh;
   background-image: url(../assets/images/sprint-background.jpg);
 }
 
 .sprint-game__card {
-  margin: auto;
+  margin: 20px auto 0;
   width: 550px;
   @include flex($flex-direction: column);
   gap: 20px;
@@ -31,15 +31,14 @@
 .card__circle_correct {
   background-image: url(../assets/images/correct-answer.svg);
 }
-.card__image-block {
-}
+
 .word {
   padding: 20px 0 0;
   @include font($font-family: $title-font, $font-size: 3.5rem)
 
 }
 .word-translation {
-  @include font($font-family: $title-font, $font-size: 3.0rem, $color: #4b4949)
+  @include font($font-family: $title-font, $font-size: 3.0rem, $color: #494a4b)
 }
 .card__buttons {
   @include flex();
@@ -65,4 +64,9 @@
     font-size: initial;
     background-color: rgb(107, 185, 4);
   }
+}
+
+.sprint-game__score {
+  @include font($font-family: $title-font, $font-size: 5.0rem, $color: #e90592, $font-weight: bold);
+  text-align: center;
 }
