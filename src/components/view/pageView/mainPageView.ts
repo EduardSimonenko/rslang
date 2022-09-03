@@ -203,6 +203,7 @@ class Page {
   private static launchPages(menu: ControlMenu): void {
     const textbookPage = new TextbookTitlePage();
     const authorization = new AppView();
+    const sprintGame = new SprintGame('1', '20');
     switch (menu.namePage) {
       case 'textbook':
         textbookPage.renderPageTextBook(menu.header, menu.footer);
@@ -220,7 +221,7 @@ class Page {
         break;
 
       case 'sprint':
-        SprintGame.startSprintGame();
+        sprintGame.startSprintGame();
         break;
 
       case 'audioCall':

@@ -1,25 +1,22 @@
 import CreateDomElements from '../../controller/newElement';
-import Api from '../../controller/textbook/controller';
 import AudiocallGame from '../audiocall/audiocall-render';
 import { WordStructure } from '../../../types/loadServerData/interfaces';
+import IwordInfo from '../../../types/sprintGame/IwordInfo';
 
 class SprintPage {
   private static body = document.querySelector('body') as HTMLBodyElement;
 
   private audioCalPage = new AudiocallGame();
 
-  static renderSprintPage(
-    numberOfCorrectAnswer: number,
-    words: WordStructure,
-    correctAnswer?: string,
-  ) {
+  static renderSprintPage(wordInfo: IwordInfo) {
+    this.body.innerHTML = '';
     const sprintGameBlock = CreateDomElements.createNewElement('section', ['sprint-game']);
     const wordCard = CreateDomElements.createNewElement('div', ['sprint-game__card']);
     const cardCirclesBlock = CreateDomElements.createNewElement('div', ['card__circles-block']);
     const cardImageBlock = CreateDomElements.createNewElement('div', ['card__image-block']);
     const cardImage = CreateDomElements.createNewElement('img', ['card__image']) as HTMLImageElement;
-    const word = CreateDomElements.createNewElement('h3', ['word'], words.word);
-    const translation = CreateDomElements.createNewElement('h4', ['word-translation'], words.wordTranslate);
+    const word = CreateDomElements.createNewElement('h3', ['word'], wordInfo.name);
+    const translation = CreateDomElements.createNewElement('h4', ['word-translation'], wordInfo.wordTranslate);
     const cardButtons = CreateDomElements.createNewElement('div', ['card__buttons']);
     const cardButtonWrong = CreateDomElements.createNewElement('button', ['card__button', 'card__button_wrong'], 'НЕВЕРНО');
     const cardButtonCorrect = CreateDomElements.createNewElement('button', ['card__button', 'card__button_correct'], 'ВЕРНО');
@@ -37,7 +34,7 @@ class SprintPage {
 
     for (let i = 0; i < correctAnswerMaxCount; i += 1) {
       const cardCircle = CreateDomElements.createNewElement('div', ['card__circle']);
-      if (i < numberOfCorrectAnswer) {
+      if (i < wordInfo.countOfCorrectAnswer) {
         cardCircle.classList.add('card__circle_correct');
       }
       CreateDomElements.insertChilds(cardCirclesBlock, [cardCircle]);
