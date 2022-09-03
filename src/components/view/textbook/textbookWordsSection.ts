@@ -13,7 +13,7 @@ import getUserData from '../../utils/userLogin';
 import optsSpiner from '../../utils/spinner';
 import getGroupAndPage from '../../utils/getGroupAndPage';
 import { ResponseData } from '../../../types/textbook/type';
-import createUrlPath from '../../utils/createUrlPath';
+import { createUrlPath } from '../../utils/createUrlPath';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;

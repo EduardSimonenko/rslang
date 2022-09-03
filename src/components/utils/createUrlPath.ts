@@ -8,7 +8,7 @@ function saveUrlPath(paramUrl: DataUrl): void {
   );
 }
 
-function createUrlPath(paramUrl: DataUrl): void {
+export function createUrlPath(paramUrl: DataUrl): void {
   saveUrlPath(paramUrl);
   window.history.pushState(
     `${paramUrl.path}?group=${paramUrl.group}&page=${paramUrl.page}`,
@@ -17,4 +17,6 @@ function createUrlPath(paramUrl: DataUrl): void {
   );
 }
 
-export default createUrlPath;
+export function replaceHashHistory(hash: string): void {
+  window.history.replaceState(hash, null);
+}

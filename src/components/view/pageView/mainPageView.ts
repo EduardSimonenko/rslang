@@ -45,7 +45,7 @@ class Page {
 
     CreateDomElements.insertChilds(wrapper, [logo, navbar, login]);
     CreateDomElements.insertChilds(header, [wrapper]);
-    this.listenLogIn(loginImg);
+    login.addEventListener('click', this.listenLogIn);
 
     return header;
   }
@@ -188,11 +188,9 @@ class Page {
     return teamSection;
   }
 
-  static listenLogIn(log: HTMLElement): void {
-    log.addEventListener('click', () => {
-      const login: AppView = new AppView();
-      login.startAuth();
-    });
+  private static listenLogIn(): void {
+    const login: AppView = new AppView();
+    login.startAuth();
   }
 }
 

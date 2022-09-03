@@ -1,4 +1,5 @@
 import CustomStorage from '../controller/storage';
+import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
 import Page from '../view/pageView/mainPageView';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
@@ -19,20 +20,20 @@ export default class App {
     });
   }
 
-  static changeState(): void {
+  private static changeState(): void {
     window.addEventListener('popstate', (e: PopStateEvent) => {
       if (e.state) {
         CustomStorage.setStorage('page', e.state);
       } else {
         const hash = window.location.href.split('#')[1];
         CustomStorage.setStorage('page', hash);
-        this.history(hash);
+        replaceHashHistory(hash);
       }
       this.renderPage();
     });
   }
 
-  static renderPage(): void {
+  private static renderPage(): void {
     let pagePath: string = CustomStorage.getStorage('page');
     let group: string;
     let currentPage;
@@ -69,9 +70,5 @@ export default class App {
     }
 
     currentPage.renderPage();
-  }
-
-  static history(hash: string): void {
-    window.history.replaceState(hash, 'словарь');
   }
 }
