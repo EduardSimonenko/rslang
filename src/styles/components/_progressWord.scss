@@ -1,0 +1,11 @@
+.container__progress {
+  padding-top: 80px;
+  @include wh (100%, 100%);
+  @include flex();
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.progress__close {
+  display: none;
+}

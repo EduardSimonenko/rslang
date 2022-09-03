@@ -22,7 +22,8 @@ module.exports = {
     "class-methods-use-this": "off",
     "consistent-return": 0,
     "no-console": ["error", { allow: ["error", "table", "log"] }],
-    "no-underscore-dangle": 'off'
+    "no-underscore-dangle": 'off',
+    "prefer-destructuring": ["error", {"object": true, "array": false}]
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
   },
