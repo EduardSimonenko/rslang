@@ -49,7 +49,7 @@ class Authorization extends Loader {
     } else {
       this.message.classList.remove('loader');
       this.message.style.color = 'red';
-      this.message.innerText = 'Пользователь с такими данными не может быть зарегистрирован';
+      this.message.innerText = 'Такой пользователь не может быть создан';
     }
   }
 
