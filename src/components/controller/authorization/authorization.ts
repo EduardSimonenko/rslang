@@ -1,3 +1,4 @@
+import AuthorizationEnum from '../../../types/authorization/enum';
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import Loader from '../load';
 import CustomStorage from '../storage';
@@ -118,7 +119,6 @@ class Authorization extends Loader {
 
       CustomStorage.setStorage('token', token);
       CustomStorage.setStorage('refreshToken', refreshToken);
-      // console.log('new tokens');
     }
   }
 
@@ -155,28 +155,23 @@ class Authorization extends Loader {
       event.preventDefault();
       const target = event.target as HTMLElement;
 
-      if (target.id === 'registration-btn') {
-        Authorization.createNewUser();
-      }
-
-      if (target.id === 'login-btn') {
-        Authorization.logIn();
-      }
-
-      if (target.id === 'logout-btn') {
-        this.logOut();
-      }
-
-      if (target.id === 'cancel-btn') {
-        Authorization.clear();
+      switch (target.id) {
+        case AuthorizationEnum.registration:
+          Authorization.createNewUser();
+          break;
+        case AuthorizationEnum.login:
+          Authorization.logIn();
+          break;
+        case AuthorizationEnum.logout:
+          this.logOut();
+          break;
+        case AuthorizationEnum.cancel:
+          Authorization.clear();
+          break;
+        default:
+          break;
       }
     });
-  }
-
-  public refreshTokenListener() {
-    if (Authorization.isLogin) {
-      setInterval(() => Authorization.refreshToken(), 2000);
-    }
   }
 }
 
