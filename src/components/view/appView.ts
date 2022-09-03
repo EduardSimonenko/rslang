@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import Authorization from '../controller/authorization/authorization';
 import AuthForm from './authorization/auth-render';
 

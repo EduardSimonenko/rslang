@@ -11,16 +11,20 @@ class Authorization extends Loader {
 
   static nameInput: HTMLInputElement;
 
+  static isLogin: boolean;
+
   constructor() {
     super();
     Authorization.message = document.getElementById('login-error');
     Authorization.emailInput = document.getElementById('email') as HTMLInputElement;
     Authorization.nameInput = document.getElementById('name') as HTMLInputElement;
     Authorization.passwordInput = document.getElementById('password') as HTMLInputElement;
+    Authorization.isLogin = Boolean(CustomStorage.getStorage('token'));
   }
 
   static async createNewUser(): Promise<void> {
-    super.load(
+    this.message.classList.add('.loader');
+    const result = await super.load(
       {
         method: MethodEnum.post,
         headers: {
@@ -34,10 +38,19 @@ class Authorization extends Loader {
         }),
       },
       [UrlFolderEnum.users],
-    );
+    ) as Response;
+    if (result.ok) {
+      this.message.innerText = 'Вы успешно зарегистрированы и вошли в систему';
+      this.message.style.color = 'green';
+      await Authorization.logIn();
+    } else {
+      this.message.style.color = 'red';
+      this.message.innerText = 'Пользователь с такими данными не может быть зарегистрирован';
+    }
   }
 
   static async logIn(): Promise<void> {
+    this.message.classList.add('loader');
     const result = await super.load(
       {
         method: MethodEnum.post,
@@ -63,8 +76,14 @@ class Authorization extends Loader {
       CustomStorage.setStorage('token', token);
       CustomStorage.setStorage('refreshToken', refreshToken);
 
+      this.message.classList.remove('loader');
       this.message.innerText = 'Вы вошли в систему';
       this.message.style.color = 'green';
+
+      const closeBtnImg = document.getElementById('close-btn-img');
+      closeBtnImg.addEventListener('click', () => {
+        window.location.reload();
+      });
     } else {
       this.message.style.color = 'red';
       this.message.innerText = 'Неверные учетные данные';
@@ -92,6 +111,7 @@ class Authorization extends Loader {
 
       CustomStorage.setStorage('token', token);
       CustomStorage.setStorage('refreshToken', refreshToken);
+      // console.log('new tokens');
     }
   }
 
@@ -113,7 +133,7 @@ class Authorization extends Loader {
   }
 
   private logOut(): void {
-    ['name', 'userId', 'token', 'refreshToken'].forEach((item) => localStorage.removeItem(item));
+    localStorage.clear();
     window.location.reload();
   }
 
@@ -124,27 +144,32 @@ class Authorization extends Loader {
   }
 
   public listen(): void {
-    const registrationBtn = document.getElementById('registration-btn');
-    const loginBtn = document.getElementById('login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const cancelBtn = document.getElementById('cancel-btn');
+    document.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = event.target as HTMLElement;
 
-    registrationBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      Authorization.createNewUser();
+      if (target.id === 'registration-btn') {
+        Authorization.createNewUser();
+      }
+
+      if (target.id === 'login-btn') {
+        Authorization.logIn();
+      }
+
+      if (target.id === 'logout-btn') {
+        this.logOut();
+      }
+
+      if (target.id === 'cancel-btn') {
+        Authorization.clear();
+      }
     });
-    loginBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      Authorization.logIn();
-    });
-    logoutBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      this.logOut();
-    });
-    cancelBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      Authorization.clear();
-    });
+  }
+
+  public refreshTokenListener() {
+    if (Authorization.isLogin) {
+      setInterval(() => Authorization.refreshToken(), 2000);
+    }
   }
 }
 
