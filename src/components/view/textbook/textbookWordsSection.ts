@@ -229,7 +229,7 @@ class TextbookWordsSection {
 
     CreateDomElements.insertChilds(
       containerVoice,
-      [imgVoicePlay, imgVoiceStop, this.renderAudio(word)],
+      [imgVoicePlay, imgVoiceStop, this.renderAudio(word), this.activeUser.renderProgressWord()],
     );
 
     this.listenerAudio(containerVoice);

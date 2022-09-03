@@ -37,6 +37,23 @@ class TextbookUsers {
     return containerBtnUser;
   }
 
+  public renderProgressWord(): HTMLElement {
+    const containerProgress: HTMLElement = CreateDomElements.createNewElement('div', ['container__progress']);
+    const progressStatus = 3;
+
+    for (let i = 0; i < progressStatus; i += 1) {
+      const progressImg = CreateDomElements.createNewElement('img', ['progress__img', 'progress__close']);
+      CreateDomElements.setAttributes(progressImg, {
+        src: `../../../assets/images/progress-${i}.png`,
+        width: '30',
+        height: '30',
+      });
+      CreateDomElements.insertChilds(containerProgress, [progressImg]);
+    }
+
+    return containerProgress;
+  }
+
   private listenBtnUser(btns: HTMLElement, group: string) {
     btns.addEventListener('click', (e: Event) => {
       const target = (e.target as HTMLButtonElement);
