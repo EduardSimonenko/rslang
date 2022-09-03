@@ -60,6 +60,8 @@ class Audiocall extends AudiocallRender {
     const hardWords = textbookWords.filter((word: WordStructure) => word.userWord)
       .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
     const words = [...unmarkedWords, ...normalWords, ...hardWords];
+    console.log('wordArr', textbookWords);
+    console.log('words', words);
     return words;
   }
 
@@ -123,6 +125,7 @@ class Audiocall extends AudiocallRender {
     for (let i = 0; i < answerBtns.length; i += 1) {
       answerBtns[i].style.backgroundColor = '';
       answerBtns[i].innerText = answers[i];
+      answerBtns[i].dataset.inner = answers[i];
       answerBtns[i].removeAttribute('disabled');
     }
     nextBtn.removeAttribute('disabled');
@@ -264,27 +267,30 @@ class Audiocall extends AudiocallRender {
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
         answerBtns.forEach((item) => item.setAttribute('disabled', ''));
         answerBtns.forEach((item) => {
-          if (item.innerText === this.correctAnswer.wordTranslate) {
+          if (item.dataset.inner === this.correctAnswer.wordTranslate) {
             const correctAnswer = item;
             correctAnswer.style.backgroundColor = '#7FB77E';
           }
         });
-        if (target.innerText === '→' && target.style.backgroundColor !== 'rgb(255, 74, 74)') { // сл слово после ответа
+        if (target.dataset.inner === '→' && target.style.backgroundColor !== 'rgb(255, 74, 74)') { // сл слово после ответа
           this.buildGameLogic(this.counter);
           target.innerText = 'Пропустить →';
+          target.dataset.inner = 'Пропустить →';
           answerBtns.forEach((item) => item.removeAttribute('disabled'));
-        } else if (target.innerText === 'Пропустить →') { // пропустить слово
+        } else if (target.dataset.inner === 'Пропустить →') { // пропустить слово
           (document.getElementById('wrong-audio') as HTMLAudioElement).play();
           target.innerText = '→';
+          target.dataset.inner = '→';
           target.style.backgroundColor = 'rgb(255, 74, 74)';
           const wordImg = document.getElementById('word-img') as HTMLImageElement;
           const word = document.getElementById('word');
           wordImg.classList.remove('hidden');
           word.classList.remove('hidden');
           this.wrongAnswers.push(this.correctAnswer);
-        } else if (target.innerText === '→' && target.style.backgroundColor === 'rgb(255, 74, 74)') { // сл слово после пропустить
+        } else if (target.dataset.inner === '→' && target.style.backgroundColor === 'rgb(255, 74, 74)') { // сл слово после пропустить
           target.style.backgroundColor = '';
           target.innerText = 'Пропустить →';
+          target.dataset.inner = 'Пропустить →';
           this.buildGameLogic(this.counter);
           answerBtns.forEach((item) => item.removeAttribute('disabled'));
         }
@@ -293,14 +299,14 @@ class Audiocall extends AudiocallRender {
       if (target.id === 'answer-btn') { // refactor
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
         answerBtns.forEach((item) => item.setAttribute('disabled', ''));
-        if (target.innerText === this.correctAnswer.wordTranslate) {
+        if (target.dataset.inner === this.correctAnswer.wordTranslate) {
           (document.getElementById('correct-audio') as HTMLAudioElement).play();
           target.removeAttribute('disabled');
           this.correctAnswers.push(this.correctAnswer);
           target.style.backgroundColor = '#7FB77E';
         } else {
           answerBtns.forEach((item) => {
-            if (item.innerText === this.correctAnswer.wordTranslate) {
+            if (item.dataset.inner === this.correctAnswer.wordTranslate) {
               (document.getElementById('wrong-audio') as HTMLAudioElement).play();
               const correctAnswer = item;
               correctAnswer.style.backgroundColor = '#7FB77E';
@@ -312,6 +318,7 @@ class Audiocall extends AudiocallRender {
         }
         const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
         nextBtn.innerText = '→';
+        nextBtn.dataset.inner = '→';
         const wordImg = document.getElementById('word-img') as HTMLImageElement;
         const word = document.getElementById('word');
         wordImg.classList.remove('hidden');

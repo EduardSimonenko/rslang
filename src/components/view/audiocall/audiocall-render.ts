@@ -31,13 +31,12 @@ class AudiocallRender {
     const gameStartBtn = CreateDomElements.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Начать игру');
     CreateDomElements.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
 
-    const levels = ['1', '2', '3', '4', '5', '6'];
-    levels.forEach((item) => {
-      const node = CreateDomElements.createNewElement('button', ['audiocall__level-btn'], `${item}`);
+    for (let level = 0; level <= 5; level += 1) {
+      const node = CreateDomElements.createNewElement('button', ['audiocall__level-btn'], String(level + 1));
       CreateDomElements.setAttributes(node, { id: 'level-btn' });
-      node.dataset.level = String(Number(item) - 1);
+      node.dataset.level = String(level);
       gameLevelBtns.appendChild(node);
-    });
+    }
 
     CreateDomElements.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
     CreateDomElements.insertChilds(gameStartScreen, [gameClose,
@@ -74,10 +73,12 @@ class AudiocallRender {
       answerBtn.setAttribute('id', 'answer-btn');
       answerBtn.setAttribute('disabled', '');
       answerBtn.dataset.id = `${i}`;
+      answerBtn.dataset.inner = '';
       answersSection.appendChild(answerBtn);
     }
     const nextBtn = CreateDomElements.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
     CreateDomElements.setAttributes(nextBtn, { id: 'next-btn', type: 'button', disabled: '' });
+    nextBtn.dataset.inner = 'Пропустить →';
 
     CreateDomElements.insertChilds(playField, [gameClose, soundSection, answersSection, nextBtn]);
 
