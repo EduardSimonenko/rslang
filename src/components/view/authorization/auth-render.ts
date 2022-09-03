@@ -1,4 +1,3 @@
-import '../../../styles/pages/_auth.scss';
 import CreateDomElements from '../../controller/newElement';
 
 class AuthForm {
@@ -51,6 +50,7 @@ class AuthForm {
       document.body.removeChild(loginWrapper);
     });
     loginAuthChange.addEventListener('click', () => {
+      loginFormError.innerText = '';
       nameInput.classList.toggle('hidden');
       loginBtn.classList.toggle('hidden');
       registrationBtn.classList.toggle('hidden');

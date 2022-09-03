@@ -23,7 +23,8 @@ class Authorization extends Loader {
   }
 
   static async createNewUser(): Promise<void> {
-    this.message.classList.add('.loader');
+    this.message.innerText = '';
+    this.message.classList.add('loader');
     const result = await super.load(
       {
         method: MethodEnum.post,
@@ -40,16 +41,20 @@ class Authorization extends Loader {
       [UrlFolderEnum.users],
     ) as Response;
     if (result.ok) {
+      this.message.classList.remove('loader');
       this.message.innerText = 'Вы успешно зарегистрированы и вошли в систему';
       this.message.style.color = 'green';
       await Authorization.logIn();
+      this.message.innerText = '';
     } else {
+      this.message.classList.remove('loader');
       this.message.style.color = 'red';
       this.message.innerText = 'Пользователь с такими данными не может быть зарегистрирован';
     }
   }
 
   static async logIn(): Promise<void> {
+    this.message.innerText = '';
     this.message.classList.add('loader');
     const result = await super.load(
       {
@@ -82,9 +87,11 @@ class Authorization extends Loader {
 
       const closeBtnImg = document.getElementById('close-btn-img');
       closeBtnImg.addEventListener('click', () => {
+        this.message.innerText = '';
         window.location.reload();
       });
     } else {
+      this.message.classList.remove('loader');
       this.message.style.color = 'red';
       this.message.innerText = 'Неверные учетные данные';
     }
