@@ -87,6 +87,7 @@ class TextbookWordsSection {
       [this.btnGames,
         this.wrapperPagination,
         container,
+        this.createBtnUp(),
       ],
     );
 
@@ -283,6 +284,36 @@ class TextbookWordsSection {
     this.listenerGroupWords(containerGroup);
 
     return containerGroup;
+  }
+
+  private createBtnUp(): HTMLElement {
+    const btnUp = CreateDomElements.createNewElement('button', ['button__up']);
+    const btnImg = CreateDomElements.createNewElement('img', ['button__img-up']);
+
+    CreateDomElements.setAttributes(btnImg, {
+      src: '../../../assets/images/button-up.png',
+      width: '40',
+      height: '40',
+      alt: 'button up',
+    });
+
+    CreateDomElements.insertChilds(btnUp, [btnImg]);
+    btnUp.addEventListener('click', () => { window.scrollTo(0, 0); });
+    window.addEventListener('scroll', this.openBtnUp);
+
+    return btnUp;
+  }
+
+  private openBtnUp(): void {
+    const btn = document.querySelector('.button__up') as HTMLButtonElement;
+    const heightWindow: number = window.pageYOffset;
+    const startPoint = 300;
+    if (heightWindow > startPoint) {
+      btn.classList.add('open-button-up');
+    }
+    if (heightWindow < startPoint) {
+      btn.classList.remove('open-button-up');
+    }
   }
 
   private listenerGroupWords(books: HTMLElement): void {
