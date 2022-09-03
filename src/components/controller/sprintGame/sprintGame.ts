@@ -21,6 +21,8 @@ class SprintGame {
 
   countOfCorrectAnswer: number;
 
+  pointsMultiplier: number;
+
   group: string;
 
   page: string;
@@ -33,7 +35,12 @@ class SprintGame {
     this.countOfCorrectAnswer = 0;
     this.group = group;
     this.page = page;
+    this.pointsMultiplier = 1;
   }
+
+  private correctAudio = new Audio('./assets/sounds/true_sounds.mp3');
+
+  private wrongAudio = new Audio('./assets/sounds/wrong_sounds.mp3');
 
   async startSprintGame() {
     document.querySelector('body').innerHTML = '';
@@ -86,6 +93,25 @@ class SprintGame {
     this.listen();
   }
 
+  private updateStatistics(isTrueAnswer: boolean) {
+    if (this.countOfCorrectAnswer === 3 && isTrueAnswer) {
+      this.countOfCorrectAnswer = -1;
+      this.pointsMultiplier += 1;
+    }
+
+    if (isTrueAnswer) {
+      this.countOfCorrectAnswer += 1;
+      this.correctAudio.play();
+      this.score += 10 * this.pointsMultiplier;
+      console.log('Вы правы');
+    } else {
+      this.countOfCorrectAnswer -= 1;
+      this.wrongAudio.play();
+      this.pointsMultiplier = 1;
+      console.log('Учи англ, сука');
+    }
+  }
+
   listen() {
     const cardButtons = document.querySelector('.card__buttons');
 
@@ -95,11 +121,11 @@ class SprintGame {
       const buttonAnswer = target.dataset.answer;
       if (!buttonAnswer) return;
       if (this.currentWord.answer === buttonAnswer) {
-        this.countOfCorrectAnswer += 1;
-        console.log('Вы правы');
+        this.updateStatistics(true);
+        console.log(this.countOfCorrectAnswer);
       } else {
-        this.countOfCorrectAnswer -= 1;
-        console.log('Учи англ, сука');
+        this.updateStatistics(false);
+        console.log(this.countOfCorrectAnswer);
       }
 
       this.renderNewCard();
