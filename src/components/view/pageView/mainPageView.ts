@@ -1,17 +1,11 @@
 import { ControlMenu } from '../../../types/textbook/interfaces';
 import CreateDomElements from '../../controller/newElement';
-<<<<<<< HEAD
-=======
 import CustomStorage from '../../controller/storage';
->>>>>>> a5fed301dfc94a892cb742628681afdb77c43a00
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
 import AppView from '../appView';
 import TextbookTitlePage from '../textbook/textbookTitlePage';
-<<<<<<< HEAD
-import SprintPage from '../sprintView/sprintPageRender';
-=======
->>>>>>> a5fed301dfc94a892cb742628681afdb77c43a00
+import SprintGame from '../../controller/sprintGame/sprintGame';
 
 class Page {
   private static body = document.querySelector('body') as HTMLBodyElement;
@@ -219,31 +213,18 @@ class Page {
         break;
 
       case 'main':
-<<<<<<< HEAD
-=======
         CustomStorage.clearDataStorage('textbookWords');
         CustomStorage.clearDataStorage('paginationBtn');
         CustomStorage.setStorage('page', 'main');
->>>>>>> a5fed301dfc94a892cb742628681afdb77c43a00
         this.renderMainPage();
         break;
 
       case 'sprint':
-<<<<<<< HEAD
-        this.body.innerHTML = '';
-        SprintPage.renderSprintPage();
-=======
-      // someFunction()
-        console.log('sprint');
->>>>>>> a5fed301dfc94a892cb742628681afdb77c43a00
+        SprintGame.startSprintGame();
         break;
 
       case 'audioCall':
       // someFunction()
-<<<<<<< HEAD
-=======
-        console.log('audiocall');
->>>>>>> a5fed301dfc94a892cb742628681afdb77c43a00
         break;
 
       default:

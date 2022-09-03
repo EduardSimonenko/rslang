@@ -8,7 +8,7 @@ class Controller extends Loader {
     //   password: 'string',
     // };
 
-    return super.load(
+    return Loader.load(
       {
         method: MethodEnum.get,
         headers: {

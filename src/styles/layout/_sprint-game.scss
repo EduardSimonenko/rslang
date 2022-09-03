@@ -8,7 +8,8 @@
   height: 100vh;
   background-image: url(../assets/images/sprint-background.jpg);
 }
-.card {
+
+.sprint-game__card {
   margin: auto;
   width: 550px;
   @include flex($flex-direction: column);

@@ -1,19 +1,28 @@
 import CreateDomElements from '../../controller/newElement';
+import Api from '../../controller/textbook/controller';
+import AudiocallGame from '../audiocall/audiocall-render';
+import { WordStructure } from '../../../types/loadServerData/interfaces';
 
 class SprintPage {
   private static body = document.querySelector('body') as HTMLBodyElement;
 
-  static renderSprintPage() {
+  private audioCalPage = new AudiocallGame();
+
+  static renderSprintPage(
+    numberOfCorrectAnswer: number,
+    words: WordStructure,
+    correctAnswer?: string,
+  ) {
     const sprintGameBlock = CreateDomElements.createNewElement('section', ['sprint-game']);
-    const wordCard = CreateDomElements.createNewElement('div', ['card']);
+    const wordCard = CreateDomElements.createNewElement('div', ['sprint-game__card']);
     const cardCirclesBlock = CreateDomElements.createNewElement('div', ['card__circles-block']);
     const cardImageBlock = CreateDomElements.createNewElement('div', ['card__image-block']);
     const cardImage = CreateDomElements.createNewElement('img', ['card__image']) as HTMLImageElement;
-    const word = CreateDomElements.createNewElement('h3', ['word'], 'Body');
-    const translation = CreateDomElements.createNewElement('h4', ['word-translation'], 'Тело');
+    const word = CreateDomElements.createNewElement('h3', ['word'], words.word);
+    const translation = CreateDomElements.createNewElement('h4', ['word-translation'], words.wordTranslate);
     const cardButtons = CreateDomElements.createNewElement('div', ['card__buttons']);
-    const cardButtonWrong = CreateDomElements.createNewElement('button', ['card__button card__button_wrong'], 'НЕВЕРНО');
-    const cardButtonCorrect = CreateDomElements.createNewElement('button', ['card__button card__button_correct'], 'ВЕРНО');
+    const cardButtonWrong = CreateDomElements.createNewElement('button', ['card__button', 'card__button_wrong'], 'НЕВЕРНО');
+    const cardButtonCorrect = CreateDomElements.createNewElement('button', ['card__button', 'card__button_correct'], 'ВЕРНО');
 
     cardImage.alt = 'Just a parrot';
     cardImage.src = './assets/images/sprint-image.svg';
@@ -28,6 +37,9 @@ class SprintPage {
 
     for (let i = 0; i < correctAnswerMaxCount; i += 1) {
       const cardCircle = CreateDomElements.createNewElement('div', ['card__circle']);
+      if (i < numberOfCorrectAnswer) {
+        cardCircle.classList.add('card__circle_correct');
+      }
       CreateDomElements.insertChilds(cardCirclesBlock, [cardCircle]);
     }
 
