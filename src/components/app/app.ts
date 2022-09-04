@@ -5,6 +5,7 @@ import getGroupAndPage from '../utils/getGroupAndPage';
 import Page from '../view/pageView/mainPageView';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 import TextbookWordsSection from '../view/textbook/textbookWordsSection';
+import StartScreen from '../view/startScreenGame/startScreenView';
 
 export default class App {
   static start(): void {
@@ -54,7 +55,7 @@ export default class App {
         break;
 
       case 'game/sprint':
-        currentPage = new SprintGame(group, page);
+        currentPage = new StartScreen();
         break;
 
       case 'game/audio-call':

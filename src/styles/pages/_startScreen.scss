@@ -1,0 +1,118 @@
+.sprint-game-wrapper {
+  @include flex();
+  color: $light-font-color;
+  @include font($color: $light-font-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(-45deg, #2C3639, #A27B5C, #3F4E4F, #DCD7C9);
+	background-size: 400% 400%;
+	animation: gradient 25s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.sprint-game__start-screen {
+  border: 1px solid $light-section-background;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 70px;
+  border-radius: 40px;
+}
+
+.sprint-game__close-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 50px;
+  cursor: pointer;
+}
+
+.sprint-game__close-btn_img {
+  transition: ease-in-out 0.3s;
+  filter: brightness(0) invert(1);
+  @include wh(32px, 32px);
+}
+.sprint-game__close-btn_img:hover {
+  filter: brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
+}
+
+.sprint-game__title {
+  @include font($title-font, $color: $light-font-color);
+  font-size: $title-font-size;
+  margin-bottom: 100px;
+}
+
+.sprint-game__subtitle {
+  margin-bottom: 30px;
+}
+
+.sprint-game__level-title {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.sprint-game__level-btns {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 50px
+}
+
+.sprint-game__level-btn {
+  @include flex();
+  color: $title-color;
+  font-size: larger ;
+  font-weight: bold;
+  @include wh(50px, 50px);
+  border-radius: 30px;
+  opacity: 0.8;
+  border: 2px solid $light-font-color;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.sprint-game__level-btn:hover {
+  background-color: gold;
+  color: $light-font-color;
+}
+
+.active {
+  border: 2px solid gold;
+  background-color: gold;
+  color: $light-font-color;
+}
+
+.btn {
+  @include button($border-color: $light-font-color);
+  font-size: 2rem;
+  background-color: rgba($color: transparent, $alpha: 0.2);
+  color: $light-font-color;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.btn[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.btn:hover {
+  background-color: $light-section-background;
+  color: $font-color;
+}
+
+
