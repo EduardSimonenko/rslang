@@ -1,10 +1,6 @@
-// @mixin flex($justify-content: center, $align-items: center, $flex-wrap: nowrap, $flex-direction: row) 
-// @mixin button($width: 240px, $height: 50px, $color: $font-color, $border-color: $font-color) 
-// @mixin font($font-family: $main-font, $font-size: $main-font-size, $font-weight: 300, $line-height: 3.3rem, $color: #000000)
-
-  
 .sprint-game {
-  @include flex($flex-direction: column);
+  @include flex($flex-direction: column, $justify-content: flex-start);
+  padding-top: 120px;
   height: 100vh;
   gap: 15px;
   background-image: url(../assets/images/sprint-background.jpg);
@@ -83,10 +79,14 @@
 .timer {
   width: 150px;
   height: 150px;
-  margin: 0 15% 60px auto;
+  margin: 0 15% 0 auto;
   @include font($font-family: $title-font, $font-size: 7.0rem, $color: #2c69ec, $font-weight: bold);
   line-height: 130px;
   text-align: center;
   border-radius: 50%;
   border: 4px solid  #01194d;
+}
+
+.card__points {
+  @include font($font-family: $title-font, $font-size: 2.5rem, $color:  #2c69ec, $font-weight: 500);
 }

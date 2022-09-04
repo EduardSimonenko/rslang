@@ -30,6 +30,8 @@ class SprintGame {
   constructor(group: string, page?: string) {
     this.words = [];
     this.wrongWords = [];
+    this.correctAnswers = [];
+    this.wrongAnswers = [];
     this.score = 0;
     this.wordsCounter = 0;
     this.countOfCorrectAnswer = 0;
@@ -104,7 +106,13 @@ class SprintGame {
       this.updateWords();
     }
     const cardInfo = this.getCurrentWordInfo();
-    SprintPage.renderCard(cardInfo, this.score);
+    let countForCorrectAnswer = 0;
+    let strPointsForCorrectAnswer = '';
+    if (this.pointsMultiplier > 1) {
+      countForCorrectAnswer = this.pointsMultiplier * 10;
+    }
+    strPointsForCorrectAnswer = countForCorrectAnswer ? `+ ${countForCorrectAnswer} очков за слово!` : '';
+    SprintPage.renderCard(cardInfo, this.score, strPointsForCorrectAnswer);
     this.wordsCounter += 1;
     this.listen();
   }
@@ -122,7 +130,7 @@ class SprintGame {
     const timer = setInterval(() => {
       if (+timerShow.innerHTML <= 0) {
         clearInterval(timer);
-        alert('Время закончилось');
+        SprintPage.renderStatistics(this.score, this.wrongAnswers, this.correctAnswers);
       } else {
         timerShow.innerHTML = (+timerShow.innerHTML - 1).toString();
       }
@@ -130,6 +138,7 @@ class SprintGame {
   }
 
   private async updateStatistics(isTrueAnswer: boolean) {
+    const word = this.words[this.wordsCounter];
     if (this.countOfCorrectAnswer === 3 && isTrueAnswer) {
       this.countOfCorrectAnswer = -1;
       this.pointsMultiplier += 1;
@@ -141,6 +150,7 @@ class SprintGame {
       this.correctAudio.currentTime = 0;
       this.correctAudio.play();
       this.score += 10 * this.pointsMultiplier;
+      this.correctAnswers.push(word);
     } else {
       if (this.countOfCorrectAnswer > 0) {
         this.countOfCorrectAnswer -= 1;
@@ -149,6 +159,7 @@ class SprintGame {
       this.wrongAudio.currentTime = 0;
       this.wrongAudio.play();
       this.pointsMultiplier = 1;
+      this.wrongAnswers.push(word);
     }
   }
 
@@ -165,7 +176,7 @@ class SprintGame {
       } else {
         this.updateStatistics(false);
       }
-      setTimeout(() => this.renderNewCard(), 300);
+      setTimeout(() => this.renderNewCard(), 0);
     });
   }
 }

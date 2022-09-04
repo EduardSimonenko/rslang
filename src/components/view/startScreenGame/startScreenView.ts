@@ -15,9 +15,10 @@ class StartScreen {
 
   renderPage(): void {
     this.body.innerHTML = '';
-    const gameClose = CreateDomElements.createNewElement('div', ['sprint-game__close-btn']);
+    const gameClose = CreateDomElements.createNewElement('a', ['sprint-game__close-btn']) as HTMLLinkElement;
     const gameCloseImg = CreateDomElements.createNewElement('img', ['sprint-gamel__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    gameClose.href = '#main';
     gameCloseImg.setAttribute('id', 'close-game');
     gameClose.appendChild(gameCloseImg);
 
@@ -49,7 +50,6 @@ class StartScreen {
 
   listen(): void {
     this.gameWrapper.addEventListener('click', (event) => {
-      event.preventDefault();
       const target = event.target as HTMLElement;
       if (target.id === 'start-btn') {
         const sprintGame = new SprintGame(this.level);
