@@ -1,5 +1,4 @@
 import CreateDomElements from '../../controller/newElement';
-import AudiocallGame from '../audiocall/audiocall-render';
 import IwordInfo from '../../../types/sprintGame/IwordInfo';
 
 class SprintPage {
@@ -9,7 +8,7 @@ class SprintPage {
     this.body.innerHTML = '';
     const sprintGameBlock = CreateDomElements.createNewElement('section', ['sprint-game']);
     const wordCard = CreateDomElements.createNewElement('div', ['sprint-game__card']);
-    const scoreBlock = CreateDomElements.createNewElement('div', ['sprint-game__score'], score.toString());
+    const scoreBlock = CreateDomElements.createNewElement('p', ['sprint-game__score'], score.toString());
     const cardCirclesBlock = CreateDomElements.createNewElement('div', ['card__circles-block']);
     const cardImageBlock = CreateDomElements.createNewElement('div', ['card__image-block']);
     const cardImage = CreateDomElements.createNewElement('img', ['card__image']) as HTMLImageElement;

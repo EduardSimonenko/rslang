@@ -70,3 +70,11 @@
   @include font($font-family: $title-font, $font-size: 5.0rem, $color: #e90592, $font-weight: bold);
   text-align: center;
 }
+
+.sprint-game__card_correct {
+  box-shadow: -1px 0px 42px 6px rgba(75, 223, 80, 0.46) inset;
+}
+
+.sprint-game__card_wrong {
+  box-shadow: -1px 0px 42px 6px rgba(223, 39, 39, 0.46) inset;
+}

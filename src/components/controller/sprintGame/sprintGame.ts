@@ -93,20 +93,33 @@ class SprintGame {
     this.listen();
   }
 
-  private updateStatistics(isTrueAnswer: boolean) {
+  private addModifier(modifier: string) {
+    const card = document.querySelector('.sprint-game__card');
+    card.classList.add(`sprint-game__card_${modifier}`);
+    setTimeout(() => {
+      card.classList.remove(`sprint-game__card_${modifier}`);
+    }, 30000);
+    console.log(card);
+  }
+
+  private async updateStatistics(isTrueAnswer: boolean) {
     if (this.countOfCorrectAnswer === 3 && isTrueAnswer) {
       this.countOfCorrectAnswer = -1;
       this.pointsMultiplier += 1;
     }
 
     if (isTrueAnswer) {
+      this.addModifier('correct');
       this.countOfCorrectAnswer += 1;
       this.correctAudio.currentTime = 0;
       this.correctAudio.play();
       this.score += 10 * this.pointsMultiplier;
       console.log('Вы правы');
     } else {
-      this.countOfCorrectAnswer -= 1;
+      if (this.countOfCorrectAnswer > 0) {
+        this.countOfCorrectAnswer -= 1;
+      }
+      this.addModifier('wrong');
       this.wrongAudio.currentTime = 0;
       this.wrongAudio.play();
       this.pointsMultiplier = 1;
@@ -127,7 +140,8 @@ class SprintGame {
       } else {
         this.updateStatistics(false);
       }
-      this.renderNewCard();
+      // this.renderNewCard();
+      setTimeout(() => this.renderNewCard(), 300);
     });
   }
 }
