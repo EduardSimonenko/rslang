@@ -1,6 +1,6 @@
 import CreateDomElements from '../../controller/newElement';
 
-class AudiocallGame {
+class AudiocallRender {
   gameWrapper: HTMLElement;
 
   correctAudio: HTMLAudioElement;
@@ -16,7 +16,8 @@ class AudiocallGame {
   }
 
   renderStartScreen(): void {
-    const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
+    const gameClose = CreateDomElements.createNewElement('a', ['audiocall__close-btn']);
+    CreateDomElements.setAttributes(gameClose, { href: '#main' });
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
     gameCloseImg.setAttribute('id', 'close-game');
@@ -31,13 +32,12 @@ class AudiocallGame {
     const gameStartBtn = CreateDomElements.createNewElement('button', ['audiocall__start-btn', 'btn'], 'Начать игру');
     CreateDomElements.setAttributes(gameStartBtn, { id: 'start-btn', type: 'button', disabled: 'true' });
 
-    const levels = ['1', '2', '3', '4', '5', '6'];
-    levels.forEach((item) => {
-      const node = CreateDomElements.createNewElement('button', ['audiocall__level-btn'], `${item}`);
+    for (let level = 0; level <= 5; level += 1) {
+      const node = CreateDomElements.createNewElement('button', ['audiocall__level-btn'], String(level + 1));
       CreateDomElements.setAttributes(node, { id: 'level-btn' });
-      node.dataset.level = String(Number(item) - 1);
+      node.dataset.level = String(level);
       gameLevelBtns.appendChild(node);
-    });
+    }
 
     CreateDomElements.insertChilds(gameLevel, [gameLevelTitle, gameLevelBtns]);
     CreateDomElements.insertChilds(gameStartScreen, [gameClose,
@@ -45,11 +45,11 @@ class AudiocallGame {
     this.gameWrapper.appendChild(gameStartScreen);
 
     document.body.appendChild(this.gameWrapper);
-    document.body.style.overflowY = 'hidden';
   }
 
   renderGame(): void {
-    const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
+    const gameClose = CreateDomElements.createNewElement('a', ['audiocall__close-btn']);
+    CreateDomElements.setAttributes(gameClose, { href: '#main', id: 'a' });
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
     gameCloseImg.setAttribute('id', 'close-game');
@@ -74,10 +74,14 @@ class AudiocallGame {
       answerBtn.setAttribute('id', 'answer-btn');
       answerBtn.setAttribute('disabled', '');
       answerBtn.dataset.id = `${i}`;
+
+      answerBtn.dataset.inner = '';
       answersSection.appendChild(answerBtn);
     }
     const nextBtn = CreateDomElements.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
     CreateDomElements.setAttributes(nextBtn, { id: 'next-btn', type: 'button', disabled: '' });
+
+    nextBtn.dataset.inner = 'Пропустить →';
 
     CreateDomElements.insertChilds(playField, [gameClose, soundSection, answersSection, nextBtn]);
 
@@ -86,28 +90,7 @@ class AudiocallGame {
       this.gameWrapper,
       [playField, this.correctAudio, this.wrongAudio],
     );
-    document.body.style.overflowY = 'hidden';
-  }
-
-  listen(): void {
-    document.addEventListener('click', (event) => {
-      event.preventDefault();
-      const target = event.target as HTMLElement;
-      if (target.id === 'start-btn') {
-        this.renderGame();
-      }
-    });
-  }
-
-  start(): void {
-    document.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      if (target.getAttribute('data-page') === 'audioCall') {
-        this.renderStartScreen();
-        this.listen();
-      }
-    });
   }
 }
 
-export default AudiocallGame;
+export default AudiocallRender;

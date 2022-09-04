@@ -24,7 +24,7 @@ class StartScreen {
 
     const gameStartScreen = CreateDomElements.createNewElement('div', ['sprint-game__start-screen']);
     const gameTitle = CreateDomElements.createNewElement('div', ['sprint-game__title'], '<h2>Спринт</h2>');
-    const gameSubtitle = CreateDomElements.createNewElement('div', ['sprint-game__subtitle'], '<span>Такая тренировка улучшает твое восприятие речи на слух</span>');
+    const gameSubtitle = CreateDomElements.createNewElement('div', ['sprint-game__subtitle'], '<span>Пару таких тренировок и можешь переезжать в Америку!</span>');
     const gameLevel = CreateDomElements.createNewElement('div', ['sprint-game__level']);
     const gameLevelTitle = CreateDomElements.createNewElement('div', ['sprint-game__level-title'], '<span>Выберите сложность</span>');
     const gameLevelBtns = CreateDomElements.createNewElement('div', ['sprint-game__level-btns']);

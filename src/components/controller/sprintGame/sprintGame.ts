@@ -3,6 +3,7 @@ import Api from '../textbook/controller';
 import SprintPage from '../../view/sprintView/sprintPageRender';
 import { getRandomInt, shuffle } from '../../utils/utils';
 import IwordInfo from '../../../types/sprintGame/IwordInfo';
+import Audiocall from '../audiocall/audiocall';
 
 class SprintGame {
   words: WordStructure[];
@@ -44,13 +45,16 @@ class SprintGame {
 
   private wrongAudio = new Audio('./assets/sounds/wrong_sounds.mp3');
 
+  private audioCall = new Audiocall();
+
   async renderPage() {
     document.querySelector('body').innerHTML = '';
     await this.createArraysForGame();
     const cardInfo = this.getCurrentWordInfo();
     SprintPage.renderSprintPage(cardInfo, this.score);
     this.wordsCounter += 1;
-    this.timer();
+    await this.timer();
+
     this.listen();
   }
 
@@ -70,6 +74,7 @@ class SprintGame {
   private getCurrentWordInfo() {
     const correctWord = this.words[this.wordsCounter];
     const wrongWord = this.wrongWords[this.wordsCounter];
+    console.log(correctWord);
 
     const randomInt = getRandomInt(0, 1);
 
@@ -131,6 +136,10 @@ class SprintGame {
       if (+timerShow.innerHTML <= 0) {
         clearInterval(timer);
         SprintPage.renderStatistics(this.score, this.wrongAnswers, this.correctAnswers);
+        console.log(this.correctAnswers);
+        console.log(this.wrongAnswers);
+        this.audioCall.sendOptions(this.correctAnswers, this.wrongAnswers);
+        this.audioCall.sendOptions(this.wrongAnswers, this.wrongAnswers);
       } else {
         timerShow.innerHTML = (+timerShow.innerHTML - 1).toString();
       }

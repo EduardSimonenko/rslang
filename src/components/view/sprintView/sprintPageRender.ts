@@ -1,6 +1,7 @@
 import CreateDomElements from '../../controller/newElement';
 import IwordInfo from '../../../types/sprintGame/IwordInfo';
 import { WordStructure } from '../../../types/loadServerData/interfaces';
+import baseUrl from '../../model/baseUrl';
 
 class SprintPage {
   private static sprintGameBlock = CreateDomElements.createNewElement('section', ['sprint-game']);
@@ -105,11 +106,11 @@ class SprintPage {
 
   private static createWordBlock(word: WordStructure) {
     const someWord = CreateDomElements.createNewElement('div', ['word']);
-    const name = CreateDomElements.createNewElement('div', ['word__name'], 'word.word  —  ');
+    const name = CreateDomElements.createNewElement('div', ['word__name'], `${word.word}  —  `);
     const translation = CreateDomElements.createNewElement('div', ['word__translation'], word.wordTranslate);
     const audioBlock = CreateDomElements.createNewElement('img', ['word__sound']) as HTMLImageElement;
     audioBlock.src = './assets/images/voice.png';
-    const wordAudio = new Audio(word.audioMeaning);
+    const wordAudio = new Audio(`${baseUrl}/${word.audio}`);
 
     audioBlock.addEventListener('click', () => {
       wordAudio.play();

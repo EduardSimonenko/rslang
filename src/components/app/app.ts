@@ -1,4 +1,3 @@
-import SprintGame from '../controller/sprintGame/sprintGame';
 import CustomStorage from '../controller/storage';
 import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
@@ -6,6 +5,8 @@ import Page from '../view/pageView/mainPageView';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 import TextbookWordsSection from '../view/textbook/textbookWordsSection';
 import StartScreen from '../view/startScreenGame/startScreenView';
+import SprintGame from '../controller/sprintGame/sprintGame';
+import Audiocall from '../controller/audiocall/audiocall';
 
 export default class App {
   static start(): void {
@@ -59,11 +60,11 @@ export default class App {
         break;
 
       case 'game/audio-call':
-        // currentPage = new TextbookWordsSection(group, page);
+        currentPage = new Audiocall();
         break;
 
       case 'game/audio-call/play':
-        // currentPage = new TextbookWordsSection(group, page);
+        currentPage = new Audiocall();
         break;
 
       case 'game/sprint/play':

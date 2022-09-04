@@ -1,0 +1,241 @@
+.audiocall-wrapper {
+  @include flex();
+  color: $light-font-color;
+  @include font($color: $light-font-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(-45deg, #2C3639, #A27B5C, #3F4E4F, #DCD7C9);
+	background-size: 400% 400%;
+	animation: gradient 25s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.audiocall__start-screen {
+  border: 1px solid $light-section-background;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 70px;
+  border-radius: 40px;
+}
+
+.audiocall__close-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 50px;
+  cursor: pointer;
+}
+
+.audiocall__close-btn_img {
+  transition: ease-in-out 0.3s;
+  filter: brightness(0) invert(1);
+  @include wh(32px, 32px);
+}
+.audiocall__close-btn_img:hover {
+  filter: brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
+}
+
+.audiocall__title {
+  @include font($title-font, $color: $light-font-color);
+  font-size: $title-font-size;
+  margin-bottom: 100px;
+}
+
+.audiocall__subtitle {
+  margin-bottom: 30px;
+}
+
+.audiocall__level-title {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.audiocall__level-btns {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 50px
+}
+
+.audiocall__level-btn {
+  @include flex();
+  color: $title-color;
+  font-size: larger ;
+  font-weight: bold;
+  @include wh(50px, 50px);
+  border-radius: 30px;
+  opacity: 0.8;
+  border: 2px solid $light-font-color;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.audiocall__level-btn:hover {
+  background-color: gold;
+  color: $light-font-color;
+}
+
+.active {
+  border: 2px solid gold;
+  background-color: gold;
+  color: $light-font-color;
+}
+
+.btn {
+  @include button($border-color: $light-font-color);
+  font-size: 2rem;
+  background-color: rgba($color: transparent, $alpha: 0.2);
+  color: $light-font-color;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.btn[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.btn:hover {
+  background-color: $light-section-background;
+  color: $font-color;
+}
+
+.play-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 70px;
+  gap: 50px;
+}
+
+.sound-section {
+  @include flex($flex-direction: column);
+  gap: 20px;
+}
+
+.word-img {
+  max-height: 300px;
+  border-radius: 50px;
+}
+
+.sound-img {
+  @include wh(100px, 100px);
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.sound-img:hover {
+  transform: scale(0.8);
+}
+
+.answers-wrapper {
+  display: flex;
+  gap: 15px;
+}
+
+.answer-btn {
+  border-radius: 25px;
+  border-color: transparent;
+}
+
+.audiocall__next-btn {
+  border-radius: 25px;
+  border-color: transparent;
+}
+
+.active {
+  background-color: gold;
+}
+
+.hidden {
+  display: none;
+}
+
+.results-container {
+  width: 100%;
+  @include flex($flex-direction: column);
+  height: 80%;
+  gap: 35px;
+}
+
+.results-title {
+  font-size: 5rem;
+  font-weight: bold;
+}
+
+.results-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 70%;
+  max-width: 30%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 25px;
+  border: 1px solid $light-font-color;
+  border-radius: 25px;
+  background-color: rgba($color: $light-font-color, $alpha: 0.2);
+  gap: 20px;
+}
+
+.results-wrapper::-webkit-scrollbar-track {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.results-wrapper::-webkit-scrollbar {
+	width: 6px;
+	background-color: transparent
+}
+
+.results-wrapper::-webkit-scrollbar-thumb {
+	background-color: $light-font-color;
+}
+
+.results-items {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  span {
+    font-weight: bold;
+  }
+}
+
+.results-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid $light-font-color;
+}
+
+.results-item__img {
+  @include wh(40px, 40px);
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.results-item__img:hover {
+  filter: invert(1);
+}
+
+.results-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
