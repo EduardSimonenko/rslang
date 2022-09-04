@@ -27,7 +27,7 @@ class SprintGame {
 
   page: string;
 
-  constructor(group: string, page: string) {
+  constructor(group: string, page?: string) {
     this.words = [];
     this.wrongWords = [];
     this.score = 0;
@@ -53,6 +53,9 @@ class SprintGame {
   }
 
   private async createArraysForGame() {
+    if (!this.page) {
+      this.page = getRandomInt(0, 20).toString();
+    }
     const response = await Api.getAllWords(this.group, this.page);
     this.words = shuffle(response);
 
@@ -86,7 +89,21 @@ class SprintGame {
     return wordInfo;
   }
 
+  private async updateWords() {
+    this.wordsCounter = 0;
+    const sparePage = getRandomInt(0, 19).toString();
+    if (this.page === sparePage) {
+      this.page += 1;
+    } else {
+      this.page = sparePage;
+    }
+    await this.createArraysForGame();
+  }
+
   private renderNewCard() {
+    if (this.wordsCounter > 19) {
+      this.updateWords();
+    }
     const cardInfo = this.getCurrentWordInfo();
     SprintPage.renderSprintPage(cardInfo, this.score);
     this.wordsCounter += 1;
@@ -99,7 +116,6 @@ class SprintGame {
     setTimeout(() => {
       card.classList.remove(`sprint-game__card_${modifier}`);
     }, 30000);
-    console.log(card);
   }
 
   private async updateStatistics(isTrueAnswer: boolean) {
@@ -114,7 +130,6 @@ class SprintGame {
       this.correctAudio.currentTime = 0;
       this.correctAudio.play();
       this.score += 10 * this.pointsMultiplier;
-      console.log('Вы правы');
     } else {
       if (this.countOfCorrectAnswer > 0) {
         this.countOfCorrectAnswer -= 1;
@@ -123,7 +138,6 @@ class SprintGame {
       this.wrongAudio.currentTime = 0;
       this.wrongAudio.play();
       this.pointsMultiplier = 1;
-      console.log('Учи англ, сука');
     }
   }
 

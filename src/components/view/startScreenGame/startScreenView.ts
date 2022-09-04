@@ -52,8 +52,7 @@ class StartScreen {
       event.preventDefault();
       const target = event.target as HTMLElement;
       if (target.id === 'start-btn') {
-        console.log(this.level);
-        const sprintGame = new SprintGame(this.level, '5');
+        const sprintGame = new SprintGame(this.level);
         sprintGame.renderPage();
       }
 
