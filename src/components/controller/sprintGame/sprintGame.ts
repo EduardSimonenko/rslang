@@ -45,10 +45,6 @@ class SprintGame {
   async renderPage() {
     document.querySelector('body').innerHTML = '';
     await this.createArraysForGame();
-    this.buildGameLogic();
-  }
-
-  buildGameLogic() {
     this.renderNewCard();
   }
 
@@ -91,16 +87,16 @@ class SprintGame {
 
   private async updateWords() {
     this.wordsCounter = 0;
-    const sparePage = getRandomInt(0, 19).toString();
-    if (this.page === sparePage) {
-      this.page += 1;
+    if (this.page === '19') {
+      this.page = '0';
     } else {
-      this.page = sparePage;
+      this.page = (+this.page + 1).toString();
     }
     await this.createArraysForGame();
   }
 
   private renderNewCard() {
+    console.log(this.page);
     if (this.wordsCounter > 19) {
       this.updateWords();
     }
