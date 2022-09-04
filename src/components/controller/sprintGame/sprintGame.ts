@@ -53,13 +53,13 @@ class SprintGame {
   }
 
   private async createArraysForGame() {
-    const response = await Api.getAllWords(this.group, this.page) as Response;
-    this.words = shuffle(await response.json());
+    const response = await Api.getAllWords(this.group, this.page);
+    this.words = shuffle(response);
 
     const randomGroup = getRandomInt(0, 5).toString();
     const randomPage = getRandomInt(0, 20).toString();
-    const secondResponse = await Api.getAllWords(randomGroup, randomPage) as Response;
-    this.wrongWords = shuffle(await secondResponse.json());
+    const secondResponse = await Api.getAllWords(randomGroup, randomPage);
+    this.wrongWords = shuffle(secondResponse);
   }
 
   private getCurrentWordInfo() {

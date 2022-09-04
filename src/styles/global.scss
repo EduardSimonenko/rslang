@@ -13,7 +13,10 @@
 // components
 @import
   './components/button',
-  './components/cardWord';
+  './components/cardWord',
+  './components/buttonGame',
+  './components/buttonUp',
+  './components/progressWord';
 
 // layout
 @import 
@@ -29,4 +32,5 @@
 // pages
 @import
   './pages/home',
-  './pages/textbook';
+  './pages/textbook',
+  './pages/auth';

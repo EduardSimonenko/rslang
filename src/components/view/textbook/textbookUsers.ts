@@ -2,6 +2,7 @@ import { WordStructure } from '../../../types/loadServerData/interfaces';
 import {
   BtndifficultyEnum, BtnUserControlEnum, GroupWordsEnum,
 } from '../../../types/textbook/enum';
+import getUserData from '../../utils/userLogin';
 import CreateDomElements from '../../controller/newElement';
 import Api from '../../controller/textbook/controller';
 
@@ -36,6 +37,22 @@ class TextbookUsers {
     return containerBtnUser;
   }
 
+  private renderProgressWord(progressStatus: number): HTMLElement {
+    const containerProgress: HTMLElement = CreateDomElements.createNewElement('div', ['container__progress']);
+
+    for (let i = 0; i < progressStatus; i += 1) {
+      const progressImg = CreateDomElements.createNewElement('img', ['progress__img', `img-${i}`]);
+      CreateDomElements.setAttributes(progressImg, {
+        src: `../../../assets/images/progress-${i}.png`,
+        width: '40',
+        height: '60',
+      });
+      CreateDomElements.insertChilds(containerProgress, [progressImg]);
+    }
+
+    return containerProgress;
+  }
+
   private listenBtnUser(btns: HTMLElement, group: string) {
     btns.addEventListener('click', (e: Event) => {
       const target = (e.target as HTMLButtonElement);
@@ -59,14 +76,14 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.normal,
             optional: { isLearned: true },
-
           },
+          getUserData(),
         ) as Response;
         word.remove();
         break;
 
       case BtnUserControlEnum.hard:
-        await Api.deleteWordUser(wordId) as Response;
+        await Api.deleteWordUser(wordId, getUserData()) as Response;
         word.remove();
         break;
 
@@ -78,13 +95,16 @@ class TextbookUsers {
   private async setWordForUser(button: HTMLButtonElement, word: HTMLDivElement): Promise<void> {
     const wordId: string = word.getAttribute('id');
     const btn: string = button.dataset.control;
+    const fullProgress = 3;
+
     try {
-      const checkWord = await Api.getWordUser(wordId) as Response;
+      const checkWord = await Api.getWordUser(wordId, getUserData());
 
       if (checkWord.ok) {
         this.updateWordForUser(btn, wordId, word);
 
         const { optional } = await checkWord.json();
+        console.log(optional);
 
         if (optional.isLearned === true && btn !== 'hard') {
           this.unmarkDoneWord(word);
@@ -104,9 +124,11 @@ class TextbookUsers {
             difficulty: BtndifficultyEnum.normal,
             optional: { isLearned: true },
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__hard');
         word.classList.add('card__done');
+        this.progressWord(word, fullProgress);
         break;
 
       case BtnUserControlEnum.hard:
@@ -115,8 +137,8 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.hard,
             optional: { isLearned: false },
-
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__done');
         word.classList.add('card__hard');
@@ -132,6 +154,19 @@ class TextbookUsers {
     wordId: string,
     word: HTMLDivElement,
   ): Promise<void> {
+    const fullProgress = 3;
+    const isProgress = true;
+    const containerProgress = word.querySelector('.container__progress') as HTMLDivElement;
+
+    if (word.classList.contains('card__done') || btn === BtnUserControlEnum.hard) {
+      this.progressWord(word, fullProgress, isProgress);
+    } else if (word.classList.contains('card__hard') && containerProgress) {
+      this.progressWord(word, fullProgress, isProgress);
+      this.progressWord(word, fullProgress);
+    } else {
+      this.progressWord(word, fullProgress);
+    }
+
     switch (btn) {
       case BtnUserControlEnum.done:
         await Api.updateUserWord(
@@ -139,11 +174,11 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.normal,
             optional: { isLearned: true },
-
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__hard');
-        word.classList.add('card__done');
+        word.classList.toggle('card__done');
         break;
 
       case BtnUserControlEnum.hard:
@@ -152,8 +187,8 @@ class TextbookUsers {
           {
             difficulty: BtndifficultyEnum.hard,
             optional: { isLearned: false },
-
           },
+          getUserData(),
         ) as Response;
         word.classList.remove('card__done');
         word.classList.add('card__hard');
@@ -180,7 +215,7 @@ class TextbookUsers {
 
   private async unmarkDoneWord(word: HTMLDivElement): Promise<void> {
     const wordId = word.getAttribute('id');
-    await Api.deleteWordUser(wordId) as Response;
+    await Api.deleteWordUser(wordId, getUserData()) as Response;
 
     word.classList.remove('card__done');
   }
@@ -265,6 +300,18 @@ class TextbookUsers {
   private stylePagination(btn: Element, curPage: string): void {
     btn.classList.remove(`card__group${this.prePage}`);
     btn.classList.add(`card__group${curPage}`);
+  }
+
+  public progressWord(word: HTMLElement, countElement = 0, removeProgress = false) {
+    let progressElement: HTMLElement;
+    if (removeProgress) {
+      progressElement = word.querySelector('.container__progress');
+      progressElement.remove();
+    } else {
+      const block = word.querySelector('.container__voice') as HTMLElement;
+      progressElement = this.renderProgressWord(countElement);
+      CreateDomElements.insertChilds(block, [progressElement]);
+    }
   }
 }
 

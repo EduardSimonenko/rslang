@@ -1,16 +1,12 @@
-import { ControlMenu } from '../../../types/textbook/interfaces';
 import CreateDomElements from '../../controller/newElement';
-import CustomStorage from '../../controller/storage';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
 import AppView from '../appView';
-import TextbookTitlePage from '../textbook/textbookTitlePage';
-import SprintGame from '../../controller/sprintGame/sprintGame';
 
 class Page {
   private static body = document.querySelector('body') as HTMLBodyElement;
 
-  static renderMainPage(): void {
+  static renderPage(): void {
     const header = this.renderHeader();
     const main = this.renderMain();
     const footer = this.renderFooter();
@@ -49,8 +45,7 @@ class Page {
 
     CreateDomElements.insertChilds(wrapper, [logo, navbar, login]);
     CreateDomElements.insertChilds(header, [wrapper]);
-
-    this.listenMenu(header, this.renderFooter());
+    login.addEventListener('click', this.listenLogIn);
 
     return header;
   }
@@ -60,13 +55,19 @@ class Page {
     const nav = CreateDomElements.createNewElement('ul', ['nav']);
     const linkToMainPage = CreateDomElements.createNewElement('a', ['nav__link'], 'главная');
     const linkToTextbook = CreateDomElements.createNewElement('a', ['nav__link'], 'учебник');
-    const linkToGames = CreateDomElements.createNewElement('a', ['nav__link', 'link-to-games'], 'мини игры');
+    const linkToGames = CreateDomElements.createNewElement('p', ['nav__link', 'link-to-games'], 'мини игры');
     const linkToStatistics = CreateDomElements.createNewElement('a', ['nav__link'], 'статистика');
 
     const submenu = CreateDomElements.createNewElement('ul', ['submenu']);
     const linkToSprintGame = CreateDomElements.createNewElement('a', ['link-to-games__content'], 'cпринт');
     const linkToAudioGame = CreateDomElements.createNewElement('a', ['link-to-games__content'], 'аудиовызов');
     const arrOfGamesLinks = [linkToSprintGame, linkToAudioGame];
+
+    CreateDomElements.setAttributes(linkToMainPage, { href: '#main' });
+    CreateDomElements.setAttributes(linkToTextbook, { href: '#textbook' });
+    CreateDomElements.setAttributes(linkToSprintGame, { href: '#game/sprint' });
+    CreateDomElements.setAttributes(linkToAudioGame, { href: '#game/audio-call' });
+    CreateDomElements.setAttributes(linkToStatistics, { href: '#statistics' });
 
     arrOfGamesLinks.forEach((el) => {
       const newItem = CreateDomElements.createNewElement('li', ['submenu__item']);
@@ -75,13 +76,6 @@ class Page {
     });
 
     CreateDomElements.insertChilds(linkToGames, [submenu]);
-
-    CreateDomElements.setAttributes(linkToMainPage, { 'data-page': 'main' });
-    CreateDomElements.setAttributes(linkToTextbook, { 'data-page': 'textbook' });
-    CreateDomElements.setAttributes(linkToGames, { 'data-page': 'games' });
-    CreateDomElements.setAttributes(linkToSprintGame, { 'data-page': 'sprint' });
-    CreateDomElements.setAttributes(linkToAudioGame, { 'data-page': 'audioCall' });
-    CreateDomElements.setAttributes(linkToStatistics, { 'data-page': 'statistics' });
 
     const linksToPages = [linkToMainPage, linkToTextbook, linkToGames, linkToStatistics];
 
@@ -138,12 +132,13 @@ class Page {
     const yearBlock = CreateDomElements.createNewElement('div', ['creation-year']);
     const yearBlockContent = CreateDomElements.createNewElement('p', ['creation-year__content'], '2022');
 
-    logoRSImg.src = './assets/images/rs-school-logo.png';
+    logoRSImg.src = '../assets/images/rs-school-logo.png';
 
     teammates.forEach((el) => {
       const linkToTeammate = CreateDomElements.createNewElement('a', ['github-links__item']) as HTMLLinkElement;
       const githubImage = CreateDomElements.createNewElement('img', ['github-links__image']) as HTMLImageElement;
 
+      CreateDomElements.setAttributes(linkToTeammate, { target: '_blank' });
       linkToTeammate.href = el.linkToGithub;
       githubImage.src = el.pathToGithubFoto;
       githubImage.alt = 'teammate github logo';
@@ -181,6 +176,7 @@ class Page {
       const teammateFoto = CreateDomElements.createNewElement('img', ['teammate__foto']) as HTMLImageElement;
       const linkToGithub = CreateDomElements.createNewElement('a', ['teammate__link'], el.name) as HTMLLinkElement;
 
+      CreateDomElements.setAttributes(linkToGithub, { target: '_blank' });
       teammateFoto.src = el.pathToFoto;
       teammateFoto.alt = 'handsome man photo';
       linkToGithub.href = el.linkToGithub;
@@ -192,45 +188,9 @@ class Page {
     return teamSection;
   }
 
-  private static listenMenu(header:HTMLElement, footer: HTMLElement): void {
-    header.addEventListener('click', (e: Event) => {
-      const target = e.target as HTMLLinkElement;
-      const namePage = target.dataset.page;
-      this.launchPages({ namePage, header, footer });
-    });
-  }
-
-  private static launchPages(menu: ControlMenu): void {
-    const textbookPage = new TextbookTitlePage();
-    const authorization = new AppView();
-    const sprintGame = new SprintGame('1', '20');
-    switch (menu.namePage) {
-      case 'textbook':
-        textbookPage.renderPageTextBook(menu.header, menu.footer);
-        break;
-
-      case 'login':
-        authorization.startAuth();
-        break;
-
-      case 'main':
-        CustomStorage.clearDataStorage('textbookWords');
-        CustomStorage.clearDataStorage('paginationBtn');
-        CustomStorage.setStorage('page', 'main');
-        this.renderMainPage();
-        break;
-
-      case 'sprint':
-        sprintGame.startSprintGame();
-        break;
-
-      case 'audioCall':
-      // someFunction()
-        break;
-
-      default:
-        break;
-    }
+  private static listenLogIn(): void {
+    const login: AppView = new AppView();
+    login.startAuth();
   }
 }
 
