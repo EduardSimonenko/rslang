@@ -1,3 +1,4 @@
+import SprintGame from '../controller/sprintGame/sprintGame';
 import CustomStorage from '../controller/storage';
 import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
@@ -53,19 +54,19 @@ export default class App {
         break;
 
       case 'game/sprint':
-        currentPage = new TextbookWordsSection(group, page);
+        currentPage = new SprintGame(group, page);
         break;
 
       case 'game/audio-call':
-        currentPage = new TextbookWordsSection(group, page);
+        // currentPage = new TextbookWordsSection(group, page);
         break;
 
       case 'game/audio-call/play':
-        currentPage = new TextbookWordsSection(group, page);
+        // currentPage = new TextbookWordsSection(group, page);
         break;
 
       case 'game/sprint/play':
-        currentPage = new TextbookWordsSection(group, page);
+        currentPage = new SprintGame(group, page);
         break;
 
       case 'statistics':

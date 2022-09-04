@@ -42,7 +42,7 @@ class SprintGame {
 
   private wrongAudio = new Audio('./assets/sounds/wrong_sounds.mp3');
 
-  async startSprintGame() {
+  async renderPage() {
     document.querySelector('body').innerHTML = '';
     await this.createArraysForGame();
     this.buildGameLogic();
@@ -140,7 +140,6 @@ class SprintGame {
       } else {
         this.updateStatistics(false);
       }
-      // this.renderNewCard();
       setTimeout(() => this.renderNewCard(), 300);
     });
   }
