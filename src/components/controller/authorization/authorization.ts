@@ -151,7 +151,8 @@ class Authorization extends Loader {
   }
 
   public listen(): void {
-    document.addEventListener('click', (event) => {
+    const authWrapper = document.querySelector('.login-wrapper');
+    authWrapper.addEventListener('click', (event) => {
       event.preventDefault();
       const target = event.target as HTMLElement;
 
