@@ -6,7 +6,6 @@ class Loader {
     if (!res.ok) {
       throw Error(`Sorry, but there is ${res.status} error: ${res.statusText}`);
     }
-
     return res;
   }
 

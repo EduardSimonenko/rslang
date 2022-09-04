@@ -1,3 +1,4 @@
+import Audiocall from '../controller/audiocall/audiocall';
 import CustomStorage from '../controller/storage';
 import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
@@ -42,7 +43,6 @@ export default class App {
     if (pagePath && pagePath.includes('?')) {
       [group, page, pagePath] = getGroupAndPage(pagePath) as string[];
     }
-
     switch (pagePath) {
       case 'textbook':
         currentPage = new TextbookTitlePage();
@@ -57,11 +57,11 @@ export default class App {
         break;
 
       case 'game/audio-call':
-        currentPage = new TextbookWordsSection(group, page);
+        currentPage = new Audiocall();
         break;
 
       case 'game/audio-call/play':
-        currentPage = new TextbookWordsSection(group, page);
+        currentPage = new Audiocall();
         break;
 
       case 'game/sprint/play':
