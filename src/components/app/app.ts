@@ -69,6 +69,14 @@ export default class App {
       case 'game/sprint/play':
         break;
 
+      case 'game/audio-call/play':
+        currentPage = new TextbookWordsSection(group, page);
+        break;
+
+      case 'game/sprint/play':
+        currentPage = new TextbookWordsSection(group, page);
+        break;
+
       case 'statistics':
 
         break;
