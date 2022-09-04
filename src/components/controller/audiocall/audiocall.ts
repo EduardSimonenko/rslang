@@ -86,13 +86,18 @@ class Audiocall extends AudiocallRender {
 
   async buildAllWords(index: number, group?: number, page?: number): Promise<void> {
     if (index === 0 && localStorage.getItem('page').includes('game/audio-call/play') && this.isLogin) {
-      const args: string[] = await getGroupAndPage(localStorage.getItem('page'));
-      this.words = shuffle(await this.getUserWordsWithOpt(+args[0], +args[1]));
-      if (this.words.length < 20) {
-        await this.addMoreWords(+args[0], +args[1]);
+      const args: string[] = getGroupAndPage(localStorage.getItem('page'));
+      if (+args[0] < 6) {
+        this.words = shuffle(await this.getUserWordsWithOpt(+args[0], +args[1]));
+        if (this.words.length < 20) {
+          await this.addMoreWords(+args[0], +args[1]);
+        }
+      } else {
+        const hardUserWords = shuffle(await Api.getDifficultWords(getUserData()));
+        this.words = hardUserWords[0].paginatedResults;
       }
     } else if (index === 0 && localStorage.getItem('page').includes('game/audio-call/play')) {
-      const args: string[] = await getGroupAndPage(localStorage.getItem('page'));
+      const args: string[] = getGroupAndPage(localStorage.getItem('page'));
       this.words = shuffle(await this.getWords(+args[0], +args[1]));
     } else {
       this.words = shuffle(await this.getWords(group, page));
@@ -112,7 +117,7 @@ class Audiocall extends AudiocallRender {
       return;
     }
 
-    // console.log('this.words', this.words);
+    console.log('this.words', this.words);
 
     this.correctAnswer = this.words[index];
     const audio = document.getElementById('audio') as HTMLAudioElement;
@@ -333,6 +338,7 @@ class Audiocall extends AudiocallRender {
         (target.nextSibling as HTMLAudioElement).play();
       }
     });
+
     gameWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
       event.preventDefault();
       switch (event.code) {
@@ -360,9 +366,9 @@ class Audiocall extends AudiocallRender {
     });
   }
 
-  start(): void {
-    this.listen();
-  }
+  // start(): void {
+  //   this.listen();
+  // }
 }
 
 export default Audiocall;

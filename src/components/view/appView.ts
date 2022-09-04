@@ -1,4 +1,4 @@
-import Audiocall from '../controller/audiocall/audiocall';
+// import Audiocall from '../controller/audiocall/audiocall';
 import Authorization from '../controller/authorization/authorization';
 import AuthForm from './authorization/auth-render';
 
@@ -15,10 +15,10 @@ class AppView {
     authorization.listen();
   }
 
-  static startAudiocall(): void {
-    const audiocall = new Audiocall();
-    audiocall.start();
-  }
+  // static startAudiocall(): void {
+  //   const audiocall = new Audiocall();
+  //   audiocall.start();
+  // }
 }
 
 export default AppView;

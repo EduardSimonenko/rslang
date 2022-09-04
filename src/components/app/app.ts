@@ -2,7 +2,6 @@ import Audiocall from '../controller/audiocall/audiocall';
 import CustomStorage from '../controller/storage';
 import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
-// import AppView from '../view/appView';
 import Page from '../view/pageView/mainPageView';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 import TextbookWordsSection from '../view/textbook/textbookWordsSection';
@@ -11,7 +10,6 @@ export default class App {
   static start(): void {
     window.addEventListener('DOMContentLoaded', () => {
       const savePage: string = CustomStorage.getStorage('page');
-      // AppView.startAudiocall();
 
       if (!savePage) {
         window.history.replaceState('main', 'словарь', '#main');
@@ -64,13 +62,6 @@ export default class App {
 
       case 'game/audio-call/play':
         currentPage = new Audiocall();
-        break;
-
-      case 'game/sprint/play':
-        break;
-
-      case 'game/audio-call/play':
-        currentPage = new TextbookWordsSection(group, page);
         break;
 
       case 'game/sprint/play':

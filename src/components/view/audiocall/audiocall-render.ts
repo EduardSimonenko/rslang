@@ -16,14 +16,12 @@ class AudiocallRender {
   }
 
   renderStartScreen(): void {
-    // const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
     const gameClose = CreateDomElements.createNewElement('a', ['audiocall__close-btn']);
     CreateDomElements.setAttributes(gameClose, { href: '#main' });
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
     gameCloseImg.setAttribute('id', 'close-game');
     gameClose.appendChild(gameCloseImg);
-    // gameClose.appendChild(elseBtn);
 
     const gameStartScreen = CreateDomElements.createNewElement('div', ['audiocall__start-screen']);
     const gameTitle = CreateDomElements.createNewElement('div', ['audiocall__title'], '<h2>Аудиовызов</h2>');
@@ -50,7 +48,6 @@ class AudiocallRender {
   }
 
   renderGame(): void {
-    // const gameClose = CreateDomElements.createNewElement('div', ['audiocall__close-btn']);
     const gameClose = CreateDomElements.createNewElement('a', ['audiocall__close-btn']);
     CreateDomElements.setAttributes(gameClose, { href: '#main', id: 'a' });
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
@@ -91,32 +88,6 @@ class AudiocallRender {
       this.gameWrapper,
       [playField, this.correctAudio, this.wrongAudio],
     );
-
-    // answersSection.addEventListener('keydown', (event: KeyboardEvent) => {
-    //   event.preventDefault();
-    //   switch (event.code) {
-    //     case 'Digit1':
-    //       (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit2':
-    //       (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit3':
-    //       (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit4':
-    //       (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Digit5':
-    //       (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
-    //       break;
-    //     case 'Space':
-    //       (document.getElementById('next-btn') as HTMLButtonElement).click();
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // });
   }
 }
 
