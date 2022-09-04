@@ -1,4 +1,3 @@
-import '../../../styles/pages/_auth.scss';
 import CreateDomElements from '../../controller/newElement';
 
 class AuthForm {
@@ -7,7 +6,7 @@ class AuthForm {
     const loginForm = CreateDomElements.createNewElement('form', ['login-form']);
     const closeBtn = CreateDomElements.createNewElement('div', ['login-form__close-btn']);
     const closeBtnImg = CreateDomElements.createNewElement('img', ['close-btn-img']);
-    CreateDomElements.setAttributes(closeBtnImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    CreateDomElements.setAttributes(closeBtnImg, { src: '../../../assets/svg/close.svg', alt: 'close', id: 'close-btn-img' });
     CreateDomElements.insertChilds(closeBtn, [closeBtnImg]);
     const loginTitle = CreateDomElements.createNewElement('div', ['login-form-title'], '<h2>Изучать слова удобнее, если у вас есть профиль</h2>');
     const loginSubtitle = CreateDomElements.createNewElement('div', ['login-form-subtitle'], 'Вы получите доступ к долгосрочному хранению статистики, а также сможете формировать собственный словарь.');
@@ -51,6 +50,7 @@ class AuthForm {
       document.body.removeChild(loginWrapper);
     });
     loginAuthChange.addEventListener('click', () => {
+      loginFormError.innerText = '';
       nameInput.classList.toggle('hidden');
       loginBtn.classList.toggle('hidden');
       registrationBtn.classList.toggle('hidden');

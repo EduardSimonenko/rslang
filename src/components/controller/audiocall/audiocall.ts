@@ -1,6 +1,9 @@
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import baseUrl from '../../model/baseUrl';
+import cleanPage from '../../utils/cleanPage';
+import getGroupAndPage from '../../utils/getGroupAndPage';
+import getUserData from '../../utils/userLogin';
 import { shuffle, getRandomInt } from '../../utils/utils';
 import AudiocallRender from '../../view/audiocall/audiocall-render';
 import Loader from '../load';
@@ -23,6 +26,8 @@ class Audiocall extends AudiocallRender {
 
   isLogin: boolean;
 
+  render: AudiocallRender;
+
   constructor() {
     super();
     this.counter = 0;
@@ -32,6 +37,7 @@ class Audiocall extends AudiocallRender {
     this.correctAnswers = [];
     this.wrongAnswers = [];
     this.isLogin = Boolean(CustomStorage.getStorage('token'));
+    this.render = new AudiocallRender();
   }
 
   async getWords(group: number, page: number): Promise<WordStructure[]> {
@@ -51,8 +57,8 @@ class Audiocall extends AudiocallRender {
   }
 
   async getUserWordsWithOpt(group: number, page: number): Promise<WordStructure[]> {
-    const response = await Api.getWordsWithOption(String(group), String(page));
-    const wordArr: AuthorizeUserWords[] = await response.json();
+    const wordArr = await Api
+      .getWordsWithOption(String(group), String(page), getUserData()) as AuthorizeUserWords[];
     const textbookWords = wordArr[0].paginatedResults; // array
     const unmarkedWords = textbookWords.filter((word: WordStructure) => !word.userWord);
     const normalWords = textbookWords.filter((word: WordStructure) => word.userWord)
@@ -60,8 +66,6 @@ class Audiocall extends AudiocallRender {
     const hardWords = textbookWords.filter((word: WordStructure) => word.userWord)
       .filter((item: WordStructure) => item.userWord.difficulty === 'hard');
     const words = [...unmarkedWords, ...normalWords, ...hardWords];
-    console.log('wordArr', textbookWords);
-    console.log('words', words);
     return words;
   }
 
@@ -81,15 +85,15 @@ class Audiocall extends AudiocallRender {
   }
 
   async buildAllWords(index: number, group?: number, page?: number): Promise<void> {
-    if (index === 0 && localStorage.getItem('textbookWords') && this.isLogin) {
-      const args = JSON.parse(localStorage.getItem('textbookWords'));
-      this.words = shuffle(await this.getUserWordsWithOpt(args.group, args.page));
+    if (index === 0 && localStorage.getItem('page').includes('game/audio-call/play') && this.isLogin) {
+      const args: string[] = await getGroupAndPage(localStorage.getItem('page'));
+      this.words = shuffle(await this.getUserWordsWithOpt(+args[0], +args[1]));
       if (this.words.length < 20) {
-        await this.addMoreWords(args.group, args.page);
+        await this.addMoreWords(+args[0], +args[1]);
       }
-    } else if (index === 0 && localStorage.getItem('textbookWords')) {
-      const args = JSON.parse(localStorage.getItem('textbookWords'));
-      this.words = shuffle(await this.getWords(args.group, args.page));
+    } else if (index === 0 && localStorage.getItem('page').includes('game/audio-call/play')) {
+      const args: string[] = await getGroupAndPage(localStorage.getItem('page'));
+      this.words = shuffle(await this.getWords(+args[0], +args[1]));
     } else {
       this.words = shuffle(await this.getWords(group, page));
     }
@@ -99,7 +103,6 @@ class Audiocall extends AudiocallRender {
   async buildGameLogic(index: number): Promise<void> {
     if (index === 0) {
       await this.buildAllWords(index, +localStorage.getItem('audiocallLevel'), getRandomInt(0, 29));
-      // console.log('this.words', this.words);
     } else if (index === this.words.length) {
       this.showResults();
       if (this.isLogin) {
@@ -108,6 +111,8 @@ class Audiocall extends AudiocallRender {
       }
       return;
     }
+
+    // console.log('this.words', this.words);
 
     this.correctAnswer = this.words[index];
     const audio = document.getElementById('audio') as HTMLAudioElement;
@@ -166,8 +171,8 @@ class Audiocall extends AudiocallRender {
     const resultsContainer = CreateDomElements.createNewElement('div', ['results-container']);
     const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
     const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
-    const resultsBtn = CreateDomElements.createNewElement('button', ['results-btn', 'btn'], 'Завершить игру');
-    CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button' });
+    const resultsBtn = CreateDomElements.createNewElement('a', ['results-btn', 'btn'], 'Завершить игру');
+    CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button', href: '#main' });
     if (this.correctAnswers.length === 0 && this.wrongAnswers.length === 0) {
       resultsWrapper.innerHTML = '<span>В рамках этого уровня на данной и предыдущих страницах все слова изучены</span>';
     } else {
@@ -181,7 +186,7 @@ class Audiocall extends AudiocallRender {
     words.forEach((word: WordStructure): void => {
       const id = word._id ? word._id : word.id;
       if (!word.userWord) {
-        Api.createUserWord(id, { difficulty: 'normal', optional: { isLearned: false, learnStep: 1, startLearningAt: Date.now() } });
+        Api.createUserWord(id, { difficulty: 'normal', optional: { isLearned: false, learnStep: 1, startLearningAt: Date.now() } }, getUserData());
       } else {
         let difficultyValue = word.userWord.difficulty ? word.userWord.difficulty : 'normal';
         let step = word.userWord.optional.learnStep ? word.userWord.optional.learnStep : 0;
@@ -197,6 +202,7 @@ class Audiocall extends AudiocallRender {
               difficulty: difficultyValue,
               optional: { isLearned: isWordLearned, learnStep: 0 },
             },
+            getUserData(),
           );
         } else {
           const date = word.userWord.optional.startLearningAt
@@ -207,36 +213,42 @@ class Audiocall extends AudiocallRender {
               difficulty: difficultyValue,
               optional: { isLearned: isWordLearned, learnStep: step += 1, startLearningAt: date },
             },
+            getUserData(),
           );
         }
       }
     });
-    // console.log('words', words);
   }
 
   quitGame(): void {
     const gameWrapper: HTMLElement = document.querySelector('.audiocall-wrapper');
     gameWrapper.innerHTML = '';
     document.body.removeChild(gameWrapper);
-    document.body.style.overflowY = '';
     this.counter = 0;
     this.words = [];
     this.supportWords = [];
     this.correctAnswer = {} as WordStructure;
     this.correctAnswers = [];
     this.wrongAnswers = [];
+    localStorage.removeItem('audiocallLevel');
   }
 
   renderPage(): void {
-    super.renderGame();
-    this.buildGameLogic(0);
+    cleanPage();
+    this.render.renderStartScreen();
+    this.listen();
+    if (localStorage.getItem('page').includes('game/audio-call/play')) {
+      document.getElementById('level-btn').click();
+      document.getElementById('start-btn').click();
+      localStorage.removeItem('audiocallLevel');
+    }
   }
 
-  async listen(): Promise<void> {
-    document.addEventListener('click', async (event) => {
-      event.preventDefault();
+  listen(): void {
+    const gameWrapper = document.querySelector('.audiocall-wrapper');
+
+    gameWrapper.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
-      // console.log(event.target);
 
       if (target.id === 'close-game') {
         this.quitGame();
@@ -251,19 +263,11 @@ class Audiocall extends AudiocallRender {
       }
 
       if (target.id === 'start-btn') {
-        this.renderPage();
+        this.render.renderGame();
+        this.buildGameLogic(0);
       }
 
-      if (target.getAttribute('data-page') === 'audioCall') { // отрефачу после подключения к учебнику через кнопки
-        if (CustomStorage.getStorage('textbookWords')) {
-          super.renderStartScreen();
-          document.getElementById('level-btn').click();
-          document.getElementById('start-btn').click();
-          localStorage.removeItem('audiocallLevel');
-        } else super.renderStartScreen();
-      }
-
-      if (target.id === 'next-btn') { // refactor
+      if (target.id === 'next-btn') {
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
         answerBtns.forEach((item) => item.setAttribute('disabled', ''));
         answerBtns.forEach((item) => {
@@ -296,7 +300,7 @@ class Audiocall extends AudiocallRender {
         }
       }
 
-      if (target.id === 'answer-btn') { // refactor
+      if (target.id === 'answer-btn') {
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
         answerBtns.forEach((item) => item.setAttribute('disabled', ''));
         if (target.dataset.inner === this.correctAnswer.wordTranslate) {
@@ -329,32 +333,29 @@ class Audiocall extends AudiocallRender {
         (target.nextSibling as HTMLAudioElement).play();
       }
     });
-
-    document.addEventListener('keydown', (event) => {
-      if (document.querySelector('.play-field')) {
-        switch (event.code) {
-          case 'Digit1':
-            (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
-            break;
-          case 'Digit2':
-            (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
-            break;
-          case 'Digit3':
-            (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
-            break;
-          case 'Digit4':
-            (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
-            break;
-          case 'Digit5':
-            (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
-            break;
-          case 'Space':
-            event.preventDefault();
-            (document.getElementById('next-btn') as HTMLButtonElement).click();
-            break;
-          default:
-            break;
-        }
+    gameWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
+      event.preventDefault();
+      switch (event.code) {
+        case 'Digit1':
+          (document.querySelector('[data-id="0"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit2':
+          (document.querySelector('[data-id="1"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit3':
+          (document.querySelector('[data-id="2"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit4':
+          (document.querySelector('[data-id="3"]') as HTMLButtonElement).click();
+          break;
+        case 'Digit5':
+          (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
+          break;
+        case 'Space':
+          (document.getElementById('next-btn') as HTMLButtonElement).click();
+          break;
+        default:
+          break;
       }
     });
   }

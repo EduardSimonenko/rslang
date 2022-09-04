@@ -2,8 +2,8 @@
   @include wh (800px, 300px);
   @include flex();
   justify-content: space-between;
-  gap: 30px;
-  padding: 0 20px 0 20px;
+  // gap: 30px;
+  padding: 0 0 0 20px;
   border: 1px solid silver;
   box-shadow: 0 0 10px silver;
   border-radius: 1px;
@@ -23,10 +23,11 @@
     }
 
     .card__text {
-      @include wh (100%, calc(100% - 15%));
+      @include wh (60%, calc(100% - 15%));
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      margin-left: 30px;
 
       .card__word {
         display: inline-block;
@@ -42,7 +43,7 @@
             top: 8px;
             height: 40px;
             width: 3px;
-            background-color: orange;
+            background-color: #ffa500;
           }
       }
   
@@ -90,7 +91,7 @@
 
 
     .container__voice {
-      @include wh (30px, 30px);
+      @include wh (45px, 100%);
       position: relative;
       align-self: flex-start;
 
@@ -160,4 +161,16 @@
 
 .card__group6 {
   background-color: #3A1EE0;
+}
+
+@keyframes spinner-line-shrink {
+  0%, 25%, 100% {
+    /* minimum scale and opacity */
+    transform: scale(0.5);
+    opacity: 0.25;
+  }
+  26% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

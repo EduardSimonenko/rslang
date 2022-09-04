@@ -233,3 +233,9 @@
 .results-item__img:hover {
   filter: invert(1);
 }
+
+.results-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
