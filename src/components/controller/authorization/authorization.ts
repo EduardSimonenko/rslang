@@ -43,10 +43,9 @@ class Authorization extends Loader {
     ) as Response;
     if (result.ok) {
       this.message.classList.remove('loader');
+      await Authorization.logIn();
       this.message.innerText = 'Вы успешно зарегистрированы и вошли в систему';
       this.message.style.color = 'green';
-      await Authorization.logIn();
-      this.message.innerText = '';
     } else {
       this.message.classList.remove('loader');
       this.message.style.color = 'red';
@@ -89,7 +88,7 @@ class Authorization extends Loader {
       const closeBtnImg = document.getElementById('close-btn-img');
       closeBtnImg.addEventListener('click', () => {
         this.message.innerText = '';
-        window.location.reload();
+        setInterval(() => this.refreshToken(), 10800000);
       });
     } else {
       this.message.classList.remove('loader');
