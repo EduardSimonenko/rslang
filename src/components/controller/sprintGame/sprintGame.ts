@@ -45,7 +45,11 @@ class SprintGame {
   async renderPage() {
     document.querySelector('body').innerHTML = '';
     await this.createArraysForGame();
-    this.renderNewCard();
+    const cardInfo = this.getCurrentWordInfo();
+    SprintPage.renderSprintPage(cardInfo, this.score);
+    this.wordsCounter += 1;
+    this.timer();
+    this.listen();
   }
 
   private async createArraysForGame() {
@@ -96,12 +100,11 @@ class SprintGame {
   }
 
   private renderNewCard() {
-    console.log(this.page);
     if (this.wordsCounter > 19) {
       this.updateWords();
     }
     const cardInfo = this.getCurrentWordInfo();
-    SprintPage.renderSprintPage(cardInfo, this.score);
+    SprintPage.renderCard(cardInfo, this.score);
     this.wordsCounter += 1;
     this.listen();
   }
@@ -111,7 +114,19 @@ class SprintGame {
     card.classList.add(`sprint-game__card_${modifier}`);
     setTimeout(() => {
       card.classList.remove(`sprint-game__card_${modifier}`);
-    }, 30000);
+    }, 300);
+  }
+
+  private timer() {
+    const timerShow = document.querySelector('.timer');
+    const timer = setInterval(() => {
+      if (+timerShow.innerHTML <= 0) {
+        clearInterval(timer);
+        alert('Время закончилось');
+      } else {
+        timerShow.innerHTML = (+timerShow.innerHTML - 1).toString();
+      }
+    }, 1000);
   }
 
   private async updateStatistics(isTrueAnswer: boolean) {

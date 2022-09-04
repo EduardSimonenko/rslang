@@ -2,13 +2,29 @@ import CreateDomElements from '../../controller/newElement';
 import IwordInfo from '../../../types/sprintGame/IwordInfo';
 
 class SprintPage {
-  private static body = document.querySelector('body') as HTMLBodyElement;
+  private static sprintGameBlock = CreateDomElements.createNewElement('section', ['sprint-game']);
+
+  private static body = document.querySelector('.body') as HTMLElement;
+
+  private static wordCard = CreateDomElements.createNewElement('div', ['sprint-game__card']);
+
+  private static scoreBlock = CreateDomElements.createNewElement('p', ['sprint-game__score']);
 
   static renderSprintPage(wordInfo: IwordInfo, score: number) {
-    this.body.innerHTML = '';
-    const sprintGameBlock = CreateDomElements.createNewElement('section', ['sprint-game']);
-    const wordCard = CreateDomElements.createNewElement('div', ['sprint-game__card']);
-    const scoreBlock = CreateDomElements.createNewElement('p', ['sprint-game__score'], score.toString());
+    this.sprintGameBlock.innerHTML = '';
+    this.renderTimer();
+    this.renderCard(wordInfo, score);
+    CreateDomElements.insertChilds(this.body, [this.sprintGameBlock]);
+  }
+
+  static renderTimer() {
+    const timer = CreateDomElements.createNewElement('div', ['timer'], '60');
+    CreateDomElements.insertChilds(this.sprintGameBlock, [timer]);
+  }
+
+  static renderCard(wordInfo: IwordInfo, score: number) {
+    this.wordCard.innerHTML = '';
+    this.scoreBlock.innerHTML = score.toString();
     const cardCirclesBlock = CreateDomElements.createNewElement('div', ['card__circles-block']);
     const cardImageBlock = CreateDomElements.createNewElement('div', ['card__image-block']);
     const cardImage = CreateDomElements.createNewElement('img', ['card__image']) as HTMLImageElement;
@@ -38,11 +54,10 @@ class SprintPage {
     }
 
     CreateDomElements.insertChilds(
-      wordCard,
+      this.wordCard,
       [cardCirclesBlock, cardImageBlock, word, translation, cardButtons],
     );
-    CreateDomElements.insertChilds(sprintGameBlock, [scoreBlock, wordCard]);
-    CreateDomElements.insertChilds(this.body, [sprintGameBlock]);
+    CreateDomElements.insertChilds(this.sprintGameBlock, [this.scoreBlock, this.wordCard]);
   }
 }
 
