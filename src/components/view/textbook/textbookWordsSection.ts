@@ -101,6 +101,8 @@ class TextbookWordsSection {
   }
 
   private renderSectionTextbook(words: WordStructure[], groupHard?: boolean): void {
+    console.table(words);
+
     if (groupHard) {
       this.wrapperPagination.style.display = 'none';
       this.btnGames.insertAdjacentElement('afterend', this.hardWord);
@@ -179,6 +181,8 @@ class TextbookWordsSection {
       );
 
       CreateDomElements.insertChilds(this.containerWords, [card]);
+
+      if (word.userWord) this.checkPogressWord(word, card);
     });
   }
 
@@ -229,7 +233,7 @@ class TextbookWordsSection {
 
     CreateDomElements.insertChilds(
       containerVoice,
-      [imgVoicePlay, imgVoiceStop, this.renderAudio(word), this.activeUser.renderProgressWord()],
+      [imgVoicePlay, imgVoiceStop, this.renderAudio(word)],
     );
 
     this.listenerAudio(containerVoice);
@@ -285,6 +289,41 @@ class TextbookWordsSection {
     this.listenerGroupWords(containerGroup);
 
     return containerGroup;
+  }
+
+  private checkPogressWord(word: WordStructure, cardWord: HTMLElement): void {
+    const { learnStep } = word.userWord.optional;
+    const { difficulty } = word.userWord;
+    const { isLearned } = word.userWord.optional;
+    console.log(999);
+
+    if (difficulty === 'hard' && learnStep) {
+      switch (learnStep) {
+        case 1:
+          this.activeUser.progressWord(cardWord, learnStep);
+          break;
+        case 5:
+          this.activeUser.progressWord(cardWord, 3);
+          break;
+        default:
+          this.activeUser.progressWord(cardWord, 2);
+          break;
+      }
+    } else if (learnStep) {
+      switch (learnStep) {
+        case 1:
+          this.activeUser.progressWord(cardWord, learnStep);
+          break;
+        case 3:
+          this.activeUser.progressWord(cardWord, learnStep);
+          break;
+        default:
+          this.activeUser.progressWord(cardWord, learnStep);
+          break;
+      }
+    } else if (isLearned) {
+      this.activeUser.progressWord(cardWord, 3);
+    }
   }
 
   private createBtnUp(): HTMLElement {
