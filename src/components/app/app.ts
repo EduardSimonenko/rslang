@@ -60,6 +60,14 @@ export default class App {
         currentPage = new TextbookWordsSection(group, page);
         break;
 
+      case 'game/audio-call/play':
+        currentPage = new TextbookWordsSection(group, page);
+        break;
+
+      case 'game/sprint/play':
+        currentPage = new TextbookWordsSection(group, page);
+        break;
+
       case 'statistics':
 
         break;

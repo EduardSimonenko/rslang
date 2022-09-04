@@ -101,8 +101,6 @@ class TextbookWordsSection {
   }
 
   private renderSectionTextbook(words: WordStructure[], groupHard?: boolean): void {
-    console.table(words);
-
     if (groupHard) {
       this.wrapperPagination.style.display = 'none';
       this.btnGames.insertAdjacentElement('afterend', this.hardWord);
@@ -207,8 +205,8 @@ class TextbookWordsSection {
       width: '60px',
       height: '80px',
     });
-    CreateDomElements.setAttributes(btnPlayA, { 'data-name': 'game/audio-call' });
-    CreateDomElements.setAttributes(btnPlayS, { 'data-name': 'game/sprint' });
+    CreateDomElements.setAttributes(btnPlayA, { 'data-name': 'game/audio-call/play' });
+    CreateDomElements.setAttributes(btnPlayS, { 'data-name': 'game/sprint/play' });
 
     CreateDomElements.insertChilds(btnAudioGame, [btnTextA, btnBackgroundS, btnPlayA]);
     CreateDomElements.insertChilds(btnSprintGame, [btnTextS, btnBackgroundA, btnPlayS]);
@@ -295,7 +293,6 @@ class TextbookWordsSection {
     const { learnStep } = word.userWord.optional;
     const { difficulty } = word.userWord;
     const { isLearned } = word.userWord.optional;
-    console.log(999);
 
     if (difficulty === 'hard' && learnStep) {
       switch (learnStep) {

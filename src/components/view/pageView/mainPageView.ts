@@ -65,8 +65,8 @@ class Page {
 
     CreateDomElements.setAttributes(linkToMainPage, { href: '#main' });
     CreateDomElements.setAttributes(linkToTextbook, { href: '#textbook' });
-    CreateDomElements.setAttributes(linkToSprintGame, { href: '#game-sprint' });
-    CreateDomElements.setAttributes(linkToAudioGame, { href: '#game-audio-call' });
+    CreateDomElements.setAttributes(linkToSprintGame, { href: '#game/sprint' });
+    CreateDomElements.setAttributes(linkToAudioGame, { href: '#game/audio-call' });
     CreateDomElements.setAttributes(linkToStatistics, { href: '#statistics' });
 
     arrOfGamesLinks.forEach((el) => {
