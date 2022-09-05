@@ -1,0 +1,114 @@
+.container__stat {
+  @include wh(100%, auto);
+  @include flex($align-items: center, $flex-direction: column);
+}
+
+.container__games {
+  @include flex($justify-content: space-between);
+  @include wh(800px,auto);
+
+    .game__audiocall,
+    .game__sprint {
+      position: relative;
+      @include wh(350px,60px);
+      @include flex();
+      border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -ms-border-radius: 5px;
+      -o-border-radius: 5px;
+    }
+
+    .game__audiocall {
+      background-color: rgb(112, 217, 178);
+    }
+    .game__sprint {
+      background-color: rgb(244, 135, 109);
+    }
+
+    .game__text-audiocall,
+    .game__text-sprint {
+      @include font($font-size: 2.5rem);
+    }
+
+    .game__img-sprint {
+      position: absolute;
+      top: -40px;
+      left: 280px;
+    }
+    .game__img-audiocall {
+      position: absolute;
+      top: -40px;
+      left: 282px;
+    }
+}
+
+.games__title {
+  @include font($font-size: 4rem, $font-weight: 800);
+  margin: 30px auto;
+}
+
+.container__game-audiocall {
+  @include wh (auto, 250px);
+  box-shadow: 0 0 10px rgb(112, 217, 178);
+}
+
+.container__game-sprint {
+  @include wh (auto, 250px);
+  box-shadow: 0 0 10px rgb(244, 135, 109);
+}
+
+.field__stat,
+.field__stat-words {
+  @include wh (100%, 50px);
+
+    .field__count {
+      display: inline-block;
+      @include font($font-weight: 900);
+      @include wh(100px,auto);
+      text-align: center;
+    }
+
+    .field__text {
+      @include font($font-size: 1.7rem, $font-weight: 500);
+      padding-left: 15px;
+    }
+}
+
+.container__fields {
+  padding-top: 40px;
+  background-color: #EBECF0;
+}
+
+.container__words-stat {
+  @include flex($justify-content: space-between);
+  @include wh(800px, auto);
+  margin-top: 80px;
+}
+
+.field__stat-words{
+  display: block;
+  @include flex();
+  @include wh(230px, 130px);
+  background-color: #EBECF0;
+  padding: 10px;  
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, .15),
+              -7px -7px 20px rgba(255, 255, 255, 1),
+              0px 0px 4px rgba(255, 255, 255, .2);
+  border-radius: 30px;
+  
+}
+
+.field__Percent {
+  @include flex($flex-direction: column);
+  background-color: #EBECF0;
+  padding: 10px;  
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, .15),
+              -7px -7px 20px rgba(255, 255, 255, 1),
+              0px 0px 4px rgba(255, 255, 255, .2);
+  border-radius: 30px;
+}
+
+.field__Percent-text {
+  @include font($font-size: 2rem, $font-weight: 400);
+}

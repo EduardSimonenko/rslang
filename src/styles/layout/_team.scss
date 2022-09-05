@@ -1,0 +1,49 @@
+.team {
+  @include flex($flex-wrap: wrap);
+  margin-top: 30px;
+  margin-bottom: 30px;
+  justify-content: space-between;
+}
+
+.team-title {
+  @include font($font-family: $title-font, $font-size: 2.7rem, $font-weight: 500, $color: $main-color);
+  width: 100%;
+  text-align: center;
+  padding: 40px;
+}
+
+.teammate {
+  @include flex($flex-direction: column);
+  gap: 10px;
+  width: 30%;
+  margin-bottom: auto;
+  background-color: $light-font-color;
+  padding: 30px;  
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, .15),
+              -7px -7px 20px rgba(255, 255, 255, 1),
+              0px 0px 4px rgba(255, 255, 255, .2) !important;
+  border-radius: 30px;
+}
+
+.teammate__foto {
+  align-self: center;
+  max-width: 50%;
+}
+.teammate__link {
+  @include font($font-weight: 400);
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.teammate__link:hover {
+  transform: scale(0.95);
+  color: $main-color;
+}
+
+.teammate__role {
+  @include font($font-size: 2rem);
+  text-align: center;
+  margin-bottom: auto;
+}

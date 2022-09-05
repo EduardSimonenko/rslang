@@ -1,0 +1,41 @@
+// abstracts
+@import 
+  './abstracts/variables',
+  './abstracts/mixins',
+  './abstracts/functions';
+
+// base
+@import 
+  './base/base',
+  './base/fonts',
+  './base/reset';
+
+// components
+@import
+  './components/button',
+  './components/cardWord',
+  './components/buttonGame',
+  './components/buttonUp',
+  './components/progressWord',
+  './components/percentageСircle';
+
+// layout
+@import 
+  './layout/footer',
+  './layout/header',
+  './layout/textbookGroup',
+  './components/buttonPag',
+  './layout/game-benefits',
+  './layout/team',
+  './layout/sprint-game',
+  './layout/navigation',
+  './layout/sprintResult';
+
+// pages
+@import
+  './pages/startScreen',
+  './pages/home',
+  './pages/textbook',
+  './pages/auth',
+  './pages/audiocall',
+  './pages/statistics';
