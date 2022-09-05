@@ -49,7 +49,7 @@ class Audiocall extends AudiocallRender {
     this.render = new AudiocallRender();
   }
 
-  async getWords(group: number, page: number): Promise<WordStructure[]> {
+  static async getWords(group: number, page: number): Promise<WordStructure[]> {
     const result = await Loader.load(
       {
         method: MethodEnum.get,
@@ -88,8 +88,8 @@ class Audiocall extends AudiocallRender {
   }
 
   async buildSupportWords(): Promise<void> {
-    const supportArray1 = await this.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
-    const supportArray2 = await this.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
+    const supportArray1 = await Audiocall.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
+    const supportArray2 = await Audiocall.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
     this.supportWords = shuffle(supportArray1.concat(supportArray2))
       .map((item: WordStructure) => item.wordTranslate);
   }
@@ -108,9 +108,9 @@ class Audiocall extends AudiocallRender {
       }
     } else if (index === 0 && localStorage.getItem('page').includes('game/audio-call/play')) {
       const args: string[] = getGroupAndPage(localStorage.getItem('page'));
-      this.words = shuffle(await this.getWords(+args[0], +args[1]));
+      this.words = shuffle(await Audiocall.getWords(+args[0], +args[1]));
     } else {
-      this.words = shuffle(await this.getWords(group, page));
+      this.words = shuffle(await Audiocall.getWords(group, page));
     }
     await this.buildSupportWords();
   }

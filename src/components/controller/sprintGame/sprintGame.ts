@@ -5,6 +5,10 @@ import { getRandomInt, shuffle } from '../../utils/utils';
 import IwordInfo from '../../../types/sprintGame/IwordInfo';
 import Audiocall from '../audiocall/audiocall';
 import getUserData from '../../utils/userLogin';
+import makeNewStat from '../../utils/sendStatistics';
+import { GameName } from '../../../types/statistics/interfaces';
+import Loader from '../load';
+import CustomStorage from '../storage';
 
 class SprintGame {
   words: WordStructure[];
@@ -73,12 +77,17 @@ class SprintGame {
       this.page = getRandomInt(0, 20).toString();
     }
 
-    const response = await Api.getWordsWithOption(
-      this.group,
-      this.page,
-      getUserData(),
-    ) as AuthorizeUserWords[];
-    this.words = shuffle(response[0].paginatedResults);
+    if (CustomStorage.getStorage('token')) {
+      const response = await Api.getWordsWithOption(
+        this.group,
+        this.page,
+        getUserData(),
+      ) as AuthorizeUserWords[];
+      this.words = shuffle(response[0].paginatedResults);
+    } else {
+      const unLoginResponse = await Audiocall.getWords(+this.group, +this.page);
+      this.words = shuffle(unLoginResponse);
+    }
 
     const randomGroup = getRandomInt(0, 5).toString();
     const randomPage = getRandomInt(0, 20).toString();
@@ -145,13 +154,24 @@ class SprintGame {
 
   private timer() {
     const timerShow = document.querySelector('.timer');
-    const timer = setInterval(() => {
+    const timer = setInterval(async () => {
       if (+timerShow.innerHTML <= 0) {
         clearInterval(timer);
         document.removeEventListener('keydown', this.keydownListener);
         SprintPage.renderStatistics(this.score, this.wrongAnswers, this.correctAnswers);
-        this.audioCall.sendOptions(this.correctAnswers, this.wrongAnswers);
-        this.audioCall.sendOptions(this.wrongAnswers, this.wrongAnswers);
+        if (CustomStorage.getStorage('token')) {
+          this.audioCall.sendOptions(this.correctAnswers, this.wrongAnswers);
+          this.audioCall.sendOptions(this.wrongAnswers, this.wrongAnswers);
+          setTimeout(async () => {
+            const statistics = await makeNewStat(
+              this.correctAnswers,
+              this.wrongAnswers,
+              GameName.sprint,
+              this.bestStreak,
+            );
+            await Api.updateStatistics(getUserData(), statistics);
+          }, 0);
+        }
       } else {
         timerShow.innerHTML = (+timerShow.innerHTML - 1).toString();
       }

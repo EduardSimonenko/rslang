@@ -32,7 +32,7 @@ class SprintPage {
   }
 
   static renderTimer() {
-    const timer = CreateDomElements.createNewElement('div', ['timer'], '60');
+    const timer = CreateDomElements.createNewElement('div', ['timer'], '10');
     CreateDomElements.insertChilds(this.sprintGameBlock, [timer]);
   }
 
