@@ -94,6 +94,11 @@ class Statistics {
     const fieldStatGame: string[] = ['<b>слов</b><br>изучено за день', 'новых слов'];
     const containerStatWords: HTMLElement = CreateDomElements.createNewElement('div', ['container__words-stat']);
     const fieldPercentWords: HTMLElement = CreateDomElements.createNewElement('div', ['field__Percent']);
+    const fieldPercentText: HTMLElement = CreateDomElements.createNewElement(
+      'p',
+      ['field__Percent-text'],
+      'Процент правильных ответов',
+    );
     const result: number[] = this.countStat(stat);
     const percent: number = percentOfCorrectAnswers(
       [stat.optional.sprint.allWords, stat.optional.audioCall.allWords],
@@ -114,7 +119,7 @@ class Statistics {
       CreateDomElements.insertChilds(field, [count, text]);
       CreateDomElements.insertChilds(containerStatWords, [field]);
     }
-    CreateDomElements.insertChilds(fieldPercentWords, [circle]);
+    CreateDomElements.insertChilds(fieldPercentWords, [fieldPercentText, circle]);
     CreateDomElements.insertChilds(containerStatWords, [fieldPercentWords]);
     return containerStatWords;
   }
