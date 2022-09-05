@@ -1,6 +1,9 @@
 .team {
-  border: 2px solid $main-color;
+  // border: 2px solid $main-color;
   @include flex($flex-wrap: wrap);
+  margin-top: 30px;
+  margin-bottom: 30px;
+  justify-content: space-between;
 }
 
 .team-title {
@@ -12,14 +15,36 @@
 
 .teammate {
   @include flex($flex-direction: column);
-  display: inline-block;
-  width: 35%;
+  gap: 10px;
+  width: 30%;
+  margin-bottom: auto;
+  background-color: $light-font-color;
+  padding: 30px;  
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, .15),
+              -7px -7px 20px rgba(255, 255, 255, 1),
+              0px 0px 4px rgba(255, 255, 255, .2) !important;
+  border-radius: 30px;
 }
+
 .teammate__foto {
-  max-width: 100%;
+  align-self: center;
+  max-width: 50%;
 }
 .teammate__link {
-  @include font();
+  @include font($font-weight: 400);
   display: block;
   text-align: center;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.teammate__link:hover {
+  transform: scale(0.95);
+  color: $main-color;
+}
+
+.teammate__role {
+  @include font($font-size: 2rem);
+  text-align: center;
+  margin-bottom: auto;
 }
