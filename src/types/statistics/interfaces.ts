@@ -1,6 +1,7 @@
 export interface StatisticsData {
   learnedWords: number,
-  optional: OptionalStatistics
+  optional: OptionalStatistics,
+  id?: string,
 }
 
 interface OptionalStatistics {
@@ -14,9 +15,15 @@ interface GameStatistic {
   newWords: number,
   correctAnswers: number,
   seriesCorrectAnswers: number,
+  allWords: number
 }
 
 export interface LongTermStatistics {
   data: string,
   newWords: number
+}
+
+export enum GameName {
+  audiocall = 'audiocall',
+  sprint = 'sprint',
 }

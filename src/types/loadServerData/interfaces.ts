@@ -33,10 +33,14 @@ export interface UserWordStructure {
 export interface OptionalUserWord {
   isLearned: boolean,
   learnStep?: number,
-  startLearningAt?: number
+  startLearningAt?: string
 }
 
 export interface AuthorizeUserWords {
   paginatedResults: WordStructure[]
-  totalCount: []
+  totalCount: Count[]
+}
+
+export interface Count {
+  count: number;
 }
