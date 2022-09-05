@@ -19,32 +19,56 @@
   display: block;
   @include font($font-size: 2.0rem, $color: white);
   padding-top: 18px;
+  transition: ease-in-out 0.3s;
 }
 
 .submenu {
-  display: none;
-  width: 130px;
-  position: absolute;
-  top: 70px;
-  z-index: 10;
+    height: 0;
+    position: absolute;
+    top: 70px;
+    z-index: 10;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
 }
 
 .link-to-games{
   position: relative;
+  cursor: pointer;
+}
+
+.link-to-games__content {
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .link-to-games:hover .submenu {
-  display: block;
+  height: 80px;
+  transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
 }
+
 .submenu__item a{
+  transition: ease-in-out 0.3s;
   display: block;
   font-size: 1.9rem;
-  color: black;
-  height: 100%;
+  color: white;
+  background-color: #A04955;
   border: 2px solid $main-color;
 
   &:hover{
     background-color: $main-color;
-    color: white;
+    color: black;
+    background-color: #F3F3F3;
   }
+}
+
+.submenu__item {
+  text-align: center;
 }

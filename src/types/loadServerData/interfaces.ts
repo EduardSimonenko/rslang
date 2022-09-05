@@ -38,5 +38,9 @@ export interface OptionalUserWord {
 
 export interface AuthorizeUserWords {
   paginatedResults: WordStructure[]
-  totalCount: []
+  totalCount: Count[]
+}
+
+export interface Count {
+  count: number;
 }

@@ -16,7 +16,8 @@
   './components/cardWord',
   './components/buttonGame',
   './components/buttonUp',
-  './components/progressWord';
+  './components/progressWord',
+  './components/percentageСircle';
 
 // layout
 @import 
@@ -36,4 +37,5 @@
   './pages/home',
   './pages/textbook',
   './pages/auth',
-  './pages/audiocall';
+  './pages/audiocall',
+  './pages/statistics';

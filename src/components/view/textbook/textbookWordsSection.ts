@@ -14,6 +14,7 @@ import optsSpiner from '../../utils/spinner';
 import getGroupAndPage from '../../utils/getGroupAndPage';
 import { ResponseData } from '../../../types/textbook/type';
 import { createUrlPath } from '../../utils/createUrlPath';
+import { filterHardWords } from '../../model/filtersWords';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -201,7 +202,7 @@ class TextbookWordsSection {
       height: '80px',
     });
     CreateDomElements.setAttributes(btnBackgroundS, {
-      src: '../../../assets/svg/audioCall.svg',
+      src: '../../../assets/svg/audiocall.svg',
       width: '60px',
       height: '80px',
     });
@@ -342,13 +343,14 @@ class TextbookWordsSection {
   }
 
   private openBtnUp(): void {
+    const page = CustomStorage.getStorage('page').split('?')[0];
     const btn = document.querySelector('.button__up') as HTMLButtonElement;
     const heightWindow: number = window.pageYOffset;
     const startPoint = 300;
-    if (heightWindow > startPoint) {
+    if (heightWindow > startPoint && page === 'textbook/words') {
       btn.classList.add('open-button-up');
     }
-    if (heightWindow < startPoint) {
+    if (heightWindow < startPoint && page === 'textbook/words') {
       btn.classList.remove('open-button-up');
     }
   }
@@ -382,7 +384,7 @@ class TextbookWordsSection {
     spinner.spin(container);
 
     if (this.token && group === hardGroup) {
-      words = (await Api.getDifficultWords(getUserData())) as AuthorizeUserWords[];
+      words = (await Api.getfilterWords(getUserData(), filterHardWords)) as AuthorizeUserWords[];
       this.cleanSectionWords();
       this.renderSectionTextbook(words[0].paginatedResults, true);
     } else if (this.token) {
@@ -476,6 +478,7 @@ class TextbookWordsSection {
     const urlPage: string = CustomStorage.getStorage('page');
     const chooseGame = e.currentTarget as HTMLLinkElement;
     const data: string[] = getGroupAndPage(urlPage);
+    CustomStorage.setStorage('prePage', urlPage);
     chooseGame.href = `#${name}?group=${data[0]}&page=${data[1]}`;
   }
 }

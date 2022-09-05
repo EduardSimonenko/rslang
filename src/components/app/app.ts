@@ -2,6 +2,7 @@ import CustomStorage from '../controller/storage';
 import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
 import Page from '../view/pageView/mainPageView';
+import Statistics from '../view/statistics/statistics';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 import TextbookWordsSection from '../view/textbook/textbookWordsSection';
 import StartScreen from '../view/startScreenGame/startScreenView';
@@ -29,6 +30,7 @@ export default class App {
         CustomStorage.setStorage('page', e.state);
       } else {
         const hash = window.location.href.split('#')[1];
+        CustomStorage.setStorage('prePage', CustomStorage.getStorage('page'));
         CustomStorage.setStorage('page', hash);
         replaceHashHistory(hash);
       }
@@ -72,7 +74,7 @@ export default class App {
         break;
 
       case 'statistics':
-
+        currentPage = new Statistics();
         break;
 
       default:
