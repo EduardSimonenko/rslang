@@ -88,6 +88,7 @@ class Authorization extends Loader {
       const closeBtnImg = document.getElementById('close-btn-img');
       closeBtnImg.addEventListener('click', () => {
         this.message.innerText = '';
+        (document.querySelector('[href="#statistics"]') as HTMLElement).style.display = '';
         setInterval(() => this.refreshToken(), 10800000);
       });
     } else {

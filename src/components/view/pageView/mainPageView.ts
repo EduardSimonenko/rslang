@@ -1,4 +1,5 @@
 import CreateDomElements from '../../controller/newElement';
+import CustomStorage from '../../controller/storage';
 import descrBlocks from '../../model/descsriptionBlocks';
 import teammates from '../../model/teammateData';
 import AppView from '../appView';
@@ -27,10 +28,11 @@ class Page {
     const login = CreateDomElements.createNewElement('button', ['login']);
     const navbar = this.renderMenu();
 
-    const logoLink = CreateDomElements.createNewElement('a', ['logo__link']) as HTMLImageElement;
+    const logoLink = CreateDomElements.createNewElement('a', ['logo__link']) as HTMLLinkElement;
     const logoImg = CreateDomElements.createNewElement('img', ['logo__img']) as HTMLImageElement;
     const loginImg = CreateDomElements.createNewElement('img', ['login__img']) as HTMLImageElement;
 
+    logoLink.href = '#main';
     loginImg.src = '../../assets/images/login-icon.svg';
     logoImg.src = '../../assets/images/logo-icon.svg';
 
@@ -87,6 +89,10 @@ class Page {
 
     CreateDomElements.insertChilds(navbar, [nav]);
 
+    if (!CustomStorage.getStorage('token')) {
+      linkToStatistics.style.display = 'none';
+    }
+
     return navbar;
   }
 
@@ -127,6 +133,7 @@ class Page {
     const footer = CreateDomElements.createNewElement('footer', ['footer']);
     const logoRSBlock = CreateDomElements.createNewElement('div', ['rs-school-logo']);
     const logoRSLink = CreateDomElements.createNewElement('a', ['rs-school-logo__link']);
+    CreateDomElements.setAttributes(logoRSLink, { href: 'https://rs.school/js/', target: '_blank' });
     const logoRSImg = CreateDomElements.createNewElement('img', ['rs-school-logo__link']) as HTMLImageElement;
     const githubLinksBlock = CreateDomElements.createNewElement('div', ['github-links']);
     const yearBlock = CreateDomElements.createNewElement('div', ['creation-year']);
@@ -167,7 +174,7 @@ class Page {
 
   private static renderTeamSection(): HTMLElement {
     const teamSection = CreateDomElements.createNewElement('section', ['team']);
-    const teamTitle = CreateDomElements.createNewElement('h2', ['team-title'], 'Лучшие разработчики РБ');
+    const teamTitle = CreateDomElements.createNewElement('h2', ['team-title'], 'Команда разработчиков');
 
     CreateDomElements.insertChilds(teamSection, [teamTitle]);
 
@@ -175,13 +182,14 @@ class Page {
       const teammate = CreateDomElements.createNewElement('div', ['teammate']);
       const teammateFoto = CreateDomElements.createNewElement('img', ['teammate__foto']) as HTMLImageElement;
       const linkToGithub = CreateDomElements.createNewElement('a', ['teammate__link'], el.name) as HTMLLinkElement;
+      const teammateRole = CreateDomElements.createNewElement('div', ['teammate__role'], el.role);
 
       CreateDomElements.setAttributes(linkToGithub, { target: '_blank' });
       teammateFoto.src = el.pathToFoto;
       teammateFoto.alt = 'handsome man photo';
       linkToGithub.href = el.linkToGithub;
 
-      CreateDomElements.insertChilds(teammate, [teammateFoto, linkToGithub]);
+      CreateDomElements.insertChilds(teammate, [teammateFoto, linkToGithub, teammateRole]);
       CreateDomElements.insertChilds(teamSection, [teammate]);
     });
 

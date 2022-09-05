@@ -19,11 +19,11 @@
   display: block;
   @include font($font-size: 2.0rem, $color: white);
   padding-top: 18px;
+  transition: ease-in-out 0.3s;
 }
 
 .submenu {
   display: none;
-  width: 130px;
   position: absolute;
   top: 70px;
   z-index: 10;
@@ -31,12 +31,19 @@
 
 .link-to-games{
   position: relative;
+  cursor: pointer;
+}
+
+.link-to-games__content {
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .link-to-games:hover .submenu {
   display: block;
 }
 .submenu__item a{
+  transition: ease-in-out 0.3s;
   display: block;
   font-size: 1.9rem;
   color: black;

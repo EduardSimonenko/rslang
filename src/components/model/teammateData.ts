@@ -2,22 +2,25 @@ import Iteammate from '../../types/pageViewTypes/Iteammates';
 
 const teammates: Iteammate[] = [
   {
-    name: 'first teammate',
-    pathToFoto: './assets/images/teammate-foto.png',
-    linkToGithub: '#',
-    pathToGithubFoto: '../assets/images/github.png',
+    name: 'Евгений Цалко',
+    pathToFoto: '../../assets/images/team-eugene.png',
+    linkToGithub: 'https://github.com/EugeneTsalko',
+    pathToGithubFoto: '../../assets/images/team-github-eugene.png',
+    role: 'Developer<br>Авторизация, игра "Аудиовызов", настройка webpack',
   },
   {
-    name: 'second teammate',
-    pathToFoto: './assets/images/teammate-foto.png',
-    linkToGithub: '#',
-    pathToGithubFoto: '../assets/images/github.png',
+    name: 'Сергей Белявский',
+    pathToFoto: '../../assets/images/team-sergey.png',
+    linkToGithub: 'https://github.com/SergBily',
+    pathToGithubFoto: '../../assets/images/team-github-sergey.png',
+    role: 'Team Lead, developer<br>Настройка сервера, учебник, слова, статистика, координация команды',
   },
   {
-    name: 'third teammate',
-    pathToFoto: './assets/images/teammate-foto.png',
-    linkToGithub: '#',
-    pathToGithubFoto: '../assets/images/github.png',
+    name: 'Эдуард Симоненко',
+    pathToFoto: '../../assets/images/team-eduard.png',
+    linkToGithub: 'https://github.com/EduardSimonenko',
+    pathToGithubFoto: '../../assets/images/team-github-eduard.png',
+    role: 'Developer<br>Дизайн, главная страница,<br>игра "Спринт"',
   },
 ];
 
