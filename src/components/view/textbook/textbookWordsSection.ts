@@ -14,6 +14,7 @@ import optsSpiner from '../../utils/spinner';
 import getGroupAndPage from '../../utils/getGroupAndPage';
 import { ResponseData } from '../../../types/textbook/type';
 import { createUrlPath } from '../../utils/createUrlPath';
+import { filterHardWords } from '../../model/filtersWords';
 
 class TextbookWordsSection {
   private body: HTMLBodyElement;
@@ -201,7 +202,7 @@ class TextbookWordsSection {
       height: '80px',
     });
     CreateDomElements.setAttributes(btnBackgroundS, {
-      src: '../../../assets/svg/audioCall.svg',
+      src: '../../../assets/svg/audiocall.svg',
       width: '60px',
       height: '80px',
     });
@@ -382,7 +383,7 @@ class TextbookWordsSection {
     spinner.spin(container);
 
     if (this.token && group === hardGroup) {
-      words = (await Api.getDifficultWords(getUserData())) as AuthorizeUserWords[];
+      words = (await Api.getfilterWords(getUserData(), filterHardWords)) as AuthorizeUserWords[];
       this.cleanSectionWords();
       this.renderSectionTextbook(words[0].paginatedResults, true);
     } else if (this.token) {

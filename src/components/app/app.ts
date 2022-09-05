@@ -3,6 +3,7 @@ import CustomStorage from '../controller/storage';
 import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
 import Page from '../view/pageView/mainPageView';
+// import Statistics from '../view/statistics/statistics';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 import TextbookWordsSection from '../view/textbook/textbookWordsSection';
 
@@ -69,7 +70,7 @@ export default class App {
         break;
 
       case 'statistics':
-
+        // currentPage = new Statistics();
         break;
 
       default:

@@ -1,6 +1,7 @@
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
 import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import baseUrl from '../../model/baseUrl';
+import { filterHardWords } from '../../model/filtersWords';
 import cleanPage from '../../utils/cleanPage';
 import getGroupAndPage from '../../utils/getGroupAndPage';
 import getUserData from '../../utils/userLogin';
@@ -93,7 +94,7 @@ class Audiocall extends AudiocallRender {
           await this.addMoreWords(+args[0], +args[1]);
         }
       } else {
-        const hardUserWords = shuffle(await Api.getDifficultWords(getUserData()));
+        const hardUserWords = shuffle(await Api.getfilterWords(getUserData(), filterHardWords));
         this.words = hardUserWords[0].paginatedResults;
       }
     } else if (index === 0 && localStorage.getItem('page').includes('game/audio-call/play')) {
