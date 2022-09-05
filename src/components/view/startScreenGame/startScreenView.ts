@@ -16,7 +16,7 @@ class StartScreen {
   renderPage(): void {
     this.body.innerHTML = '';
     const gameClose = CreateDomElements.createNewElement('a', ['sprint-game__close-btn']) as HTMLLinkElement;
-    const gameCloseImg = CreateDomElements.createNewElement('img', ['sprint-gamel__close-btn_img']);
+    const gameCloseImg = CreateDomElements.createNewElement('img', ['sprint-game__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
     gameClose.href = '#main';
     gameCloseImg.setAttribute('id', 'close-game');

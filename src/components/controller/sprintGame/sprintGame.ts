@@ -1,9 +1,10 @@
-import { WordStructure } from '../../../types/loadServerData/interfaces';
+import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
 import Api from '../textbook/controller';
 import SprintPage from '../../view/sprintView/sprintPageRender';
 import { getRandomInt, shuffle } from '../../utils/utils';
 import IwordInfo from '../../../types/sprintGame/IwordInfo';
 import Audiocall from '../audiocall/audiocall';
+import getUserData from '../../utils/userLogin';
 
 class SprintGame {
   words: WordStructure[];
@@ -41,9 +42,9 @@ class SprintGame {
     this.pointsMultiplier = 1;
   }
 
-  private correctAudio = new Audio('./assets/sounds/true_sounds.mp3');
+  private correctAudio = new Audio('./assets/audio/correct.mp3');
 
-  private wrongAudio = new Audio('./assets/sounds/wrong_sounds.mp3');
+  private wrongAudio = new Audio('./assets/audio/wrong.mp3');
 
   private audioCall = new Audiocall();
 
@@ -54,7 +55,7 @@ class SprintGame {
     SprintPage.renderSprintPage(cardInfo, this.score);
     this.wordsCounter += 1;
     await this.timer();
-
+    console.log(this.correctAnswers);
     this.listen();
   }
 
@@ -62,8 +63,13 @@ class SprintGame {
     if (!this.page) {
       this.page = getRandomInt(0, 20).toString();
     }
-    const response = await Api.getAllWords(this.group, this.page);
-    this.words = shuffle(response);
+
+    const response = await Api.getWordsWithOption(
+      this.group,
+      this.page,
+      getUserData(),
+    ) as AuthorizeUserWords[];
+    this.words = shuffle(response[0].paginatedResults);
 
     const randomGroup = getRandomInt(0, 5).toString();
     const randomPage = getRandomInt(0, 20).toString();
@@ -74,8 +80,6 @@ class SprintGame {
   private getCurrentWordInfo() {
     const correctWord = this.words[this.wordsCounter];
     const wrongWord = this.wrongWords[this.wordsCounter];
-    console.log(correctWord);
-
     const randomInt = getRandomInt(0, 1);
 
     const wordInfo = {
@@ -136,8 +140,6 @@ class SprintGame {
       if (+timerShow.innerHTML <= 0) {
         clearInterval(timer);
         SprintPage.renderStatistics(this.score, this.wrongAnswers, this.correctAnswers);
-        console.log(this.correctAnswers);
-        console.log(this.wrongAnswers);
         this.audioCall.sendOptions(this.correctAnswers, this.wrongAnswers);
         this.audioCall.sendOptions(this.wrongAnswers, this.wrongAnswers);
       } else {

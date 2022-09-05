@@ -188,23 +188,27 @@ class Audiocall extends AudiocallRender {
 
   sendOptions(words: WordStructure[], comparedArray: WordStructure[]) {
     words.forEach(async (word: WordStructure) => {
+      if (!word) return;
       const id = word._id ? word._id : word.id;
       let difficultyValue;
       let isWordLearned;
       let step;
       let updatedWord: UserWordStructure;
+      let startLearningDate: string;
 
       if (!word.userWord) {
-        await Api.createUserWord(id, { difficulty: 'normal', optional: { isLearned: false, learnStep: 0, startLearningAt: Date.now() } }, getUserData());
+        await Api.createUserWord(id, { difficulty: 'normal', optional: { isLearned: false, learnStep: 0, startLearningAt: new Date().toLocaleDateString() } }, getUserData());
         const response = await Api.getWordUser(id, getUserData());
         updatedWord = await response.json() as UserWordStructure;
         difficultyValue = updatedWord.difficulty;
         step = updatedWord.optional.learnStep;
         isWordLearned = updatedWord.optional.isLearned;
+        startLearningDate = new Date().toLocaleDateString();
       } else {
         difficultyValue = word.userWord.difficulty;
         isWordLearned = word.userWord.optional.isLearned;
         step = word.userWord.optional.learnStep;
+        startLearningDate = word.userWord.optional.startLearningAt;
       }
 
       if ((step >= 2 && difficultyValue === 'normal') || (step >= 4 && difficultyValue === 'hard')) {
@@ -216,7 +220,11 @@ class Audiocall extends AudiocallRender {
           id,
           {
             difficulty: difficultyValue,
-            optional: { isLearned: isWordLearned, learnStep: 0 },
+            optional: {
+              isLearned: isWordLearned,
+              learnStep: 0,
+              startLearningAt: startLearningDate,
+            },
           },
           getUserData(),
         );
@@ -225,7 +233,11 @@ class Audiocall extends AudiocallRender {
           id,
           {
             difficulty: difficultyValue,
-            optional: { isLearned: isWordLearned, learnStep: step + 1 },
+            optional: {
+              isLearned: isWordLearned,
+              learnStep: step + 1,
+              startLearningAt: startLearningDate,
+            },
           },
           getUserData(),
         );

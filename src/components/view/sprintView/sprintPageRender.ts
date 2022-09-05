@@ -14,13 +14,20 @@ class SprintPage {
 
   static renderSprintPage(wordInfo: IwordInfo, score: number) {
     this.sprintGameBlock.innerHTML = '';
+    const gameClose = CreateDomElements.createNewElement('a', ['sprint-game__close-btn']) as HTMLLinkElement;
+    const gameCloseImg = CreateDomElements.createNewElement('img', ['sprint-game__close-btn_img']);
+    CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    gameClose.href = '#game/sprint';
+    gameCloseImg.setAttribute('id', 'close-game');
+    gameClose.appendChild(gameCloseImg);
+    CreateDomElements.insertChilds(this.sprintGameBlock, [gameClose]);
     this.renderTimer();
     this.renderCard(wordInfo, score);
     CreateDomElements.insertChilds(this.body, [this.sprintGameBlock]);
   }
 
   static renderTimer() {
-    const timer = CreateDomElements.createNewElement('div', ['timer'], '60');
+    const timer = CreateDomElements.createNewElement('div', ['timer'], '10');
     CreateDomElements.insertChilds(this.sprintGameBlock, [timer]);
   }
 
@@ -77,15 +84,22 @@ class SprintPage {
     const correctWords = CreateDomElements.createNewElement('div', ['result__correct-words'], 'Правильные ответы: ');
     const wrongWords = CreateDomElements.createNewElement('div', ['result__wrong-words'], 'Неправильные ответы: ');
     const startSprintGameLink = CreateDomElements.createNewElement('a', ['result__sprint-link', 'btn'], 'Cыграть снова!') as HTMLLinkElement;
+    const gameClose = CreateDomElements.createNewElement('a', ['sprint-game__close-btn']) as HTMLLinkElement;
+    const gameCloseImg = CreateDomElements.createNewElement('img', ['sprint-game__close-btn_img']);
+    CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    gameClose.href = '#game';
+    gameCloseImg.setAttribute('id', 'close-game');
+    gameClose.appendChild(gameCloseImg);
 
     startSprintGameLink.href = '#game/sprint';
-
     wrongAnswers.forEach((el) => {
+      if (!el) return;
       const wrongWord = this.createWordBlock(el);
       CreateDomElements.insertChilds(wrongWords, [wrongWord]);
     });
 
     correctAnswers.forEach((el) => {
+      if (!el) return;
       const correctWord = this.createWordBlock(el);
       CreateDomElements.insertChilds(correctWords, [correctWord]);
     });
@@ -96,7 +110,7 @@ class SprintPage {
       [resultHeader, showAnswerLink, resultWords, motivationalMessage, startSprintGameLink],
     );
 
-    CreateDomElements.insertChilds(this.sprintGameBlock, [resultBlock]);
+    CreateDomElements.insertChilds(this.sprintGameBlock, [gameClose, resultBlock]);
 
     showAnswerLink.addEventListener('click', () => {
       resultWords.classList.add('result__words_active');
