@@ -21,7 +21,7 @@ class AuthForm {
     });
     const passwordInput = CreateDomElements.createNewElement('input', ['login-form__input']);
     CreateDomElements.setAttributes(passwordInput, {
-      id: 'password', type: 'password', placeholder: 'Пароль', required: '',
+      id: 'password', type: 'password', placeholder: 'Пароль', required: '', minlength: '8',
     });
     CreateDomElements.insertChilds(loginFormFields, [emailInput, nameInput, passwordInput]);
     const loginFormError = CreateDomElements.createNewElement('div', ['login-form-error']);

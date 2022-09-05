@@ -53,7 +53,13 @@ class Authorization extends Loader {
     } else {
       this.message.classList.remove('loader');
       this.message.style.color = 'red';
-      this.message.innerText = 'Такой пользователь не может быть создан';
+      if (!(document.getElementById('email') as HTMLInputElement).value.includes('@')) {
+        this.message.innerText = 'Введите верный e-mail';
+      } else if ((document.getElementById('name') as HTMLInputElement).value.length <= 0) {
+        this.message.innerText = 'Введите имя пользователя';
+      } else if ((document.getElementById('password') as HTMLInputElement).value.length < 8) {
+        this.message.innerText = 'Слишком короткий пароль';
+      } else this.message.innerText = 'Такой пользователь не может быть создан';
     }
   }
 
