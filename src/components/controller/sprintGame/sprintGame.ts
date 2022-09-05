@@ -29,6 +29,10 @@ class SprintGame {
 
   page: string;
 
+  bestStreak: number;
+
+  currentStreak: number;
+
   constructor(group: string, page?: string) {
     this.words = [];
     this.wrongWords = [];
@@ -40,6 +44,8 @@ class SprintGame {
     this.group = group;
     this.page = page;
     this.pointsMultiplier = 1;
+    this.bestStreak = 0;
+    this.currentStreak = 0;
   }
 
   private correctAudio = new Audio('./assets/audio/correct.mp3');
@@ -52,7 +58,7 @@ class SprintGame {
     document.querySelector('body').innerHTML = '';
     await this.createArraysForGame();
     const cardInfo = this.getCurrentWordInfo();
-    SprintPage.renderSprintPage(cardInfo, this.score);
+    SprintPage.renderStartScreen(cardInfo, this.score);
     this.keydownListen();
     this.wordsCounter += 1;
     await this.timer();
@@ -139,6 +145,7 @@ class SprintGame {
     const timer = setInterval(() => {
       if (+timerShow.innerHTML <= 0) {
         clearInterval(timer);
+        document.removeEventListener('keydown', this.keydownListener);
         SprintPage.renderStatistics(this.score, this.wrongAnswers, this.correctAnswers);
         this.audioCall.sendOptions(this.correctAnswers, this.wrongAnswers);
         this.audioCall.sendOptions(this.wrongAnswers, this.wrongAnswers);
@@ -162,6 +169,7 @@ class SprintGame {
       this.correctAudio.play();
       this.score += 10 * this.pointsMultiplier;
       this.correctAnswers.push(word);
+      this.currentStreak += 1;
     } else {
       if (this.countOfCorrectAnswer > 0) {
         this.countOfCorrectAnswer -= 1;
@@ -171,29 +179,32 @@ class SprintGame {
       this.wrongAudio.play();
       this.pointsMultiplier = 1;
       this.wrongAnswers.push(word);
+      this.currentStreak = 0;
+    }
+
+    if (this.currentStreak > this.bestStreak) {
+      this.bestStreak = this.currentStreak;
+    }
+  }
+
+  private keydownListener(event: KeyboardEvent) {
+    const rightButtton = document.querySelector('.card__button_correct');
+    const leftButton = document.querySelector('.card__button_wrong');
+    event.preventDefault();
+    const click = new Event('click');
+    if (event.code === 'ArrowRight') {
+      rightButtton.dispatchEvent(click);
+    }
+    if (event.code === 'ArrowLeft') {
+      leftButton.dispatchEvent(click);
     }
   }
 
   private keydownListen() {
-    const rightButtton = document.querySelector('.card__button_correct');
-    const leftButton = document.querySelector('.card__button_wrong');
-
-    const keydownListener = function (event: KeyboardEvent) {
-      event.preventDefault();
-      const click = new Event('click');
-      if (event.code === 'ArrowRight') {
-        rightButtton.dispatchEvent(click);
-      }
-      if (event.code === 'ArrowLeft') {
-        leftButton.dispatchEvent(click);
-      }
-    };
-
-    document.addEventListener('keydown', keydownListener);
+    document.addEventListener('keydown', this.keydownListener);
   }
 
   listen() {
-    const cardButtons = document.querySelector('.card__buttons');
     const rightButtton = document.querySelector('.card__button_correct');
     const leftButton = document.querySelector('.card__button_wrong');
 

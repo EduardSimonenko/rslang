@@ -7,6 +7,8 @@
   padding: 25px 15px;
   gap: 15px;
   box-shadow: 10px -2px 25px 19px rgba(246, 246, 246, 0.2);
+  margin-top: 50px;
+
 }
 
 .result__header {
@@ -79,4 +81,10 @@
 .result__sprint-link.btn {
   height: 50px;
   line-height: 40px;
+}
+
+@media (max-width: 768px) {
+  .result {
+    width: 80%;
+  }
 }

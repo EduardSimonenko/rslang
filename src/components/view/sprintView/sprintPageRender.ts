@@ -14,21 +14,47 @@ class SprintPage {
 
   static renderSprintPage(wordInfo: IwordInfo, score: number) {
     this.sprintGameBlock.innerHTML = '';
-    const gameClose = CreateDomElements.createNewElement('a', ['sprint-game__close-btn']) as HTMLLinkElement;
-    const gameCloseImg = CreateDomElements.createNewElement('img', ['sprint-game__close-btn_img']);
-    CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
-    gameClose.href = '#game/sprint';
-    gameCloseImg.setAttribute('id', 'close-game');
-    gameClose.appendChild(gameCloseImg);
+    const gameClose = this.renderCloseBlock();
     CreateDomElements.insertChilds(this.sprintGameBlock, [gameClose]);
     this.renderTimer();
     this.renderCard(wordInfo, score);
     CreateDomElements.insertChilds(this.body, [this.sprintGameBlock]);
   }
 
+  private static renderCloseBlock() {
+    const gameClose = CreateDomElements.createNewElement('a', ['sprint-game__close-btn']) as HTMLLinkElement;
+    const gameCloseImg = CreateDomElements.createNewElement('img', ['sprint-game__close-btn_img']);
+    CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
+    gameClose.href = '#game/sprint';
+    gameCloseImg.setAttribute('id', 'close-game');
+    gameClose.appendChild(gameCloseImg);
+    return gameClose;
+  }
+
   static renderTimer() {
     const timer = CreateDomElements.createNewElement('div', ['timer'], '60');
     CreateDomElements.insertChilds(this.sprintGameBlock, [timer]);
+  }
+
+  static renderStartScreen(wordInfo: IwordInfo, score: number) {
+    this.sprintGameBlock.innerHTML = '';
+    const gameClose = this.renderCloseBlock();
+    const timer = CreateDomElements.createNewElement('div', ['start-game-timer'], '4');
+    CreateDomElements.insertChilds(this.sprintGameBlock, [gameClose, timer]);
+
+    const timerInterval = setInterval(() => {
+      if (timer.innerHTML === 'Вперед!') {
+        clearInterval(timerInterval);
+        this.renderSprintPage(wordInfo, score);
+      }
+      if (+timer.innerHTML <= 1) {
+        timer.innerHTML = 'Вперед!';
+        timer.style.border = '0px';
+      } else {
+        timer.innerHTML = (+timer.innerHTML - 1).toString();
+      }
+    }, 1000);
+    CreateDomElements.insertChilds(this.body, [this.sprintGameBlock]);
   }
 
   static renderCard(wordInfo: IwordInfo, score: number, countForCorrectAnswer?: string) {
