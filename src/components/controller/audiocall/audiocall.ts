@@ -129,14 +129,11 @@ class Audiocall extends AudiocallRender {
           GameName.audiocall,
           this.bestSeriesCount,
         );
-        console.log('stat to send', statistics);
         await Api.updateStatistics(getUserData(), statistics);
       }
 
       return;
     }
-
-    console.log('this.words', this.words);
 
     if (this.words.length !== 0) {
       this.correctAnswer = this.words[index];

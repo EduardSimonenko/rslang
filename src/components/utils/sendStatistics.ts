@@ -45,15 +45,14 @@ async function makeNewStat(
     if (gameStat.seriesCorrectAnswers < counter) {
       gameStat.seriesCorrectAnswers = counter;
     }
-    gameStat.allAnswers += (correctAnswers.length + wrongAnswers.length);
+    gameStat.allWords += (correctAnswers.length + wrongAnswers.length);
   } else {
     gameStat.data = today;
     gameStat.correctAnswers = correctAnswers.length;
     gameStat.newWords = newWordsToday;
     gameStat.seriesCorrectAnswers = counter;
-    gameStat.allAnswers = (correctAnswers.length + wrongAnswers.length);
+    gameStat.allWords = (correctAnswers.length + wrongAnswers.length);
   }
-  // console.log('newStat', newStat);
   return newStat;
 }
 

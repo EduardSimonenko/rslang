@@ -128,7 +128,7 @@ class Api extends Loader {
         },
       },
       [UrlFolderEnum.users, user.userId, UrlFolderEnum.aggregatedWords],
-      [`filter=${filter}`, 'wordsPerPage=100'],
+      [`filter=${filter}`, 'wordsPerPage=600'],
     );
     const data = await response.json() as AuthorizeUserWords[];
     return data;
