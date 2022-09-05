@@ -104,7 +104,6 @@ class TextbookUsers {
         this.updateWordForUser(btn, wordId, word);
 
         const { optional } = await checkWord.json();
-        console.log(optional);
 
         if (optional.isLearned === true && btn !== 'hard') {
           this.unmarkDoneWord(word);

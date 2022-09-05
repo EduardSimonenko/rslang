@@ -1,0 +1,110 @@
+.sprint-game {
+  @include flex($flex-direction: column, $justify-content: flex-start);
+  padding-top: 50px;
+  height: 100vh;
+  gap: 15px;
+  background-image: url(../assets/images/sprint-background.jpg);
+}
+
+.sprint-game__card {
+  margin: 20px auto 0;
+  width: 520px;
+  @include flex($flex-direction: column);
+  gap: 20px;
+  background-color: rgb(247, 247, 240);
+  border-radius: 10px;
+  padding: 30px 0;
+}
+.card__circles-block {
+  @include flex();
+  padding: 25px 0 0;
+  gap: 10px;
+}
+.card__circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 100%;
+  background-color: rgb(202, 202, 202);
+}
+.card__circle_correct {
+  background-image: url(../assets/images/correct-answer.svg);
+}
+
+.word {
+  padding: 20px 0 0;
+  @include font($font-family: $title-font, $font-size: 3.5rem)
+
+}
+.word-translation {
+  @include font($font-family: $title-font, $font-size: 3.0rem, $color: #494a4b)
+}
+.card__buttons {
+  @include flex();
+  gap: 20px;
+  padding: 15px 0;
+}
+.card__button {
+  width: 130px;
+  height: 50px;
+  border-radius: 7px;
+
+}
+.card__button_wrong {
+  background-color: rgb(212, 33, 33);
+  &:hover{
+    font-size: initial;
+    background-color: rgb(187, 6, 6);
+  }
+}
+.card__button_correct {
+  background-color: rgb(129, 223, 7);
+  &:hover{
+    font-size: initial;
+    background-color: rgb(107, 185, 4);
+  }
+}
+
+.sprint-game__score {
+  @include font($font-family: $title-font, $font-size: 5.0rem, $color:  #2c69ec, $font-weight: bold);
+  text-align: center;
+}
+
+.sprint-game__card_correct {
+  box-shadow: -1px 0px 42px 6px rgba(75, 223, 80, 0.46) inset;
+}
+
+.sprint-game__card_wrong {
+  box-shadow: -1px 0px 42px 6px rgba(223, 39, 39, 0.46) inset;
+}
+
+.timer,
+.start-game-timer {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 0 10%;
+  @include font($font-family: $title-font, $font-size: 7.0rem, $color: #2c69ec, $font-weight: bold);
+  line-height: 130px;
+  text-align: center;
+  border-radius: 50%;
+  border: 4px solid  #01194d;
+}
+
+.start-game-timer {
+  margin: auto;
+}
+
+.card__points {
+  @include font($font-family: $title-font, $font-size: 2.5rem, $color:  #2c69ec, $font-weight: 500);
+  height: 20px;
+}
+
+.card__prompt {
+  @include font($font-family: $title-font, $font-size: 2.5rem, $font-weight: 500);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .sprint-game__card {
+    width: 80%;
+  }
+}

@@ -78,11 +78,13 @@ class AudiocallRender {
       answerBtn.setAttribute('id', 'answer-btn');
       answerBtn.setAttribute('disabled', '');
       answerBtn.dataset.id = `${i}`;
+
       answerBtn.dataset.inner = '';
       answersSection.appendChild(answerBtn);
     }
     const nextBtn = CreateDomElements.createNewElement('button', ['audiocall__next-btn', 'btn'], 'Пропустить →');
     CreateDomElements.setAttributes(nextBtn, { id: 'next-btn', type: 'button', disabled: '' });
+
     nextBtn.dataset.inner = 'Пропустить →';
 
     CreateDomElements.insertChilds(playField, [gameClose, soundSection, answersSection, nextBtn]);

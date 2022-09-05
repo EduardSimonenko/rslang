@@ -1,4 +1,3 @@
-import Audiocall from '../controller/audiocall/audiocall';
 import CustomStorage from '../controller/storage';
 import { replaceHashHistory } from '../utils/createUrlPath';
 import getGroupAndPage from '../utils/getGroupAndPage';
@@ -6,6 +5,9 @@ import Page from '../view/pageView/mainPageView';
 import Statistics from '../view/statistics/statistics';
 import TextbookTitlePage from '../view/textbook/textbookTitlePage';
 import TextbookWordsSection from '../view/textbook/textbookWordsSection';
+import StartScreen from '../view/startScreenGame/startScreenView';
+import SprintGame from '../controller/sprintGame/sprintGame';
+import Audiocall from '../controller/audiocall/audiocall';
 
 export default class App {
   static start(): void {
@@ -45,6 +47,7 @@ export default class App {
     if (pagePath && pagePath.includes('?')) {
       [group, page, pagePath] = getGroupAndPage(pagePath) as string[];
     }
+
     switch (pagePath) {
       case 'textbook':
         currentPage = new TextbookTitlePage();
@@ -55,7 +58,7 @@ export default class App {
         break;
 
       case 'game/sprint':
-        currentPage = new TextbookWordsSection(group, page);
+        currentPage = new StartScreen();
         break;
 
       case 'game/audio-call':
@@ -67,7 +70,7 @@ export default class App {
         break;
 
       case 'game/sprint/play':
-        currentPage = new TextbookWordsSection(group, page);
+        currentPage = new SprintGame(group, page);
         break;
 
       case 'statistics':

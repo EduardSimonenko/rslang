@@ -27,10 +27,13 @@
   './components/buttonPag',
   './layout/game-benefits',
   './layout/team',
-  './layout/navigation';
+  './layout/sprint-game',
+  './layout/navigation',
+  './layout/sprintResult';
 
 // pages
 @import
+  './pages/startScreen',
   './pages/home',
   './pages/textbook',
   './pages/auth',

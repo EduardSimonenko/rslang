@@ -15,10 +15,12 @@ async function makeNewStat(
   delete newStat.id;
   const gameStat = gameName === GameName.audiocall
     ? newStat.optional.audioCall : newStat.optional.sprint; // стата конкретно по игре
+
   const learnedWordsData = await Api.getfilterWords(
     getUserData(),
     filterLearnedWords,
-  ) as AuthorizeUserWords[]; // все слова с isLearned: true
+  ) as AuthorizeUserWords[];
+  // все слова с isLearned: true
   let learnedWordsNum = 0; // кол-во слов с isLearned: true
   if (learnedWordsData[0].paginatedResults.length !== 0) {
     learnedWordsNum = learnedWordsData[0].totalCount[0].count;
@@ -41,7 +43,7 @@ async function makeNewStat(
 
   if (gameStat.data === today) {
     gameStat.correctAnswers += correctAnswers.length;
-    gameStat.newWords = newWordsToday;
+    gameStat.newWords += 20;
     if (gameStat.seriesCorrectAnswers < counter) {
       gameStat.seriesCorrectAnswers = counter;
     }
@@ -49,7 +51,7 @@ async function makeNewStat(
   } else {
     gameStat.data = today;
     gameStat.correctAnswers = correctAnswers.length;
-    gameStat.newWords = newWordsToday;
+    gameStat.newWords = 20;
     gameStat.seriesCorrectAnswers = counter;
     gameStat.allWords = (correctAnswers.length + wrongAnswers.length);
   }

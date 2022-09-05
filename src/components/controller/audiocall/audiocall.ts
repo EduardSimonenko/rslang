@@ -49,7 +49,7 @@ class Audiocall extends AudiocallRender {
     this.render = new AudiocallRender();
   }
 
-  async getWords(group: number, page: number): Promise<WordStructure[]> {
+  static async getWords(group: number, page: number): Promise<WordStructure[]> {
     const result = await Loader.load(
       {
         method: MethodEnum.get,
@@ -59,6 +59,7 @@ class Audiocall extends AudiocallRender {
         },
       },
       [UrlFolderEnum.words],
+
       [`page=${page}`, `group=${group}`],
     ) as Response;
     const words: WordStructure[] = await result.json();
@@ -87,8 +88,8 @@ class Audiocall extends AudiocallRender {
   }
 
   async buildSupportWords(): Promise<void> {
-    const supportArray1 = await this.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
-    const supportArray2 = await this.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
+    const supportArray1 = await Audiocall.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
+    const supportArray2 = await Audiocall.getWords(getRandomInt(0, 5), getRandomInt(0, 29));
     this.supportWords = shuffle(supportArray1.concat(supportArray2))
       .map((item: WordStructure) => item.wordTranslate);
   }
@@ -107,9 +108,9 @@ class Audiocall extends AudiocallRender {
       }
     } else if (index === 0 && localStorage.getItem('page').includes('game/audio-call/play')) {
       const args: string[] = getGroupAndPage(localStorage.getItem('page'));
-      this.words = shuffle(await this.getWords(+args[0], +args[1]));
+      this.words = shuffle(await Audiocall.getWords(+args[0], +args[1]));
     } else {
-      this.words = shuffle(await this.getWords(group, page));
+      this.words = shuffle(await Audiocall.getWords(group, page));
     }
     await this.buildSupportWords();
   }
@@ -321,6 +322,7 @@ class Audiocall extends AudiocallRender {
             correctAnswer.style.backgroundColor = '#7FB77E';
           }
         });
+
         if (target.dataset.inner === '→' && target.style.backgroundColor !== 'rgb(255, 74, 74)') { // сл слово после ответа
           this.buildGameLogic(this.index);
           target.innerText = 'Пропустить →';
@@ -349,6 +351,7 @@ class Audiocall extends AudiocallRender {
       if (target.id === 'answer-btn') {
         const answerBtns = Array.from(document.querySelectorAll('.answer-btn')) as HTMLButtonElement[];
         answerBtns.forEach((item) => item.setAttribute('disabled', ''));
+
         if (target.dataset.inner === this.correctAnswer.wordTranslate) {
           (document.getElementById('correct-audio') as HTMLAudioElement).play();
           target.removeAttribute('disabled');
@@ -374,6 +377,7 @@ class Audiocall extends AudiocallRender {
         }
         const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
         nextBtn.innerText = '→';
+
         nextBtn.dataset.inner = '→';
         const wordImg = document.getElementById('word-img') as HTMLImageElement;
         const word = document.getElementById('word');
@@ -405,6 +409,7 @@ class Audiocall extends AudiocallRender {
           (document.querySelector('[data-id="4"]') as HTMLButtonElement).click();
           break;
         case 'Space':
+
           (document.getElementById('next-btn') as HTMLButtonElement).click();
           break;
         default:

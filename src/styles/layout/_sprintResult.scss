@@ -1,0 +1,90 @@
+.result {
+  width: 520px;
+  height: 600px;
+  background-color: white;
+  border-radius: 5%;
+  @include flex($justify-content: space-between, $align-items: center, $flex-wrap: nowrap, $flex-direction: column);
+  padding: 25px 15px;
+  gap: 15px;
+  box-shadow: 10px -2px 25px 19px rgba(246, 246, 246, 0.2);
+  margin-top: 50px;
+
+}
+
+.result__header {
+  @include font($font-family: $title-font, $font-size: 3.3rem, $font-weight: 500, $color: #90409d);
+};
+
+.result__button {
+  display: none;
+  @include font($font-family: $title-font, $font-size: 3.3rem, $font-weight: 500);
+  background-color: white;
+  border-radius: 5%;
+  &.result__button_active {
+    display: block;
+  }
+  &:hover {
+    cursor: pointer;
+    color: #90409d;;
+  }
+}
+
+.result__motivational {
+  @include font($font-weight: 500, $color: #90409d, $font-size: 2.0rem);
+  text-align: center;
+}
+
+.result__words {
+  display: none;
+  width: 100%;
+  overflow: auto;
+  &.result__words_active {
+    display: block;
+  }
+
+  .word {
+    font-size: 2.5rem;
+    padding: 0;
+    height: 60px;
+  }
+}
+
+.result__correct-words,
+.result__wrong-words {
+  @include font($font-weight: 800);
+  margin: 10px;
+}
+
+.result__correct-words {
+  color:  rgb(75, 223, 80);
+}
+
+.result__wrong-words {
+  color:  rgb(223, 39, 39) ;
+}
+
+.word {
+  @include flex($justify-content: flex-start);
+  gap: 15px;
+}
+
+.word__sound {
+  width: 40px;
+  height: 40px;
+  &:hover {
+    cursor: pointer;
+    width: 45px;
+    height: 45px;
+  }
+}
+
+.result__sprint-link.btn {
+  height: 50px;
+  line-height: 40px;
+}
+
+@media (max-width: 768px) {
+  .result {
+    width: 80%;
+  }
+}
