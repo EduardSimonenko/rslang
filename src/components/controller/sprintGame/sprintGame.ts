@@ -58,11 +58,14 @@ class SprintGame {
     document.querySelector('body').innerHTML = '';
     await this.createArraysForGame();
     const cardInfo = this.getCurrentWordInfo();
-    SprintPage.renderStartScreen(cardInfo, this.score);
-    this.keydownListen();
-    this.wordsCounter += 1;
-    await this.timer();
-    this.listen();
+    SprintPage.renderStartScreen();
+    setTimeout(() => {
+      SprintPage.renderSprintPage(cardInfo, this.score);
+      this.keydownListen();
+      this.wordsCounter += 1;
+      this.timer();
+      this.listen();
+    }, 4000);
   }
 
   private async createArraysForGame() {

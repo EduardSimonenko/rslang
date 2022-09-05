@@ -36,20 +36,17 @@ class SprintPage {
     CreateDomElements.insertChilds(this.sprintGameBlock, [timer]);
   }
 
-  static renderStartScreen(wordInfo: IwordInfo, score: number) {
+  static renderStartScreen() {
     this.sprintGameBlock.innerHTML = '';
     const gameClose = this.renderCloseBlock();
     const timer = CreateDomElements.createNewElement('div', ['start-game-timer'], '4');
     CreateDomElements.insertChilds(this.sprintGameBlock, [gameClose, timer]);
 
     const timerInterval = setInterval(() => {
-      if (timer.innerHTML === 'Вперед!') {
-        clearInterval(timerInterval);
-        this.renderSprintPage(wordInfo, score);
-      }
       if (+timer.innerHTML <= 1) {
         timer.innerHTML = 'Вперед!';
         timer.style.border = '0px';
+        clearInterval(timerInterval);
       } else {
         timer.innerHTML = (+timer.innerHTML - 1).toString();
       }
