@@ -53,9 +53,9 @@ class SprintGame {
     await this.createArraysForGame();
     const cardInfo = this.getCurrentWordInfo();
     SprintPage.renderSprintPage(cardInfo, this.score);
+    this.keydownListen();
     this.wordsCounter += 1;
     await this.timer();
-    console.log(this.correctAnswers);
     this.listen();
   }
 
@@ -174,21 +174,44 @@ class SprintGame {
     }
   }
 
+  private keydownListen() {
+    const rightButtton = document.querySelector('.card__button_correct');
+    const leftButton = document.querySelector('.card__button_wrong');
+
+    const keydownListener = function (event: KeyboardEvent) {
+      event.preventDefault();
+      const click = new Event('click');
+      if (event.code === 'ArrowRight') {
+        rightButtton.dispatchEvent(click);
+      }
+      if (event.code === 'ArrowLeft') {
+        leftButton.dispatchEvent(click);
+      }
+    };
+
+    document.addEventListener('keydown', keydownListener);
+  }
+
   listen() {
     const cardButtons = document.querySelector('.card__buttons');
+    const rightButtton = document.querySelector('.card__button_correct');
+    const leftButton = document.querySelector('.card__button_wrong');
 
-    cardButtons.addEventListener('click', async (event) => {
+    const answerListener = (event: Event) => {
       event.preventDefault();
       const target = event.target as HTMLLinkElement;
       const buttonAnswer = target.dataset.answer;
-      if (!buttonAnswer) return;
       if (this.currentWord.answer === buttonAnswer) {
         this.updateStatistics(true);
       } else {
         this.updateStatistics(false);
       }
       setTimeout(() => this.renderNewCard(), 0);
-    });
+    };
+
+    rightButtton.addEventListener('click', answerListener);
+
+    leftButton.addEventListener('click', answerListener);
   }
 }
 

@@ -27,7 +27,7 @@ class SprintPage {
   }
 
   static renderTimer() {
-    const timer = CreateDomElements.createNewElement('div', ['timer'], '10');
+    const timer = CreateDomElements.createNewElement('div', ['timer'], '60');
     CreateDomElements.insertChilds(this.sprintGameBlock, [timer]);
   }
 
@@ -43,6 +43,7 @@ class SprintPage {
     const cardButtons = CreateDomElements.createNewElement('div', ['card__buttons']);
     const cardButtonWrong = CreateDomElements.createNewElement('button', ['card__button', 'card__button_wrong'], 'НЕВЕРНО');
     const cardButtonCorrect = CreateDomElements.createNewElement('button', ['card__button', 'card__button_correct'], 'ВЕРНО');
+    const keydownInfo = CreateDomElements.createNewElement('p', ['card__prompt'], 'P.S. можешь использовать клавиатуру (&#8592;, &#8594;)');
 
     cardImage.alt = 'Just a parrot';
     cardImage.src = './assets/images/sprint-image.svg';
@@ -65,7 +66,8 @@ class SprintPage {
 
     CreateDomElements.insertChilds(
       this.wordCard,
-      [cardCirclesBlock, pointsForCorrectAnswer, cardImageBlock, word, translation, cardButtons],
+      // eslint-disable-next-line max-len
+      [cardCirclesBlock, pointsForCorrectAnswer, cardImageBlock, word, translation, cardButtons, keydownInfo],
     );
     CreateDomElements.insertChilds(this.sprintGameBlock, [this.scoreBlock, this.wordCard]);
   }

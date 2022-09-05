@@ -101,7 +101,6 @@ class TextbookWordsSection {
   }
 
   private renderSectionTextbook(words: WordStructure[], groupHard?: boolean): void {
-    console.log(words);
     if (groupHard) {
       this.wrapperPagination.style.display = 'none';
       this.btnGames.insertAdjacentElement('afterend', this.hardWord);
