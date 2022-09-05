@@ -41,12 +41,17 @@ class SprintPage {
     const gameClose = this.renderCloseBlock();
     const timer = CreateDomElements.createNewElement('div', ['start-game-timer'], '4');
     CreateDomElements.insertChilds(this.sprintGameBlock, [gameClose, timer]);
+    const timeEndAudio = new Audio('./assets/audio/time-end.mp3');
+    const timeStartAudio = new Audio('./assets/audio/start-game.mp3');
+    timeStartAudio.play();
 
     const timerInterval = setInterval(() => {
       if (+timer.innerHTML <= 1) {
         timer.innerHTML = 'Вперед!';
         timer.style.border = '0px';
         clearInterval(timerInterval);
+        timeStartAudio.muted = true;
+        timeEndAudio.play();
       } else {
         timer.innerHTML = (+timer.innerHTML - 1).toString();
       }
