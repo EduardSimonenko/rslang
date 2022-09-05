@@ -1,7 +1,10 @@
 import AuthorizationEnum from '../../../types/authorization/enum';
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
+import createStatistics from '../../utils/createStatistics';
+import getUserData from '../../utils/userLogin';
 import Loader from '../load';
 import CustomStorage from '../storage';
+import Api from '../textbook/controller';
 
 class Authorization extends Loader {
   static message: HTMLElement;
@@ -46,10 +49,17 @@ class Authorization extends Loader {
       await Authorization.logIn();
       this.message.innerText = 'Вы успешно зарегистрированы и вошли в систему';
       this.message.style.color = 'green';
+      Api.updateStatistics(getUserData(), createStatistics());
     } else {
       this.message.classList.remove('loader');
       this.message.style.color = 'red';
-      this.message.innerText = 'Такой пользователь не может быть создан';
+      if (!(document.getElementById('email') as HTMLInputElement).value.includes('@')) {
+        this.message.innerText = 'Введите верный e-mail';
+      } else if ((document.getElementById('name') as HTMLInputElement).value.length <= 0) {
+        this.message.innerText = 'Введите имя пользователя';
+      } else if ((document.getElementById('password') as HTMLInputElement).value.length < 8) {
+        this.message.innerText = 'Слишком короткий пароль';
+      } else this.message.innerText = 'Такой пользователь не может быть создан';
     }
   }
 

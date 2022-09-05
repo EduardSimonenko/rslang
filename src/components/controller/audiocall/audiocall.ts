@@ -1,9 +1,11 @@
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
-import { AuthorizeUserWords, WordStructure } from '../../../types/loadServerData/interfaces';
+import { AuthorizeUserWords, UserWordStructure, WordStructure } from '../../../types/loadServerData/interfaces';
+import { GameName } from '../../../types/statistics/interfaces';
 import baseUrl from '../../model/baseUrl';
 import { filterHardWords } from '../../model/filtersWords';
 import cleanPage from '../../utils/cleanPage';
 import getGroupAndPage from '../../utils/getGroupAndPage';
+import makeNewStat from '../../utils/sendStatistics';
 import getUserData from '../../utils/userLogin';
 import { shuffle, getRandomInt } from '../../utils/utils';
 import AudiocallRender from '../../view/audiocall/audiocall-render';
@@ -19,7 +21,7 @@ class Audiocall extends AudiocallRender {
 
   wrongAnswers: WordStructure[];
 
-  counter: number;
+  index: number;
 
   supportWords: string[];
 
@@ -29,9 +31,15 @@ class Audiocall extends AudiocallRender {
 
   render: AudiocallRender;
 
+  bestSeriesCount: number;
+
+  seriesCount: number;
+
   constructor() {
     super();
-    this.counter = 0;
+    this.index = 0;
+    this.bestSeriesCount = 0;
+    this.seriesCount = 0;
     this.words = [];
     this.supportWords = [];
     this.correctAnswer = {} as WordStructure;
@@ -111,38 +119,49 @@ class Audiocall extends AudiocallRender {
       await this.buildAllWords(index, +localStorage.getItem('audiocallLevel'), getRandomInt(0, 29));
     } else if (index === this.words.length) {
       this.showResults();
-      if (this.isLogin) {
-        this.sendOptions(this.correctAnswers);
-        this.sendOptions(this.wrongAnswers);
+
+      if (this.isLogin && this.words.length !== 0) {
+        this.sendOptions(this.correctAnswers, this.wrongAnswers);
+        this.sendOptions(this.wrongAnswers, this.wrongAnswers);
+        const statistics = await makeNewStat(
+          this.correctAnswers,
+          this.wrongAnswers,
+          GameName.audiocall,
+          this.bestSeriesCount,
+        );
+        await Api.updateStatistics(getUserData(), statistics);
       }
+
       return;
     }
 
-    this.correctAnswer = this.words[index];
-    const audio = document.getElementById('audio') as HTMLAudioElement;
-    const wordImg = document.getElementById('word-img') as HTMLImageElement;
-    wordImg.classList.add('hidden');
-    const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
-    const word = document.getElementById('word');
-    word.classList.add('hidden');
+    if (this.words.length !== 0) {
+      this.correctAnswer = this.words[index];
+      const audio = document.getElementById('audio') as HTMLAudioElement;
+      const wordImg = document.getElementById('word-img') as HTMLImageElement;
+      wordImg.classList.add('hidden');
+      const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
+      const word = document.getElementById('word');
+      word.classList.add('hidden');
 
-    const answerBtns = Array.from(document.getElementsByClassName('answer-btn')) as HTMLButtonElement[];
-    this.supportWords = shuffle(this.supportWords);
-    const answers: string[] = shuffle(
-      [this.correctAnswer.wordTranslate, ...this.supportWords.slice(0, 4)],
-    );
-    for (let i = 0; i < answerBtns.length; i += 1) {
-      answerBtns[i].style.backgroundColor = '';
-      answerBtns[i].innerText = answers[i];
-      answerBtns[i].dataset.inner = answers[i];
-      answerBtns[i].removeAttribute('disabled');
-    }
-    nextBtn.removeAttribute('disabled');
-    word.innerText = `${this.correctAnswer.word} - ${this.correctAnswer.transcription} - ${this.correctAnswer.wordTranslate}`;
-    wordImg.src = `${baseUrl}/${this.correctAnswer.image}`;
-    audio.src = `${baseUrl}/${this.correctAnswer.audio}`;
-    audio.play();
-    this.counter += 1;
+      const answerBtns = Array.from(document.getElementsByClassName('answer-btn')) as HTMLButtonElement[];
+      this.supportWords = shuffle(this.supportWords);
+      const answers: string[] = shuffle(
+        [this.correctAnswer.wordTranslate, ...this.supportWords.slice(0, 4)],
+      );
+      for (let i = 0; i < answerBtns.length; i += 1) {
+        answerBtns[i].style.backgroundColor = '';
+        answerBtns[i].innerText = answers[i];
+        answerBtns[i].dataset.inner = answers[i];
+        answerBtns[i].removeAttribute('disabled');
+      }
+      nextBtn.removeAttribute('disabled');
+      word.innerText = `${this.correctAnswer.word} - ${this.correctAnswer.transcription} - ${this.correctAnswer.wordTranslate}`;
+      wordImg.src = `${baseUrl}/${this.correctAnswer.image}`;
+      audio.src = `${baseUrl}/${this.correctAnswer.audio}`;
+      audio.play();
+      this.index += 1;
+    } else this.showResults();
   }
 
   selectLevel(target: HTMLElement): void {
@@ -187,40 +206,61 @@ class Audiocall extends AudiocallRender {
     gameWrapper.appendChild(resultsContainer);
   }
 
-  async sendOptions(words: WordStructure[]): Promise<void> {
-    words.forEach((word: WordStructure): void => {
+  sendOptions(words: WordStructure[], comparedArray: WordStructure[]) {
+    words.forEach(async (word: WordStructure) => {
+      if (!word) return;
       const id = word._id ? word._id : word.id;
+      let difficultyValue;
+      let isWordLearned;
+      let step;
+      let updatedWord: UserWordStructure;
+      let startLearningDate: string;
+
       if (!word.userWord) {
-        Api.createUserWord(id, { difficulty: 'normal', optional: { isLearned: false, learnStep: 1, startLearningAt: Date.now() } }, getUserData());
+        await Api.createUserWord(id, { difficulty: 'normal', optional: { isLearned: false, learnStep: 0, startLearningAt: new Date().toLocaleDateString() } }, getUserData());
+        const response = await Api.getWordUser(id, getUserData());
+        updatedWord = await response.json() as UserWordStructure;
+        difficultyValue = updatedWord.difficulty;
+        step = updatedWord.optional.learnStep;
+        isWordLearned = updatedWord.optional.isLearned;
+        startLearningDate = new Date().toLocaleDateString();
       } else {
-        let difficultyValue = word.userWord.difficulty ? word.userWord.difficulty : 'normal';
-        let step = word.userWord.optional.learnStep ? word.userWord.optional.learnStep : 0;
-        let isWordLearned = word.userWord.optional.isLearned
-          ? word.userWord.optional.isLearned : false;
-        if ((step >= 2 && difficultyValue === 'normal') || (step >= 4 && difficultyValue === 'hard')) {
-          isWordLearned = true; difficultyValue = 'normal';
-        }
-        if (word.userWord && words === this.wrongAnswers) {
-          Api.updateUserWord(
-            id,
-            {
-              difficulty: difficultyValue,
-              optional: { isLearned: isWordLearned, learnStep: 0 },
+        difficultyValue = word.userWord.difficulty;
+        isWordLearned = word.userWord.optional.isLearned;
+        step = word.userWord.optional.learnStep;
+        startLearningDate = word.userWord.optional.startLearningAt;
+      }
+
+      if ((step >= 2 && difficultyValue === 'normal') || (step >= 4 && difficultyValue === 'hard')) {
+        isWordLearned = true; difficultyValue = 'normal';
+      }
+
+      if (words === comparedArray) {
+        Api.updateUserWord(
+          id,
+          {
+            difficulty: difficultyValue,
+            optional: {
+              isLearned: isWordLearned,
+              learnStep: 0,
+              startLearningAt: startLearningDate,
             },
-            getUserData(),
-          );
-        } else {
-          const date = word.userWord.optional.startLearningAt
-            ? word.userWord.optional.startLearningAt : Date.now();
-          Api.updateUserWord(
-            id,
-            {
-              difficulty: difficultyValue,
-              optional: { isLearned: isWordLearned, learnStep: step += 1, startLearningAt: date },
+          },
+          getUserData(),
+        );
+      } else {
+        Api.updateUserWord(
+          id,
+          {
+            difficulty: difficultyValue,
+            optional: {
+              isLearned: isWordLearned,
+              learnStep: step + 1,
+              startLearningAt: startLearningDate,
             },
-            getUserData(),
-          );
-        }
+          },
+          getUserData(),
+        );
       }
     });
   }
@@ -229,7 +269,7 @@ class Audiocall extends AudiocallRender {
     const gameWrapper: HTMLElement = document.querySelector('.audiocall-wrapper');
     gameWrapper.innerHTML = '';
     document.body.removeChild(gameWrapper);
-    this.counter = 0;
+    this.index = 0;
     this.words = [];
     this.supportWords = [];
     this.correctAnswer = {} as WordStructure;
@@ -282,7 +322,7 @@ class Audiocall extends AudiocallRender {
           }
         });
         if (target.dataset.inner === '→' && target.style.backgroundColor !== 'rgb(255, 74, 74)') { // сл слово после ответа
-          this.buildGameLogic(this.counter);
+          this.buildGameLogic(this.index);
           target.innerText = 'Пропустить →';
           target.dataset.inner = 'Пропустить →';
           answerBtns.forEach((item) => item.removeAttribute('disabled'));
@@ -296,11 +336,12 @@ class Audiocall extends AudiocallRender {
           wordImg.classList.remove('hidden');
           word.classList.remove('hidden');
           this.wrongAnswers.push(this.correctAnswer);
+          this.seriesCount = 0;
         } else if (target.dataset.inner === '→' && target.style.backgroundColor === 'rgb(255, 74, 74)') { // сл слово после пропустить
           target.style.backgroundColor = '';
           target.innerText = 'Пропустить →';
           target.dataset.inner = 'Пропустить →';
-          this.buildGameLogic(this.counter);
+          this.buildGameLogic(this.index);
           answerBtns.forEach((item) => item.removeAttribute('disabled'));
         }
       }
@@ -313,6 +354,11 @@ class Audiocall extends AudiocallRender {
           target.removeAttribute('disabled');
           this.correctAnswers.push(this.correctAnswer);
           target.style.backgroundColor = '#7FB77E';
+
+          this.seriesCount += 1;
+          if (this.bestSeriesCount < this.seriesCount) {
+            this.bestSeriesCount = this.seriesCount;
+          }
         } else {
           answerBtns.forEach((item) => {
             if (item.dataset.inner === this.correctAnswer.wordTranslate) {
@@ -324,6 +370,7 @@ class Audiocall extends AudiocallRender {
           target.removeAttribute('disabled');
           this.wrongAnswers.push(this.correctAnswer);
           target.style.backgroundColor = '#FF4A4A';
+          this.seriesCount = 0;
         }
         const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
         nextBtn.innerText = '→';
@@ -365,10 +412,6 @@ class Audiocall extends AudiocallRender {
       }
     });
   }
-
-  // start(): void {
-  //   this.listen();
-  // }
 }
 
 export default Audiocall;
