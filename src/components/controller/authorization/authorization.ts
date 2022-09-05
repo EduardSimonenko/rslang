@@ -91,6 +91,7 @@ class Authorization extends Loader {
         (document.querySelector('[href="#statistics"]') as HTMLElement).style.display = '';
         setInterval(() => this.refreshToken(), 10800000);
       });
+      setTimeout(() => window.location.reload(), 500);
     } else {
       this.message.classList.remove('loader');
       this.message.style.color = 'red';

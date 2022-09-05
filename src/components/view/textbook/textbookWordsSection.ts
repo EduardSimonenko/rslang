@@ -343,13 +343,14 @@ class TextbookWordsSection {
   }
 
   private openBtnUp(): void {
+    const page = CustomStorage.getStorage('page').split('?')[0];
     const btn = document.querySelector('.button__up') as HTMLButtonElement;
     const heightWindow: number = window.pageYOffset;
     const startPoint = 300;
-    if (heightWindow > startPoint) {
+    if (heightWindow > startPoint && page === 'textbook/words') {
       btn.classList.add('open-button-up');
     }
-    if (heightWindow < startPoint) {
+    if (heightWindow < startPoint && page === 'textbook/words') {
       btn.classList.remove('open-button-up');
     }
   }
@@ -477,6 +478,7 @@ class TextbookWordsSection {
     const urlPage: string = CustomStorage.getStorage('page');
     const chooseGame = e.currentTarget as HTMLLinkElement;
     const data: string[] = getGroupAndPage(urlPage);
+    CustomStorage.setStorage('prePage', urlPage);
     chooseGame.href = `#${name}?group=${data[0]}&page=${data[1]}`;
   }
 }

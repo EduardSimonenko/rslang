@@ -28,6 +28,7 @@ export default class App {
         CustomStorage.setStorage('page', e.state);
       } else {
         const hash = window.location.href.split('#')[1];
+        CustomStorage.setStorage('prePage', CustomStorage.getStorage('page'));
         CustomStorage.setStorage('page', hash);
         replaceHashHistory(hash);
       }

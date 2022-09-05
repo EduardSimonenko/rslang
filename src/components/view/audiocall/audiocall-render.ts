@@ -1,4 +1,5 @@
 import CreateDomElements from '../../controller/newElement';
+import CustomStorage from '../../controller/storage';
 
 class AudiocallRender {
   gameWrapper: HTMLElement;
@@ -16,8 +17,10 @@ class AudiocallRender {
   }
 
   renderStartScreen(): void {
+    const prePage = CustomStorage.getStorage('prePage');
     const gameClose = CreateDomElements.createNewElement('a', ['audiocall__close-btn']);
-    CreateDomElements.setAttributes(gameClose, { href: '#main' });
+
+    CreateDomElements.setAttributes(gameClose, { href: `#${prePage}` });
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
     gameCloseImg.setAttribute('id', 'close-game');
@@ -48,8 +51,9 @@ class AudiocallRender {
   }
 
   renderGame(): void {
+    const prePage = CustomStorage.getStorage('prePage');
     const gameClose = CreateDomElements.createNewElement('a', ['audiocall__close-btn']);
-    CreateDomElements.setAttributes(gameClose, { href: '#main', id: 'a' });
+    CreateDomElements.setAttributes(gameClose, { href: `#${prePage}`, id: 'a' });
     const gameCloseImg = CreateDomElements.createNewElement('img', ['audiocall__close-btn_img']);
     CreateDomElements.setAttributes(gameCloseImg, { src: '../../../assets/svg/close.svg', alt: 'close' });
     gameCloseImg.setAttribute('id', 'close-game');
