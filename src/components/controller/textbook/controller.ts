@@ -147,9 +147,7 @@ class Api extends Loader {
       },
       [UrlFolderEnum.users, user.userId, UrlFolderEnum.statistics],
     );
-    console.log('🚀 ~ file: controller.ts ~ line 150 ~ Api ~ updateStatistics ~ response', response);
     const data = await response.json();
-    console.log(JSON.stringify(options));
     return data;
   }
 

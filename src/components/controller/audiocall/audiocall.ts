@@ -189,13 +189,14 @@ class Audiocall extends AudiocallRender {
   }
 
   showResults(): void {
+    const prePage = CustomStorage.getStorage('prePage');
     const gameWrapper = document.querySelector('.audiocall-wrapper');
     gameWrapper.innerHTML = '';
     const resultsContainer = CreateDomElements.createNewElement('div', ['results-container']);
     const resultsWrapper = CreateDomElements.createNewElement('div', ['results-wrapper']);
     const resultsTitle = CreateDomElements.createNewElement('div', ['results-title'], '<span>Результаты</span>');
     const resultsBtn = CreateDomElements.createNewElement('a', ['results-btn', 'btn'], 'Завершить игру');
-    CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button', href: '#main' });
+    CreateDomElements.setAttributes(resultsBtn, { id: 'results-btn', type: 'button', href: `#${prePage}` });
     if (this.correctAnswers.length === 0 && this.wrongAnswers.length === 0) {
       resultsWrapper.innerHTML = '<span>В рамках этого уровня на данной и предыдущих страницах все слова изучены</span>';
     } else {

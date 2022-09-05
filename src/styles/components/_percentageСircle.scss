@@ -1,0 +1,66 @@
+@property --p {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.field__percent {
+  --p:0;
+  --b:17px;
+  --c:#f4876d;
+  --w:150px;
+  
+  width: var(--w);
+  aspect-ratio: 1;
+  position:relative;
+  display:inline-grid;
+  margin:5px;
+  place-content:center;
+  font-size:25px;
+  font-weight:bold;
+  font-family:sans-serif;
+}
+
+.field__percent:before,
+.field__percent:after {
+  content:"";
+  position:absolute;
+  border-radius:50%;
+}
+
+.field__percent:before {
+  inset:0;
+  background:
+    radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
+    conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+  -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+          mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+          border: 2px solid #70d9b2;
+}
+
+.field__percent:after {
+  inset:calc(50% - var(--b)/2);
+  background:var(--c);
+  transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(59% - var(--w)/2));
+  -webkit-transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(59% - var(--w)/2));
+  -moz-transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(59% - var(--w)/2));
+  -ms-transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(59% - var(--w)/2));
+  -o-transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(59% - var(--w)/2));
+}
+
+.animate {
+  animation: fill 1s 0.5s ease-in-out;
+  -webkit-animation: fill 1s 0.5s ease-in-out;
+}
+
+.no-round:before {
+  background-size:0 0,auto;
+}
+
+.no-round:after {
+  content:none;
+}
+
+@keyframes fill {
+  from{--p:0}
+}
