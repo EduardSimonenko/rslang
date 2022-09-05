@@ -7,7 +7,6 @@ import Audiocall from '../audiocall/audiocall';
 import getUserData from '../../utils/userLogin';
 import makeNewStat from '../../utils/sendStatistics';
 import { GameName } from '../../../types/statistics/interfaces';
-import Loader from '../load';
 import CustomStorage from '../storage';
 
 class SprintGame {

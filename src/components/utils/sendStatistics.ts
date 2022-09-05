@@ -3,7 +3,6 @@ import { GameName, LongTermStatistics, StatisticsData } from '../../types/statis
 import Api from '../controller/textbook/controller';
 import { filterLearnedWords, filterTodayWords } from '../model/filtersWords';
 import getUserData from './userLogin';
-import { getRandomInt } from './utils';
 
 async function makeNewStat(
   correctAnswers: WordStructure[],
