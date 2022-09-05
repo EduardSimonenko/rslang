@@ -98,3 +98,17 @@
   border-radius: 30px;
   
 }
+
+.field__Percent {
+  @include flex($flex-direction: column);
+  background-color: #EBECF0;
+  padding: 10px;  
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, .15),
+              -7px -7px 20px rgba(255, 255, 255, 1),
+              0px 0px 4px rgba(255, 255, 255, .2);
+  border-radius: 30px;
+}
+
+.field__Percent-text {
+  @include font($font-size: 2rem, $font-weight: 400);
+}
