@@ -14,6 +14,7 @@ interface GameStatistic {
   newWords: number,
   correctAnswers: number,
   seriesCorrectAnswers: number,
+  allWords: number,
 }
 
 export interface LongTermStatistics {
