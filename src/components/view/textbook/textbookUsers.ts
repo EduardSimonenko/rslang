@@ -163,6 +163,11 @@ class TextbookUsers {
     } else if (word.classList.contains('card__hard') && containerProgress) {
       this.progressWord(word, fullProgress, isProgress);
       this.progressWord(word, fullProgress);
+    } else if (containerProgress
+      && !word.classList.contains('card__done')
+      && !word.classList.contains('card__hard')) {
+      this.progressWord(word, fullProgress, isProgress);
+      this.progressWord(word, fullProgress);
     } else {
       this.progressWord(word, fullProgress);
     }
@@ -201,14 +206,11 @@ class TextbookUsers {
 
   public markWordsUser(card: HTMLElement, word: WordStructure): void {
     if (word.userWord) {
-      switch (word.userWord.difficulty) {
-        case 'hard':
-          card.classList.add('card__hard');
-          break;
-
-        default:
-          card.classList.add('card__done');
-          break;
+      if (word.userWord.difficulty === 'hard') {
+        card.classList.add('card__hard');
+      }
+      if (word.userWord.optional.isLearned) {
+        card.classList.add('card__done');
       }
     }
   }
