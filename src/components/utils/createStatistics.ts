@@ -20,15 +20,18 @@ function createStatistics(): StatisticsData {
         newWords: 0, /* колличество новых слов в данной игре за день */
         correctAnswers: 0,
         seriesCorrectAnswers: 0,
+        allAnswers: 0,
       },
       sprint: {
         data: today,
         newWords: 0,
         correctAnswers: 0,
-        seriesCorrectAnswers: 1,
+        seriesCorrectAnswers: 0,
+        allAnswers: 0,
       },
     },
   };
+  console.log('statistics', statistics);
   return statistics;
 }
 

@@ -1,7 +1,10 @@
 import AuthorizationEnum from '../../../types/authorization/enum';
 import { MethodEnum, UrlFolderEnum } from '../../../types/loadServerData/enum';
+import createStatistics from '../../utils/createStatistics';
+import getUserData from '../../utils/userLogin';
 import Loader from '../load';
 import CustomStorage from '../storage';
+import Api from '../textbook/controller';
 
 class Authorization extends Loader {
   static message: HTMLElement;
@@ -46,6 +49,7 @@ class Authorization extends Loader {
       await Authorization.logIn();
       this.message.innerText = 'Вы успешно зарегистрированы и вошли в систему';
       this.message.style.color = 'green';
+      Api.updateStatistics(getUserData(), createStatistics());
     } else {
       this.message.classList.remove('loader');
       this.message.style.color = 'red';

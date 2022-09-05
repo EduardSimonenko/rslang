@@ -128,7 +128,7 @@ class Api extends Loader {
         },
       },
       [UrlFolderEnum.users, user.userId, UrlFolderEnum.aggregatedWords],
-      [`filter=${filter}`],
+      [`filter=${filter}`, 'wordsPerPage=100'],
     );
     const data = await response.json() as AuthorizeUserWords[];
     return data;
@@ -149,10 +149,11 @@ class Api extends Loader {
     );
     console.log('🚀 ~ file: controller.ts ~ line 150 ~ Api ~ updateStatistics ~ response', response);
     const data = await response.json();
+    console.log(JSON.stringify(options));
     return data;
   }
 
-  static async getStatistics(user: UserLogin): Promise<void> {
+  static async getStatistics(user: UserLogin): Promise<StatisticsData> {
     const response: Response = await super.load(
       {
         method: MethodEnum.get,
